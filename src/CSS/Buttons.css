@@ -1,0 +1,79 @@
+.title-label {
+  width: fit-content;
+  text-align: center;
+  font-family: "Agdasima", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 330px;
+  transition: color 0.8s ease;
+}
+
+.buttons-container {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  width: 100%;
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.pulse-button {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  color: white;
+  font-size: 0;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+}
+
+.pulse-button::after {
+  content: '';
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  z-index: -1;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+} 
+
+.button-show {
+  position: absolute;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: "Agdasima", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 20px;
+  animation: none !important;
+}
