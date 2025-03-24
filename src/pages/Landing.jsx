@@ -1,13 +1,21 @@
-import { useRef } from "react";
-import Button from "../components/Buttons";
+import { useRef, useEffect } from "react";
+import Button from "../components/NavButtons";
 import useStore from "../utils/store";
-import "../CSS/Landing.css";
+import "./Landing.scss";
 
 export default function Landing() {
 
-    const { bgColor, label, labelColor, crownVisible, buttonsVisible } = useStore();
+    const { bgColor, label, labelColor, crownVisible, buttonsVisible, setBgColor, setCrownVisible, setIsClicked, setButtonsVisible, setLabel } = useStore();
     const screenRef = useRef(null);
     const labelRef = useRef(null);
+
+    useEffect(() => {
+        setBgColor("#000000");
+        setCrownVisible(true);
+        setIsClicked(false);
+        setLabel("");
+        setButtonsVisible(true);
+    }, []);
   
     
     return (  

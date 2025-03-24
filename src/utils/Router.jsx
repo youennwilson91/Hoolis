@@ -7,6 +7,8 @@ import Contact from '../pages/Contact';
 import Hoolis from '../pages/Hoolis';
 
 const router = createBrowserRouter([
+
+  // Landing
   {path: '/', element: <Landing />},
   {path: '/about', element: <About />},
   {path: '/shop', element: <Shop />},

@@ -1,4 +1,4 @@
-import "../CSS/Buttons.css";
+import "./NavButtons.scss";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -8,7 +8,7 @@ import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setBgColor, setLabel, setLabelColor, setCrownVisible, setButtonsVisible} = useStore();
+    const {setBgColor, setLabel, setLabelColor, setCrownVisible, setButtonsVisible, setIsClicked, isClicked} = useStore();
     const navigation = useNavigate();
     const location = useLocation();
     const buttonRefs = useRef([]);
@@ -21,7 +21,6 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
         {id: 5, landingPosition: {transform: 'translate(-230px, -40px)'}, menuPosition: {transform: 'translate(-250px, 340px)'}, label: "CONTACT", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.3, navigate: "/contact"},
     ]
 
-    const [isClicked, setIsClicked] = useState(false);
 
     useGSAP(() => {
         if (buttonRefs.current) {
@@ -90,8 +89,8 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
             className={`pulse-button ${location.pathname === button.navigate ? "button-show" : ""}`} 
             style={buttonsPosition === "landing" ? button.landingPosition : button.menuPosition} 
             key={button.id}
-            onMouseEnter={() => handleHover({bgColor: button.bgColor, label: button.label, labelColor: button.labelColor, crownVisible: false})}
-            onMouseLeave={() => handleHover({bgColor: "#000000", label: "", labelColor: "#000000", crownVisible: true})}
+            onMouseEnter={() => location.pathname !== button.navigate ? handleHover({bgColor: button.bgColor, label: button.label, labelColor: button.labelColor, crownVisible: false}) : null}
+            onMouseLeave={() => location.pathname !== button.navigate ? handleHover({bgColor: "#000000", label: "", labelColor: "#000000", crownVisible: true}) : null}
             onClick={() => handleClick({upscale: button.upscale, navigate: button.navigate})}
           >
             {button.label}

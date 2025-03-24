@@ -16,6 +16,17 @@
     align-items: center;
 }
 
+.title-label {
+    position: absolute;
+    width: fit-content;
+    text-align: center;
+    font-family: "Agdasima", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 330px;
+    transition: color 0.8s ease;
+  }
+
 img {
     width: 100%;
     height: auto;

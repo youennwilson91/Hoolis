@@ -1,19 +1,25 @@
-import Button from "../components/Buttons";
+import Button from "../components/NavButtons";
 import useStore from "../utils/store";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import "../CSS/Hoolis.css";
+import "./Hoolis.scss";
 import "../index.css";
 
 export default function Hoolis() {
-  const screenRefHoolis = useRef(null);
-  const labelRefHoolis = useRef(null);
-  const { labelColor } = useStore();
+  const screenRef = useRef(null);
+  const labelRef = useRef(null);
+  const { label, setLabel, bgColor, labelColor, setLabelColor, setIsClicked} = useStore();
+
+  useEffect(() => {
+    setIsClicked(false);
+    setLabel("");
+    setLabelColor("bgColor");
+  }, []);
 
   useGSAP(() => {
-    gsap.to(screenRefHoolis.current, {
-      backgroundColor: "#226D68",
+    gsap.to(screenRef.current, {
+      backgroundColor: "#D6955B",
       duration: 0.75,
       ease: "power3.inOut",
       opacity: 1
@@ -21,14 +27,15 @@ export default function Hoolis() {
   }, []);
 
   return (
-    <div ref={screenRefHoolis} className="hoolis-container" >
+    <div ref={screenRef} className="hoolis-container" style={{backgroundColor: bgColor}}>
+      <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
       <div className="hoolis-images-container">
         <img src="../public/hoolis-img/mouth-tee-thomas.jpg" alt="" />
         <img src="../public/hoolis-img/mouth-tee-back.jpg" alt="" />
         <img src="../public/hoolis-img/coquillage-tee-polito.jpg" alt="" />
         <img src="../public/hoolis-img/marc-paulito.jpg" alt="" />
       </div>
-      <Button screenRef={screenRefHoolis} labelRef={labelRefHoolis} />
+      <Button screenRef={screenRef} labelRef={labelRef} />
     </div>
   );
 }
