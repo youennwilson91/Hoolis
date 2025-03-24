@@ -16,6 +16,8 @@ const useStore = create((set) => ({
   setCrownVisible: (visible) => set({ crownVisible: visible }),
   setButtonsVisible: (visible) => set({ buttonsVisible: visible }),
   setIsClicked: (visible) => set({ isClicked: visible }),
+  setArticleGalleryChosen: (article) => set({ articleGalleryChosen: article }),
+  setArticleIsClicked: (isClicked) => set({ articleIsClicked: isClicked }),
 
   // Shop Page
   galleryVisible: false,
@@ -30,6 +32,7 @@ const useStore = create((set) => ({
     crownVisible: true,
     buttonsVisible: true,
     isClicked: false,
+    articleGalleryChosen: null,
   }),
 }));
 

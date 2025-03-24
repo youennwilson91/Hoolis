@@ -8,7 +8,7 @@ import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setGalleryVisible, setButtonsVisible, setIsClicked, isClicked, galleryVisible} = useStore();
+    const {setGalleryVisible, setButtonsVisible, setIsClicked, isClicked, galleryVisible, setArticleGalleryChosen} = useStore();
     const location = useLocation();
     const buttonRefs = useRef([]);
 
@@ -40,9 +40,13 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
       }
     }
     
-    function handleClick({navigate}) {
-      if (location.pathname !== navigate) {
-      setGalleryVisible(true);
+    function handleClick(index) {
+      if (!galleryVisible) {
+        setGalleryVisible(true);
+        setArticleGalleryChosen(buttons[index].label);
+      }
+      else {
+        setArticleGalleryChosen(buttons[index].label);
       }
     }
 
@@ -61,7 +65,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
             key={button.id}
             onMouseEnter={() => handleHover({bgColor: button.bgColor, label: button.label, labelColor: button.labelColor, crownVisible: false})}
             onMouseLeave={() => handleHover({bgColor: "#000000", label: "", labelColor: "#000000", crownVisible: true})}
-            onClick={() => handleClick({upscale: button.upscale, navigate: button.navigate})}
+            onClick={() => handleClick(index)}
           >
             {button.label}
           </button>

@@ -48,8 +48,9 @@
             flex-direction: row;
             justify-content: center;
             gap: 5px;
+            overflow-x: hidden;
             overflow-y: hidden;
-            overflow-x: auto;
+            opacity: 1  ;
 
             .article {
                 position: relative;
@@ -70,26 +71,61 @@
                 
                 .article-description {
                     position: absolute;
-                    width: 100%;
-                    height: 100%;
+                    width: fit-content;
+                    height: fit-content;
                     opacity: 0;
                     display: flex;
                     flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
 
 
                     h1 {
                         position: relative;
                         font-size: 36px;
                         color: white;
-                        pointer-events: none;
+                        pointer-events: none !important;
+                    }
+                }
+
+                .article-details {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+
+                    .article-title {
+                        position: absolute;
+                        top: -5%;
+                        left: 2%;
+                        font-size: 36px;
+                        color: white;
+                    }
+
+                    .article-price {
+                        position: absolute;
+                        top: 2%;
+                        left: 2%;
+                        font-size: 36px;
+                        color: white;
                     }
 
                     p {
-                        position: relative;
-                        font-size: 16px;
-                        pointer-events: none;
+                        position: absolute;
+                        bottom: -5%;
+                        left: 2%;
+                        pointer-events: none !important;
+                        font-size: 26px;
+                    }
+
+                    .close-article {
+                        position: absolute;
+                        top: -6%;
+                        right: 2%;
+                        font-size: 36px;
+                        color: white;
+                        cursor: pointer;
                     }
                 }
 
