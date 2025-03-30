@@ -13,6 +13,7 @@ const useStore = create(
   crownVisible: true,
   buttonsVisible: true,
   
+  
   setBgColor: (color) => set({ bgColor: color }),
   setLabel: (text) => set({ label: text }),
   setLabelColor: (color) => set({ labelColor: color }),
@@ -33,6 +34,12 @@ const useStore = create(
     addToCart: callback(state.addToCart) 
   })),
 
+
+  // Mobile Landing Page
+  mobileButtonsVisible: true,
+
+  setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
+
   // Action pour réinitialiser l'état
   resetStore: () => set({
     bgColor: "#000000",
@@ -46,6 +53,9 @@ const useStore = create(
     galleryVisible: false,
     cartVisible: false,
     addToCart: [],
+
+    // Mobile Landing Page
+    mobileButtonsVisible: true,
   }),
     }),
     {
@@ -54,5 +64,6 @@ const useStore = create(
     }
   )
 );
+
 
 export default useStore;

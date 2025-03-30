@@ -8,17 +8,28 @@ import "../index.css";
 
 export default function Hoolis() {
   const screenRef = useRef(null);
+  const mobileScreenRef = useRef(null);
   const labelRef = useRef(null);
-  const { label, setLabel, bgColor, labelColor, setLabelColor, setIsClicked} = useStore();
+  const { label, setLabel, bgColor, labelColor, setLabelColor, setIsClicked, mobileButtonsVisible, setMobileButtonsVisible} = useStore();
 
   useEffect(() => {
     setIsClicked(false);
     setLabel("");
     setLabelColor("bgColor");
+    setMobileButtonsVisible(false);
   }, []);
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
+      backgroundColor: "#D6955B",
+      duration: 0.75,
+      ease: "power3.inOut",
+      opacity: 1
+    });
+  }, []);
+
+  useGSAP(() => {
+    gsap.to(mobileScreenRef.current, {
       backgroundColor: "#D6955B",
       duration: 0.75,
       ease: "power3.inOut",
@@ -33,9 +44,9 @@ export default function Hoolis() {
         <img src="../public/hoolis-img/mouth-tee-thomas.jpg" alt="" />
         <img src="../public/hoolis-img/mouth-tee-back.jpg" alt="" />
         <img src="../public/hoolis-img/coquillage-tee-polito.jpg" alt="" />
-        <img src="../public/hoolis-img/marc-paulito.jpg" alt="" />
       </div>
       <Button screenRef={screenRef} labelRef={labelRef} />
     </div>
+
   );
 }

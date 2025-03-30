@@ -38,6 +38,8 @@ export default function Shop() {
   const articleGalleryRef = useRef(null);
   const descriptionRef = useRef(null);
   const cartRef = useRef(null);
+  const mobileScreenRef = useRef(null);
+
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const { 
@@ -49,7 +51,9 @@ export default function Shop() {
     articleGalleryChosen, 
     articleIsClicked, setArticleIsClicked, 
     cartVisible, setCartVisible, 
-    addToCart, setAddToCart } = useStore();
+    addToCart, setAddToCart,
+    mobileButtonsVisible, setMobileButtonsVisible
+  } = useStore();
   const [clickedArticleId, setClickedArticleId] = useState(null);
 
 
@@ -63,11 +67,21 @@ export default function Shop() {
     setSelectedArticleId(null);
     setIsClicked(false);
     setCartVisible(false);
+    setMobileButtonsVisible(false);
 
   }, []);
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
+      duration: 0.75,
+      ease: "power3.inOut",
+      opacity: 1
+    });
+  }, []);
+
+  useGSAP(() => {
+    gsap.to(mobileScreenRef.current, {
+      backgroundColor: "#D6955B",
       duration: 0.75,
       ease: "power3.inOut",
       opacity: 1
@@ -188,6 +202,7 @@ export default function Shop() {
   }
 
   return (
+  <>
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img src="../public/shop-img/shop-img-2.jpg" alt="" />
@@ -283,6 +298,19 @@ export default function Shop() {
       </div>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
     </div>
+
+    <div ref={mobileScreenRef} className="mobile-shop-container">
+      <div className="mobile-shop-articles">
+        {dataArticles.map((article) => (
+          <div key={article.id} className="mobile-shop-article">
+            <img src={article.image} alt={article.title} />
+          </div>
+        ))}
+      </div>
+      <Button screenRef={screenRef} labelRef={labelRef} />
+      
+    </div>
+  </>
   );
 }
 

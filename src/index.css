@@ -20,7 +20,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
-  font-family: "Agdasima", sans-serif;
+  font-family: "Agdasima", sans-serif !important; 
 }
 
 #root {

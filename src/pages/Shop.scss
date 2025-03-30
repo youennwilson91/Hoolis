@@ -1,3 +1,8 @@
+
+.mobile-shop-container {
+    display: none;
+}
+
 .shop-container {
     width: 100vw;
     height: 100vh;
@@ -209,7 +214,6 @@
             left: 2%;
             font-size: 36px;
             color: black;
-            cursor: pointer;
         }
 
         .close-cart {
@@ -308,6 +312,21 @@
             }
         }
     }
+}
+
+@media (max-width: 1024px) {
+    .shop-container {
+        display: none;
+    }
+
+    .mobile-shop-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+    }
+    
 }
 
 

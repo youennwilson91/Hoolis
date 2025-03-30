@@ -18,6 +18,10 @@
   z-index: 999;
 }
 
+.mobile-buttons-container {
+  display: none;
+}
+
 .pulse-button {
   width: 5px;
   height: 5px;
@@ -36,13 +40,13 @@
 .pulse-button::after {
   content: '';
   position: absolute;
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  z-index: -1;
+  top: -5px; 
+  left: -5px; 
+  right: -5px; 
+  bottom: -5px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  z-index: 5;
   animation: pulse 2s infinite;
 }
 
@@ -52,12 +56,12 @@
     opacity: 0.8;
   }
   50% {
-    transform: scale(6);
+    transform: scale(20);
     opacity: 0;
   }
   100% {
     transform: scale(1);
-    opacity: 0;
+    opacity: 0.8;
   }
 } 
 
@@ -73,5 +77,86 @@
   font-weight: 700;
   font-style: normal;
   font-size: 20px;
-  animation: none !important;
+}
+
+
+@media screen and (max-width: 1024px) {
+  .buttons-container {
+    display: none;
+  }
+
+  .mobile-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+  }
+
+  .mobile-buttons-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+  }
+
+  .mobile-button {
+    font-family: "Agdasima", sans-serif !important; 
+    font-weight: 700;
+    font-style: normal;
+    font-size: 100px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .mobile-button-toggle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 50%;
+    top: 5%;
+    left: 5%;
+  }
+
+  .mobile-button-toggle::after {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    background: white;
+    border-radius: 20px;
+    animation: pulse 2s infinite;
+  }
+
+  .exit-button {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 60px;          /* Augmenté de 40px à 60px */
+    height: 60px;         /* Augmenté de 40px à 60px */
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    font-size: 30px;      /* Augmenté de 20px à 30px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+  }
 }
