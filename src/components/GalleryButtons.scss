@@ -13,16 +13,17 @@
   
   .gallery-buttons-container {
     position: absolute;
-    top: 40%;
     left: 0;
     width: 100%;
-    height: 10%;
+    height: 6vh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
   .gallery-buttons {
+    position: absolute;
+    top: -105px;
     background-color: transparent;
     border: none;
     color: white;

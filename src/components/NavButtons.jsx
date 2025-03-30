@@ -14,11 +14,11 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
     const buttonRefs = useRef([]);
 
     const buttons = [
-        {id: 1, landingPosition: {transform: 'translate(250px, -50px)'}, menuPosition: {transform: 'translate(250px, 340px)'}, label: "F&W", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.7, navigate: "/fw"},
-        {id: 2, landingPosition: {transform: 'translate(230px, -130px)'}, menuPosition: {transform: 'translate(125px, 340px)'}, label: "SHOP", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 1.7, navigate: "/shop"},
-        {id: 3, landingPosition: {transform: 'translate(50px, -210px)'}, menuPosition: {transform: 'translate(0px, 340px)'}, label: "HOOLIS", bgColor: "#D6955B", labelColor: "#b5773f", upscale: 1.5, navigate: "/hoolis"},
-        {id: 4, landingPosition: {transform: 'translate(-160px, -130px)'}, menuPosition: {transform: 'translate(-125px, 340px)'}, label: "ABOUT", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 1.5, navigate: "/about"},
-        {id: 5, landingPosition: {transform: 'translate(-230px, -40px)'}, menuPosition: {transform: 'translate(-250px, 340px)'}, label: "CONTACT", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.3, navigate: "/contact"},
+        {id: 1, landingPosition: {transform: 'translate(250px, -50px)'}, menuPosition: {transform: 'translate(250px, 45vh)'}, label: "F&W", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.7, navigate: "/fw"},
+        {id: 2, landingPosition: {transform: 'translate(230px, -130px)'}, menuPosition: {transform: 'translate(125px, 45vh)'}, label: "SHOP", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 1.7, navigate: "/shop"},
+        {id: 3, landingPosition: {transform: 'translate(50px, -210px)'}, menuPosition: {transform: 'translate(0px, 45vh)'}, label: "HOOLIS", bgColor: "#D6955B", labelColor: "#b5773f", upscale: 1.5, navigate: "/hoolis"},
+        {id: 4, landingPosition: {transform: 'translate(-160px, -130px)'}, menuPosition: {transform: 'translate(-125px, 45vh)'}, label: "ABOUT", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 1.5, navigate: "/about"},
+        {id: 5, landingPosition: {transform: 'translate(-230px, -40px)'}, menuPosition: {transform: 'translate(-250px, 45vh)'}, label: "CONTACT", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.3, navigate: "/contact"},
     ]
 
 
