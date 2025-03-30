@@ -8,7 +8,7 @@ import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setGalleryVisible, setButtonsVisible, setIsClicked, isClicked, galleryVisible, setArticleGalleryChosen} = useStore();
+    const {setGalleryVisible, setButtonsVisible, setIsClicked, isClicked, galleryVisible, setArticleGalleryChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked} = useStore();
     const location = useLocation();
     const buttonRefs = useRef([]);
 
@@ -41,12 +41,17 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
     }
     
     function handleClick(index) {
+      
       if (!galleryVisible) {
         setGalleryVisible(true);
         setArticleGalleryChosen(buttons[index].label);
+
       }
       else {
         setArticleGalleryChosen(buttons[index].label);
+        setArticleIsClicked(false);
+        setArticleIsHovered(false);
+        setSelectedArticleId(null);
       }
     }
 
