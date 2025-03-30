@@ -18,7 +18,7 @@
   z-index: 999;
 }
 
-.mobile-buttons-container {
+.mobile-container {
   display: none;
 }
 
@@ -87,11 +87,11 @@
 
   .mobile-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000000;
+    top: 4vh;
+    left: 4vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .mobile-buttons-container {
@@ -104,6 +104,7 @@
     width: 100vw;
     top: 0;
     left: 0;
+    background-color: rgba(0, 0, 0, 0.9);
   }
 
   .mobile-button {

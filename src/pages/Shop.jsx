@@ -307,7 +307,7 @@ export default function Shop() {
           </div>
         ))}
       </div>
-      <Button screenRef={screenRef} labelRef={labelRef} />
+      <Button screenRef={mobileScreenRef} labelRef={labelRef} />
       
     </div>
   </>

@@ -162,47 +162,43 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
         ))}
       </div>
 
-
-      {!mobileButtonsVisible && (
-      <button 
-        className="mobile-button-toggle" 
-        onClick={() => setMobileButtonsVisible(!mobileButtonsVisible)}
-        style={{backgroundColor: mobileButtonsVisible ? "transparent" : "white"}}
-      >
-      </button>
-      )}
-
-      {mobileButtonsVisible && (
       <div className="mobile-container">
-        <div className="mobile-buttons-container">
-        {location.pathname !== "/" && (
-          <button 
-            className="exit-button"
-            onClick={() => setMobileButtonsVisible(false)}
-          >
-            X
-          </button>
+        {!mobileButtonsVisible && (
+        <button 
+          className="mobile-button-toggle" 
+          onClick={() => setMobileButtonsVisible(!mobileButtonsVisible)}
+          style={{backgroundColor: mobileButtonsVisible ? "transparent" : "white"}}
+        >
+        </button>
         )}
-          {buttons.map((button, index) => (
+
+        {mobileButtonsVisible && (
+          <div className="mobile-buttons-container">
+          {location.pathname !== "/" && (
             <button 
-              ref={el => {
-                if (!buttonsMobileRefs.current) {
-                  buttonsMobileRefs.current = [];
-                }
-                buttonsMobileRefs.current[index] = el;
-              }}
-              key={button.id}
-              className="mobile-button"
-              onClick={() => handleMobileClick({upscale: button.upscale, navigate: button.navigate, ref: buttonsMobileRefs.current[index]})}
-            >{button.label} 
+              className="exit-button"
+              onClick={() => setMobileButtonsVisible(false)}
+            >
+              X
             </button>
-          ))}
-        </div>
+          )}
+            {buttons.map((button, index) => (
+              <button 
+                ref={el => {
+                  if (!buttonsMobileRefs.current) {
+                    buttonsMobileRefs.current = [];
+                  }
+                  buttonsMobileRefs.current[index] = el;
+                }}
+                key={button.id}
+                className="mobile-button"
+                onClick={() => handleMobileClick({upscale: button.upscale, navigate: button.navigate, ref: buttonsMobileRefs.current[index]})}
+              >{button.label} 
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-      )}
-
     </>
-
-      
     )
 }

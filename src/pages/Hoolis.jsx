@@ -38,15 +38,19 @@ export default function Hoolis() {
   }, []);
 
   return (
+    <>
+    
     <div ref={screenRef} className="hoolis-container" style={{backgroundColor: bgColor}}>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
+      <Button screenRef={screenRef} labelRef={labelRef} />
       <div className="hoolis-images-container">
         <img src="../public/hoolis-img/mouth-tee-thomas.jpg" alt="" />
         <img src="../public/hoolis-img/mouth-tee-back.jpg" alt="" />
         <img src="../public/hoolis-img/coquillage-tee-polito.jpg" alt="" />
       </div>
-      <Button screenRef={screenRef} labelRef={labelRef} />
     </div>
+    
+    </>
 
   );
 }
