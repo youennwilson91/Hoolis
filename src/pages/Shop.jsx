@@ -37,10 +37,19 @@ export default function Shop() {
   const articleRef = useRef([]);
   const articleGalleryRef = useRef(null);
   const descriptionRef = useRef(null);
-
+  const cartRef = useRef(null);
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
-  const { label, setLabel, bgColor, labelColor, setLabelColor, setIsClicked, galleryVisible, setGalleryVisible, articleGalleryChosen, articleIsClicked, setArticleIsClicked, cartVisible, setCartVisible, addToCart, setAddToCart } = useStore();
+  const { 
+    label, setLabel, 
+    bgColor, 
+    labelColor, setLabelColor, 
+    setIsClicked, 
+    galleryVisible, setGalleryVisible, 
+    articleGalleryChosen, 
+    articleIsClicked, setArticleIsClicked, 
+    cartVisible, setCartVisible, 
+    addToCart, setAddToCart } = useStore();
   const [clickedArticleId, setClickedArticleId] = useState(null);
 
 
@@ -119,7 +128,7 @@ export default function Shop() {
       gsap.to(articleRef, {
         duration: 0.5,
         ease: "power3.inOut",
-        width: "100%",
+        width: "50%",
         height: "100%"
       });
     }
@@ -138,7 +147,6 @@ export default function Shop() {
   }
 
   function handleAddToCart(article) {
-    alert("Article ajouté au panier");
     setAddToCart(prevCart => {
       return [...prevCart, {...article, cartid: prevCart.length + 1}]
     });
@@ -148,6 +156,35 @@ export default function Shop() {
     setAddToCart(prevCart => prevCart.filter(
       cartItem => cartItem.cartid !== item.cartid
     ));
+  }
+  
+  function handleOpenCart() {
+    setCartVisible(true);
+    setTimeout(() => {
+      if (cartRef.current) {
+        gsap.to(cartRef.current, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          opacity: 1
+        });
+      }
+    }, 0);
+  }
+
+  function handleCloseCart() {
+    if (cartRef.current) {
+      gsap.to(cartRef.current, {
+        duration: 0.5,
+        ease: "power3.inOut",
+        opacity: 0,
+        onComplete: () => {
+          setCartVisible(false);
+          if (cartRef.current) {
+            cartRef.current.style.opacity = 0;
+          }
+        }
+      });
+    }
   }
 
   return (
@@ -201,25 +238,27 @@ export default function Shop() {
           </div>
           }
         {!galleryVisible && <ShopButtons onClick={handleGalleryOpen}/>}
-        <div className="cart-icon" onClick={() => setCartVisible(true)}>
+        <div className="cart-icon" onClick={handleOpenCart}>
+          <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
             <g data-name="Layer 2" id="Layer_2">
-              <path d="M23.52,29h-15a5.48,5.48,0,0,1-5.31-6.83L6.25,9.76a1,1,0,0,1,1-.76H24a1,1,0,0,1,1,.7l3.78,12.16a5.49,5.49,0,0,1-.83,4.91A5.41,5.41,0,0,1,23.52,29ZM8,11,5.11,22.65A3.5,3.5,0,0,0,8.48,27h15a3.44,3.44,0,0,0,2.79-1.42,3.5,3.5,0,0,0,.53-3.13L23.28,11Z"/>
+              <path d="M23.52,29h-15a5.48,5.48,0,0,1-5.31-6.83L6.25,9.76a1,1,0,0,1,1-.76H24a1,1,0,0,1,1,.7l3.78,12.16a5.49,5.49,0,0,1-.83,
+              4.91A5.41,5.41,0,0,1,23.52,29ZM8,11,5.11,22.65A3.5,3.5,0,0,0,8.48,27h15a3.44,3.44,0,0,0,2.79-1.42,3.5,3.5,0,0,0,.53-3.13L23.28,11Z"/>
               <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
             </g>
           </svg>
         </div>
 
         {cartVisible && 
-        <div className="cart-container">
+        <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
             const price = parseInt(item.price.replace('€', ''));
             const quantity = item.quantity || 1;
             return total + (price * quantity);
           }, 0)}€</h1>
-          <h1 className="close-cart" onClick={() => setCartVisible(false)}>CLOSE</h1>
+          <h1 className="close-cart" onClick={handleCloseCart}>CLOSE</h1>
           <hr />
           <div className="cart-items">
             {addToCart.map((item) => (
