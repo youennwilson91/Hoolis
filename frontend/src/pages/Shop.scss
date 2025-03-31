@@ -1,4 +1,3 @@
-
 .mobile-shop-container {
     display: none;
 }
@@ -95,13 +94,6 @@
                     display: flex;
                     flex-direction: column;
                     pointer-events: none !important;
-
-
-                    h1 {
-                        position: relative;
-                        font-size: 36px;
-                        color: white;
-                    }
                 }
 
                 .article-details {
@@ -113,66 +105,65 @@
                     justify-content: center;
                     align-items: center;
                     pointer-events: none !important;
-
-                    .article-title {
-                        position: absolute;
-                        top: 0%;
-                        left: 2%;
-                        font-size: 36px;
-                        color: white;
-                    }
-
-                    .article-price {
-                        position: absolute;
-                        top: 6%;
-                        left: 2%;
-                        font-size: 36px;
-                        color: white;
-                    }
-
-                    .add-to-cart {
-                        position: absolute;
-                        top: 15%;
-                        left: 2%;
-                        border: 3px solid white;
-                        padding: 10px;
-                        border-radius: 10px;
-                        font-size: 26px;
-                        color: white;
-                        cursor: pointer;
-                        pointer-events: all !important;
-                    }
-
-                    .add-to-cart:hover {
-                        cursor: pointer;
-                        color: black;
-                        border: 3px solid black;
-                    }
-
-                    p {
-                        position: absolute;
-                        bottom: 0%;
-                        left: 2%;
-                        pointer-events: none !important;
-                        font-size: 26px;
-                    }
-
-                    .close-article {
-                        position: absolute;
-                        top: -1%;
-                        right: 2%;
-                        font-size: 36px;
-                        color: white;
-                        cursor: pointer;
-                        pointer-events: all !important;
-                    }
-
-                    .close-article:hover {
-                        cursor: pointer;
-                        color: black;
-                    }
                 }
 
+                .article-title {
+                    position: absolute;
+                    top: 0%;
+                    left: 2%;
+                    font-size: 36px;
+                    color: white;
+                }
+
+                .article-price {
+                    position: absolute;
+                    top: 6%;
+                    left: 2%;
+                    font-size: 36px;
+                    color: white;
+                }
+
+                .add-to-cart {
+                    position: absolute;
+                    top: 15%;
+                    left: 2%;
+                    border: 3px solid white;
+                    padding: 10px;
+                    border-radius: 10px;
+                    font-size: 26px;
+                    color: white;
+                    cursor: pointer;
+                    pointer-events: all !important;
+                }
+
+                .add-to-cart:hover {
+                    cursor: pointer;
+                    color: black;
+                    border: 3px solid black;
+                }
+
+                p {
+                    position: absolute;
+                    bottom: 0%;
+                    left: 2%;
+                    pointer-events: none !important;
+                    font-size: 26px;
+                }
+
+                .close-article {
+                    position: absolute;
+                    top: -1%;
+                    right: 2%;
+                    font-size: 36px;
+                    color: white;
+                    cursor: pointer;
+                    pointer-events: all !important;
+                }
+
+                .close-article:hover {
+                    cursor: pointer;
+                    color: black;
+                }
             }
         }
         
@@ -189,8 +180,8 @@
 
         .cart-quantity {
             position: absolute;
-            bottom: 50%;
-            right: 10%;
+            bottom: 80%;
+            right: 5%;
             font-size: 20px;
             color: white;
         }
@@ -227,7 +218,7 @@
 
         .cart-title {
             position: absolute;
-            top: -4%;
+            top: -1%;
             left: 2%;
             font-size: 36px;
             color: black;
@@ -235,7 +226,7 @@
 
         .close-cart {
             position: absolute;
-            top: -4%;
+            top: -1%;
             right: 2%;
             font-size: 36px;
             color: black;
@@ -286,7 +277,8 @@
 
                 .cart-item-title {
                     position: absolute;
-                    font-size: 36px;
+                    font-size: 46px;
+                    color: white;
                 }
 
                 .cart-item-details {
@@ -412,14 +404,14 @@
             width: 50px;
             height: 50px;
             cursor: pointer;
-            fill: white;
+            fill: black;
     
             .cart-quantity {
                 position: absolute;
-                bottom: 50%;
+                bottom: 80%;
                 right: 10%;
                 font-size: 20px;
-                color: white;
+                color: black;
             }
         }
     

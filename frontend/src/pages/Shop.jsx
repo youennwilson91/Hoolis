@@ -174,15 +174,16 @@ export default function Shop() {
   
   function handleOpenCart() {
     setCartVisible(true);
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if (cartRef.current) {
         gsap.to(cartRef.current, {
           duration: 0.5,
           ease: "power3.inOut",
-          opacity: 1
+          opacity: 1,
+          immediateRender: false
         });
       }
-    }, 0);
+    });
   }
 
   function handleCloseCart() {
@@ -269,7 +270,7 @@ export default function Shop() {
         </div>
 
         {cartVisible && 
-        <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
+        <div className="cart-container" ref={cartRef}>
           <div className="bg-cart"></div>
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
             const price = parseInt(item.price.replace('€', ''));

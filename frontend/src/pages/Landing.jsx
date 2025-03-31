@@ -21,8 +21,8 @@ export default function Landing() {
   
     return (  
         <>
-            <div className="desktop-view">
-                <div ref={screenRef} className="crown-container" style={{backgroundColor: bgColor}}>
+            <div ref={screenRef} className="desktop-view">
+                <div className="crown-container" style={{backgroundColor: bgColor}}>
                     <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
                     {crownVisible && (
                         <svg version="1.0" className="crown-svg"
@@ -55,7 +55,7 @@ export default function Landing() {
                 </div>
             </div>
 
-            <div className="mobile-view">
+            <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing" style={{backgroundColor: bgColor}}>
                     <Button 
                         screenRef={screenMobileRef} 
