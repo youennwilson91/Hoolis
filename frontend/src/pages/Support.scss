@@ -1,0 +1,56 @@
+.support-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    background-color: #226D68 !important;
+
+    .title-label {
+        position: absolute;
+        width: fit-content;
+        text-align: center;
+        font-family: "Agdasima", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        font-size: 330px;
+        transition: color 0.8s ease;
+      }
+
+.support-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 50%;
+    
+    input {
+        font-family: "Agdasima", sans-serif !important;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    textarea {
+        font-family: "Agdasima", sans-serif !important;
+        font-size: 24px;
+        font-weight: 600;
+        height: 200px;
+    }
+
+    button {
+        width: 100%;
+        font-family: "Agdasima", sans-serif !important;
+        font-size: 24px;
+        font-weight: 600;
+        background-color: black;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #21514e;
+        color: #226D68;
+    }
+}
+}
