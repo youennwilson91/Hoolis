@@ -205,7 +205,7 @@ export default function Shop() {
   <>
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
-        <img src="../public/shop-img/shop-img-2.jpg" alt="" />
+        <img src="../public/hoolis-img/marc-paulito.jpg" alt="" />
         {galleryVisible && 
           <div ref={galleryRef} className="shop-gallery">
             <ShopButtons/>

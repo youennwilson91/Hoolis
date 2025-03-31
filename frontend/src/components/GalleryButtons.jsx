@@ -13,10 +13,10 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
     const buttonRefs = useRef([]);
 
     const buttons = [
-        {id: 1, initialPosition: {transform: 'translate(200px, -200px)'}, galleryPosition: {transform: 'translate(-300px, -270px)'}, label: "TOPS", upscale: 1.7, navigate: "/shop/tops"},
-        {id: 2, initialPosition: {transform: 'translate(300px, 190px)'}, galleryPosition: {transform: 'translate(-100px, -270px)'}, label: "BOTTOMS", upscale: 1.7, navigate: "/shop/bottoms"},
-        {id: 3, initialPosition: {transform: 'translate(-50px, 230px)'}, galleryPosition: {transform: 'translate(100px, -270px)'}, label: "SHOES", upscale: 1.5, navigate: "/shop/shoes"},
-        {id: 4, initialPosition: {transform: 'translate(-160px, 0px)'}, galleryPosition: {transform: 'translate(300px, -270px)'}, label: "ACCESSORIES", upscale: 1.5, navigate: "/shop/accessories"}
+        {id: 1, initialPosition: {transform: 'translate(0px, -250px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-300px, -270px)'}, label: "TOPS", upscale: 1.7, navigate: "/shop/tops"},
+        {id: 2, initialPosition: {transform: 'translate(0px, -100px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-100px, -270px)'}, label: "BOTTOMS", upscale: 1.7, navigate: "/shop/bottoms"},
+        {id: 3, initialPosition: {transform: 'translate(0px, 50px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(100px, -270px)'}, label: "SHOES", upscale: 1.5, navigate: "/shop/shoes"},
+        {id: 4, initialPosition: {transform: 'translate(0px, 200px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(300px, -270px)'}, label: "ACCESSORIES", upscale: 1.5, navigate: "/shop/accessories"}
     ]
 
 
