@@ -32,6 +32,7 @@ const dataArticles = [
 export default function Shop() {
 
   const screenRef = useRef(null);
+  const mobileCartRef = useRef(null);
   const labelRef = useRef(null);
   const galleryRef = useRef(null);
   const articleRef = useRef([]);
@@ -39,7 +40,6 @@ export default function Shop() {
   const descriptionRef = useRef(null);
   const cartRef = useRef(null);
   const mobileScreenRef = useRef(null);
-
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const { 
@@ -202,8 +202,45 @@ export default function Shop() {
     }
   }
 
+  function handleOpenMobileCart() {
+    setCartVisible(true);
+    requestAnimationFrame(() => {
+      if (mobileCartRef.current) {
+        gsap.to(mobileCartRef.current, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          opacity: 1,
+          immediateRender: false
+        });
+      }
+    });
+  }
+
+  function handleCloseMobileCart() {
+    if (mobileCartRef.current) {
+      gsap.to(mobileCartRef.current, {
+        duration: 0.5,
+        ease: "power3.inOut",
+        opacity: 0,
+        onComplete: () => {
+          setCartVisible(false);
+          if (mobileCartRef.current) {
+            mobileCartRef.current.style.opacity = 0;
+          }
+        }
+      });
+    }
+  }
+
   return (
   <>
+
+    {/*------------------------------------------- DESKTOP -------------------------------------------*/}
+    {/*------------------------------------------- DESKTOP -------------------------------------------*/}
+    {/*------------------------------------------- DESKTOP -------------------------------------------*/}
+    {/*------------------------------------------- DESKTOP -------------------------------------------*/}
+    {/*------------------------------------------- DESKTOP -------------------------------------------*/}
+
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img src="../public/hoolis-img/marc-paulito.jpg" alt="" />
@@ -270,7 +307,7 @@ export default function Shop() {
         </div>
 
         {cartVisible && 
-        <div className="cart-container" ref={cartRef}>
+        <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
             const price = parseInt(item.price.replace('€', ''));
@@ -303,6 +340,14 @@ export default function Shop() {
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
     </div>
 
+
+
+    {/*------------------------------------------- MOBILE -------------------------------------------*/}
+    {/*------------------------------------------- MOBILE -------------------------------------------*/}
+    {/*------------------------------------------- MOBILE -------------------------------------------*/}
+    {/*------------------------------------------- MOBILE -------------------------------------------*/}
+    {/*------------------------------------------- MOBILE -------------------------------------------*/}
+
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div className="mobile-shop-articles">
         {dataArticles.map((article) => (
@@ -319,7 +364,7 @@ export default function Shop() {
           </div>
         ))}
 
-        <div className="cart-icon" onClick={handleOpenCart}>
+        <div className="cart-icon" onClick={handleOpenMobileCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
@@ -332,9 +377,9 @@ export default function Shop() {
         </div>
 
         {cartVisible && 
-        <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
+        <div className="cart-container" ref={mobileCartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
-          <button className="close-cart" onClick={handleCloseCart}>CLOSE</button>
+          <button className="close-cart" onClick={handleCloseMobileCart}>CLOSE</button>
           <hr className="cart-hr-top"/>
           <div className="cart-items">
             {addToCart.map((item) => (
