@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap');
+
+.shop-container * {
+  font-family: "Agdasima", sans-serif !important;
+}
+
 .mobile-shop-container {
     display: none;
 }
@@ -29,6 +35,7 @@
     
     .shop-gallery {
         position: absolute;
+        top: 10vh;
         width: 95%;
         height: 85%;
         display: flex;
@@ -42,6 +49,8 @@
             height: 1px;
             background-color: white;
         }
+
+        
 
         .shop-gallery-articles {
             position: absolute;
@@ -285,6 +294,7 @@
                     position: absolute;
                     font-size: 46px;
                     color: white;
+                    text-shadow: 0px 0px 10px black;
                 }
 
                 .cart-item-details {
@@ -297,6 +307,7 @@
                     justify-content: center;
                     font-size: 26px;
                     color: white;
+                    text-shadow: 0px 0px 10px black;
 
 
                     p {
@@ -305,6 +316,7 @@
                         margin: 0px;
                         font-size: 30px;
                         font-weight: 600;
+                        text-shadow: 0px 0px 10px black;
                     }   
 
                     .remove-item {
@@ -314,6 +326,7 @@
                         padding: 0px;
                         margin: 0px;
                         text-align: center;
+                        text-shadow: 0px 0px 10px black;
                     }
 
                     .remove-item:hover {
@@ -328,6 +341,9 @@
         }
     }
 }
+
+
+/*------------------------------------------- MOBILE -------------------------------------------*/
 
 @media (max-width: 1024px) {
     .shop-container {
@@ -533,6 +549,8 @@
                     .cart-item-title {
                         position: absolute;
                         font-size: 36px;
+                        color: white;
+                        text-shadow: 0px 0px 10px black;
                     }
     
                     .cart-item-details {
@@ -545,6 +563,7 @@
                         justify-content: center;
                         font-size: 26px;
                         color: white;
+                        text-shadow: 0px 0px 10px black;
     
     
                         p {
@@ -561,7 +580,7 @@
                             border-radius: 10px;
                             padding: 5px;
                             margin: 0px;
-                            
+                            text-shadow: 0px 0px 10px black;
                         }
     
                         .remove-item:hover {

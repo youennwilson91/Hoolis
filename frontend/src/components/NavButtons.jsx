@@ -7,11 +7,11 @@ import {useRef, useState} from "react";
 import "../index.css";
 
 export const buttons = [
-  {id: 1, landingPosition: {transform: 'translate(250px, -50px)'}, menuPosition: {transform: 'translate(250px, 45vh)'}, label: "F&W", bgColor: "#226D68", labelColor: "#21514e", upscale: 2, navigate: "/fw"},
-  {id: 2, landingPosition: {transform: 'translate(230px, -130px)'}, menuPosition: {transform: 'translate(125px, 45vh)'}, label: "SHOP", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 2, navigate: "/shop"},
-  {id: 3, landingPosition: {transform: 'translate(50px, -210px)'}, menuPosition: {transform: 'translate(0px, 45vh)'}, label: "HOOLIS", bgColor: "#D6955B", labelColor: "#b5773f", upscale: 1.8, navigate: "/hoolis"},
-  {id: 4, landingPosition: {transform: 'translate(-160px, -130px)'}, menuPosition: {transform: 'translate(-125px, 45vh)'}, label: "ABOUT", bgColor: "#ddb94b", labelColor: "#f5d77e", upscale: 1.8, navigate: "/about"},
-  {id: 5, landingPosition: {transform: 'translate(-230px, -40px)'}, menuPosition: {transform: 'translate(-250px, 45vh)'}, label: "SUPPORT", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.5, navigate: "/support"},
+  {id: 1, landingPosition: {transform: 'translate(250px, 360px)'}, menuPosition: {transform: 'translate(250px, -0vh)'}, label: "ABOUT", bgColor: "#226D68", labelColor: "#21514e", upscale: 2, navigate: "/about"},
+  {id: 2, landingPosition: {transform: 'translate(230px, 300px)'}, menuPosition: {transform: 'translate(125px, -0vh)'}, label: "SHOP", bgColor: "#ECD453", labelColor: "#B89E14", upscale: 2, navigate: "/shop"},
+  {id: 3, landingPosition: {transform: 'translate(50px, 210px)'}, menuPosition: {transform: 'translate(0px, -0vh)'}, label: "HOOLIS", bgColor: "#ECD453", labelColor: "#B89E14", upscale: 1.8, navigate: "/hoolis"},
+  {id: 4, landingPosition: {transform: 'translate(-160px, 290px)'}, menuPosition: {transform: 'translate(-125px, -0vh)'}, label: "F&W", bgColor: "#ECD453", labelColor: "#B89E14", upscale: 1.8, navigate: "/fw"},
+  {id: 5, landingPosition: {transform: 'translate(-230px, 380px)'}, menuPosition: {transform: 'translate(-250px, -0vh)'}, label: "SUPPORT", bgColor: "#226D68", labelColor: "#21514e", upscale: 1.5, navigate: "/support"},
 ]
 
 

@@ -7,6 +7,10 @@
   font-family: "Agdasima", sans-serif !important;
 }
 
+html, body, #root, .app-container, h1, h2, h3, p, div, span, button, input, textarea {
+  font-family: "Agdasima", sans-serif !important;
+}
+
 body {
   font-family: "Agdasima", sans-serif !important;
   -webkit-font-smoothing: antialiased;

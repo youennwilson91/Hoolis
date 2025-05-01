@@ -25,20 +25,31 @@ const useStore = create(
   galleryVisible: false,
   addToCart: [],
   cartVisible: false,
+  shopImages: [],
+  articleIsHovered: false,
+  selectedArticleId: null,
+  products: [],
+  isMouseActive: false,
 
   setGalleryVisible: (visible) => set({ galleryVisible: visible }),
-  setArticleGalleryChosen: (article) => set({ articleGalleryChosen: article }),
+  setCollectionChosen: (collection) => set({ collectionChosen: collection }),
   setArticleIsClicked: (isClicked) => set({ articleIsClicked: isClicked }),
+  setArticleIsHovered: (isHovered) => set({ articleIsHovered: isHovered }),
+  setSelectedArticleId: (id) => set({ selectedArticleId: id }),
   setCartVisible: (visible) => set({ cartVisible: visible }),
   setAddToCart: (callback) => set((state) => ({ 
     addToCart: callback(state.addToCart) 
   })),
-
-
+  setProducts: (products) => set({ products: products }),
+  setIsMouseActive: (active) => set({ isMouseActive: active }),
+  
   // Mobile Landing Page
   mobileButtonsVisible: true,
-
   setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
+
+  // FandW Page
+  isBooking: false,
+  setIsBooking: (isBooking) => set({ isBooking: isBooking }),
 
   // Action pour réinitialiser l'état
   resetStore: () => set({
@@ -48,8 +59,10 @@ const useStore = create(
     crownVisible: true,
     buttonsVisible: true,
     isClicked: false,
-    articleGalleryChosen: null,
+    collectionChosen: null,
     articleIsClicked: null,
+    articleIsHovered: false,
+    selectedArticleId: null,
     galleryVisible: false,
     cartVisible: false,
     addToCart: [],

@@ -60,6 +60,7 @@ export default function Landing() {
                     <Button 
                         screenRef={screenMobileRef} 
                         labelRef={labelRef} 
+                        buttonsPosition="landing"
                     />
                 </div>
             </div>

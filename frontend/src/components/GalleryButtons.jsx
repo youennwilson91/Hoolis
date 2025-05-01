@@ -8,15 +8,14 @@ import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setGalleryVisible, setButtonsVisible, setIsClicked, isClicked, galleryVisible, setArticleGalleryChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked} = useStore();
-    const location = useLocation();
+    const {setGalleryVisible, isClicked, galleryVisible, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked} = useStore();
     const buttonRefs = useRef([]);
 
     const buttons = [
-        {id: 1, initialPosition: {transform: 'translate(0px, -250px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-300px, -270px)'}, label: "TOPS", upscale: 1.7, navigate: "/shop/tops"},
-        {id: 2, initialPosition: {transform: 'translate(0px, -100px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-100px, -270px)'}, label: "BOTTOMS", upscale: 1.7, navigate: "/shop/bottoms"},
-        {id: 3, initialPosition: {transform: 'translate(0px, 50px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(100px, -270px)'}, label: "SHOES", upscale: 1.5, navigate: "/shop/shoes"},
-        {id: 4, initialPosition: {transform: 'translate(0px, 200px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(300px, -270px)'}, label: "ACCESSORIES", upscale: 1.5, navigate: "/shop/accessories"}
+        {id: 1, initialPosition: {transform: 'translate(0px, -200px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-300px, -270px)'}, label: "TOPS", upscale: 1.7, navigate: "/shop/tops"},
+        {id: 2, initialPosition: {transform: 'translate(0px, -50px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-100px, -270px)'}, label: "BOTTOMS", upscale: 1.7, navigate: "/shop/bottoms"},
+        {id: 3, initialPosition: {transform: 'translate(0px, 100px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(100px, -270px)'}, label: "SHOES", upscale: 1.5, navigate: "/shop/shoes"},
+        {id: 4, initialPosition: {transform: 'translate(0px, 250px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(300px, -270px)'}, label: "ACCESSORIES", upscale: 1.5, navigate: "/shop/accessories"}
     ]
 
 
@@ -44,11 +43,10 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
       
       if (!galleryVisible) {
         setGalleryVisible(true);
-        setArticleGalleryChosen(buttons[index].label);
-
+        setCollectionChosen(buttons[index].label);
       }
       else {
-        setArticleGalleryChosen(buttons[index].label);
+        setCollectionChosen(buttons[index].label);
         setArticleIsClicked(false);
         setArticleIsHovered(false);
         setSelectedArticleId(null);

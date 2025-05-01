@@ -1,7 +1,9 @@
+import BookingCalendar from "../components/Calendar";
+
 export default function About() {
   return (
     <div>
-      <h1>About</h1>
+      <BookingCalendar/>
     </div>
   );
 }
