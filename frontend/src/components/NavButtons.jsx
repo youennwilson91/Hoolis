@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useStore from "../utils/store";
-import {useRef, useState} from "react";
+import {useRef, useState, useEffect} from "react";
 import "../index.css";
 
 export const buttons = [
@@ -33,7 +33,10 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
     const location = useLocation();
     const buttonRefs = useRef([]);
     const buttonsMobileRefs = useRef([]);
-
+    
+    useEffect(() => {
+      location.pathname !== "/" ? setMobileButtonsVisible(false) : setMobileButtonsVisible(true);
+    }, []);
 
     useGSAP(() => {
         if (buttonRefs.current) {
@@ -173,7 +176,8 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
         )}
 
         {mobileButtonsVisible && (
-          <div className="mobile-buttons-container">
+        <div className="mobile-buttons-container">
+         <img src="../public/hoolis-img/coquillage-tee-polito.jpg" alt="T-shirt Coquillage" />
           {location.pathname !== "/" && (
             <button 
               className="exit-button"

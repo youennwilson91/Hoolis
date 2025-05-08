@@ -56,7 +56,7 @@ export default function Landing() {
             </div>
 
             <div ref={screenMobileRef} className="mobile-view">
-                <div className="mobile-landing" style={{backgroundColor: bgColor}}>
+                <div className="mobile-landing">
                     <Button 
                         screenRef={screenMobileRef} 
                         labelRef={labelRef} 

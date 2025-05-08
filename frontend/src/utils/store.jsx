@@ -44,7 +44,7 @@ const useStore = create(
   setIsMouseActive: (active) => set({ isMouseActive: active }),
   
   // Mobile Landing Page
-  mobileButtonsVisible: true,
+  mobileButtonsVisible: false,
   setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
 
   // FandW Page
