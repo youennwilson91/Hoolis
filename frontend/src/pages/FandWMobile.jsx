@@ -9,12 +9,12 @@ import BookingCalendar from "../components/Calendar";
 
 export default function FandWMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
-  const mobileCartRef = useRef(null);
   const bookButtonRef = useRef(null);
+  const bookingContainerRef = useRef(null);
 
   const { isBooking, setIsBooking } = useStore();
-  const [images, setImages] = useState([]);
-
+  const [medias, setMedias] = useState([]);
+  
   useEffect(() => {
     setIsBooking(false);
   }, []);
@@ -23,25 +23,26 @@ export default function FandWMobile({ labelRef }) {
     axios.get('http://localhost:8000/store/watches/')
       .then(response => {
         console.log("Données brutes de l'API:", response.data);
-        const data = response.data;
-        
-        const imageArray = Object.values(data).map(image => ({
-          watch1: [image.small['1'], "watch1"],
-          watch2: [image.small['2'], "watch2"],
-          watch3: [image.small['3'], "watch3"],
-          watch4: [image.small['4'], "watch4"]
+        const watches = response.data.results;
+
+        // Structure organisée des médias par montre
+        if (watches && watches.length > 0) {
+        const formattedWatches = watches.map(watch => ({
+          id: watch.id,
+          name: watch.name,
+          description: watch.description,
+          small: watch.images.filter(img => img.size === 'small'),
         }));
         
-        console.log("Tableau final d'images:", imageArray);
-        setImages(imageArray);
-        
-        // Précharge l'image suivante une fois que nous avons les données
-        if (imageArray.length > 0) {
-          preloadNextImages(0, imageArray);
-        }
-      })
+        console.log("Montres formatées:", formattedWatches);
+        setMedias(formattedWatches);
+      } else {
+        console.log("Aucune montre trouvée dans l'API.");
+      }
+    })
       .catch(error => console.error('Erreur lors de la récupération des images:', error));
   }, []);
+  
 
   useGSAP(() => {
     gsap.to(mobileScreenRef.current, {
@@ -52,14 +53,26 @@ export default function FandWMobile({ labelRef }) {
     });
   }, []);
 
+  // Animation du bouton de réservation
   useGSAP(() => {
     if (bookButtonRef.current) {
-      gsap.to(bookButtonRef.current,  {
+      gsap.to(bookButtonRef.current, {
         duration: 0.25,
         ease: "power2.inOut"
-      })
+      });
     }
   }, []);
+
+  // Animation du conteneur de réservation
+  useGSAP(() => {
+    if (bookingContainerRef.current && isBooking) {
+      gsap.to(bookingContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [isBooking]);
 
   function handleBooking() {
     setIsBooking(true);
@@ -69,20 +82,23 @@ export default function FandWMobile({ labelRef }) {
     setIsBooking(false);
   }
 
-
   return (
     <div ref={mobileScreenRef} className="mobile-fandw-container">
       <div className="mobile-fandw-watches">
-        {images && images.length > 0 ? (
-          images.map((image) => (
-            <div key={image.id} className="mobile-fandw-watch">
+        {medias && medias.length > 0 ? (
+          medias.map((media) => (
+            <div key={media.id} className="mobile-fandw-watch">
               <div className="mobile-fandw-watch-image-container">
-                <img src={image.watch1[0] || '/path/to/default/image.jpg'} />
-                <img src={image.watch2[0] || '/path/to/default/image.jpg'} />
-                <img src={image.watch3[0] || '/path/to/default/image.jpg'} />
-                <video src={image.watch4[0] || '/path/to/default/image.jpg'} autoPlay loop muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                {media.small && media.small.length > 0 ? media.small.map((m) => (
+                  m.type === 'image' ? (
+                    <img key={m.id} src={m.media} alt={m.name} />
+                  ) : (
+                    <video key={m.id} src={m.media} autoPlay loop muted style={{width: '100%', height: '100%', objectFit: 'cover'}} alt={`Vidéo ${m.name}`} />
+                  )
+                )) : null}
+          
                 <div className="mobile-fandw-watch-details">
-                  <h1>{image.watch1[1]}</h1>
+                  <h1>{media.name}</h1>
                 </div>
               </div>
             </div>
@@ -90,19 +106,28 @@ export default function FandWMobile({ labelRef }) {
         ) : (
           <div>Loading products...</div>
         )}
-
       </div>
+      
+      
+      {!isBooking ? (
+        <button 
+          ref={bookButtonRef} 
+          className="button-book" 
+          onClick={handleBooking}
+        >
+          PRENDRE RENDEZ-VOUS
+        </button>
+      ) : null}
+
+      {isBooking ? (
+        <div ref={bookingContainerRef} className="booking-container">
+          <BookingCalendar />
+          <button className="close-booking-button" onClick={closeBooking}>×</button>
+        </div>
+      ) : null}
+
       <Button screenRef={mobileScreenRef} labelRef={labelRef} />
-      {!isBooking ? <button 
-            ref={bookButtonRef} 
-            className="button-book" 
-            onClick={handleBooking}
-          >
-            PRENDRE RENDEZ-VOUS
-          </button> : null}
 
-      {isBooking ? <BookingCalendar /> : null}
     </div>
-
   );
 } 

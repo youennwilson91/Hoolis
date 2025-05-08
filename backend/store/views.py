@@ -17,6 +17,7 @@ from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
 from .tasks import process_order
 from django.http import HttpResponse, JsonResponse
+from rest_framework.pagination import PageNumberPagination
 from datetime import datetime, timedelta, time, date
 from django.utils.timezone import make_aware
 from django.conf import settings
@@ -30,7 +31,7 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
     permission_classes = [IsAdminOrReadOnly]
-    pagination_class = None  # Désactiver explicitement la pagination
+    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         queryset = Product.objects.select_related('collection').prefetch_related('images').all()
@@ -207,69 +208,13 @@ class BookingViewSet(ModelViewSet):
             return CreateBookingSerializer
         elif self.request.method == 'DELETE':
             return DeleteBookingSerializer
+            
 
-def list_watch_images(request):
-    folder_path = os.path.join(settings.MEDIA_ROOT, 'store/F&W/')
-    fichiers = os.listdir(folder_path)
-    fichiers.sort()
-    
-    # Base URL pour les médias
-    media_base_url = request.build_absolute_uri(settings.MEDIA_URL)
-    
-    grouped = {}
-    
-    print("===== DEBUG IMAGES =====")
+class WatchViewSet(ModelViewSet):
+    serializer_class = WatchSerializer
 
-    for f in fichiers:
-        if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.webm')):
-            try:
-                # Déterminer le nom de base et le type (small/wide)
-                if 'small' in f:
-                    # Format: watch1-small-0.png -> base_name: watch1, type: small, num: 0
-                    parts = f.split('-small-')
-                    base_name = parts[0]
-                    size = 'small'
-                    num = parts[1].split('.')[0]  # Récupérer le numéro (0, 1, 2...)
-                elif 'wide' in f:
-                    # Format: watch1-wide-0.png -> base_name: watch1, type: wide, num: 0
-                    parts = f.split('-wide-')
-                    base_name = parts[0]
-                    size = 'wide'
-                    num = parts[1].split('.')[0]  # Récupérer le numéro (0, 1, 2...)
-                else:
-                    # Cas par défaut si ni small ni wide n'est spécifié
-                    base_name = f.split('-')[0]
-                    size = 'unknown'
-                    num = '0'
-                
-                # Initialiser la structure si c'est la première fois qu'on rencontre ce base_name
-                if base_name not in grouped:
-                    grouped[base_name] = {'small': {}, 'wide': {}}
-                
-                # Stocker l'URL complète de l'image
-                file_path = f'store/F&W/{f}'
-                full_url = f"{media_base_url}{file_path}"
-                
-                # Ajouter un timestamp uniquement pour les images wide 1, 2 et 3
-                if size == 'wide' and num in ['1', '2', '3']:
-                    timestamp = int(datetime.now().timestamp())
-                    full_url = f"{full_url}?t={timestamp}"
-                
-                # Vérifier la taille du fichier
-                file_size = os.path.getsize(os.path.join(folder_path, f))
-                print(f"Fichier: {f}, taille: {file_size} octets, URL: {full_url}")
-                
-                if size == 'small':
-                    grouped[base_name]['small'][num] = full_url
-                elif size == 'wide':
-                    grouped[base_name]['wide'][num] = full_url
-                
-            except Exception as e:
-                print(f"Erreur lors du traitement du fichier {f}: {str(e)}")
-    
-    print("=======================")
-    
-    return JsonResponse(grouped)
+    def get_queryset(self):
+        return Watch.objects.prefetch_related('images')
 
 
 

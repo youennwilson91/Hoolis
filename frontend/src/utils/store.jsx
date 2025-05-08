@@ -51,6 +51,10 @@ const useStore = create(
   isBooking: false,
   setIsBooking: (isBooking) => set({ isBooking: isBooking }),
 
+  // Mobile state
+  isMobile: false,
+  setIsMobile: (isMobile) => set({ isMobile: isMobile }),
+
   // Action pour réinitialiser l'état
   resetStore: () => set({
     bgColor: "#000000",

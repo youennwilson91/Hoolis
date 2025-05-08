@@ -7,6 +7,10 @@ function BookingCalendarWithDropdown() {
   const [availableDates, setAvailableDates] = useState([]);
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [showForm, setShowForm] = useState(true);
 
   // Générer des dates pour les 14 prochains jours
   useEffect(() => {
@@ -32,26 +36,40 @@ function BookingCalendarWithDropdown() {
   // Lorsqu'une date est sélectionnée, on interroge l'API
   useEffect(() => {
     if (selectedDate) {
-      axios.get(`http://localhost:8000/api/available_slots/?date=${selectedDate}`)
-        .then((res) => {
-          setSlots(res.data);
-        });
+      fetchSlots(new Date(selectedDate));
     }
   }, [selectedDate]);
 
-  // Réserver un créneau
-  const handleBooking = (slot) => {
-    if (!name) return alert("Entrez votre nom avant de réserver !");
-    axios.post('http://localhost:8000/api/bookings/', {
-      name: name,
-      start_time: slot.start,
-      end_time: slot.end
-    }).then(() => {
-      alert("Réservation confirmée !");
-      setSlots(slots.filter(s => s.start !== slot.start)); // retirer le créneau réservé
-    }).catch(err => {
-      alert("Ce créneau est déjà pris.");
-    });
+  // Fetch available slots for the selected date
+  const fetchSlots = async (date) => {
+    try {
+      const selectedDate = date.toISOString().split('T')[0];
+      const response = await axios.get(`http://192.168.1.184:8000/api/available_slots/?date=${selectedDate}`);
+      setSlots(response.data || []);
+    } catch (error) {
+      console.error('Error fetching slots:', error);
+      setSlots([]);
+    }
+  };
+
+  // Function to handle the booking
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post('http://192.168.1.184:8000/api/bookings/', {
+        date: selectedDate.toISOString().split('T')[0],
+        time_slot: selectedTimeSlot,
+        name: clientName,
+        email: clientEmail,
+      });
+      
+      setBookingSuccess(true);
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      // You can handle error states here
+    }
   };
 
   return (
@@ -62,6 +80,13 @@ function BookingCalendarWithDropdown() {
         placeholder="Votre nom"
         value={name}
         onChange={(e) => setName(e.target.value)}
+        className="form-input"
+      />
+      <input
+        type="email"
+        placeholder="Votre email"
+        value={clientEmail}
+        onChange={(e) => setClientEmail(e.target.value)}
         className="form-input"
       />
       <br /><br />
@@ -87,7 +112,7 @@ function BookingCalendarWithDropdown() {
           <li key={index} className="slot-item">
             {new Date(slot.start).toLocaleTimeString()} – {new Date(slot.end).toLocaleTimeString()}
             <button 
-              onClick={() => handleBooking(slot)}
+              onClick={() => handleBookingSubmit(event)}
               className="booking-button"
             >
               Réserver

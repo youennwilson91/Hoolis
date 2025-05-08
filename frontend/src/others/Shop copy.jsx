@@ -32,7 +32,8 @@ export default function Shop() {
     articleIsClicked, setArticleIsClicked, 
     cartVisible, setCartVisible, 
     addToCart, setAddToCart,
-    mobileButtonsVisible, setMobileButtonsVisible
+    mobileButtonsVisible, setMobileButtonsVisible,
+    setMedias
   } = useStore();
   const [clickedArticleId, setClickedArticleId] = useState(null);
 
@@ -52,9 +53,13 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/store/images/shop/')
+    axios.get('http://192.168.1.184:8000/store/images/shop/')
       .then(response => {
-        console.log(response.data);
+        console.log("Données brutes de l'API:", response.data);
+        setMedias({
+          black: response.data.results.black,
+          color: response.data.results.color
+        });
       })
       .catch(error => console.error('Erreur lors de la récupération des images:', error));
   }, []); 
@@ -186,7 +191,6 @@ export default function Shop() {
 
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
-        <img src="../public/hoolis-img/marc-paulito.jpg" alt="" />
         {galleryVisible && 
           <div ref={galleryRef} className="shop-gallery">
             <ShopButtons/>

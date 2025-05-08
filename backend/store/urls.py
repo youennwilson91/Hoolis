@@ -22,7 +22,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('', include(cart_router.urls)),
     path('', include(product_router.urls)),
-    path('watches/', views.list_watch_images, name='list_images_fw'),
+    path('watches/', views.WatchViewSet.as_view({'get': 'list'})),
     path('available_slots/', views.SlotsViewSet.as_view({'get': 'list'})),
     path('bookings/', views.BookingViewSet.as_view({'post': 'create'})),
 ]

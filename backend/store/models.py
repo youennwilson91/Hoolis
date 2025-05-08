@@ -132,11 +132,19 @@ class Slots(models.Model):
 class Watch(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    images = models.ImageField(upload_to='store/images/')
 
     def __str__(self):
         return self.name
+
+
+class WatchMedia(models.Model):
+    watch = models.ForeignKey(Watch, on_delete=models.CASCADE, related_name='images')
+    media = models.FileField(upload_to='store/F&W/')
+    size = models.CharField(max_length=100, default='small', choices=[('small', 'Small'), ('wide', 'Wide')])
+    type = models.CharField(max_length=100, default='image', choices=[('image', 'Image'), ('video', 'Video')])
+
+    def __str__(self):
+        return f"{self.watch.name}"
 
 
 class Booking(models.Model):
@@ -154,4 +162,3 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.start_time} → {self.end_time})"
-

@@ -204,3 +204,14 @@ class DeleteBookingSerializer(serializers.ModelSerializer):
         return instance
 
 
+class WatchMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WatchMedia
+        fields = ['id', 'media', 'size', 'type']
+
+class WatchSerializer(serializers.ModelSerializer):
+    images = WatchMediaSerializer(many=True, read_only=True)
+    class Meta:
+        model = Watch
+        fields = ['id', 'name', 'description', 'images']
+

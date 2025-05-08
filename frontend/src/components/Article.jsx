@@ -37,10 +37,18 @@ export default function Article({
       <div className="article-image-container">
         {/* Accéder correctement aux images de l'article */}
         {article.images && article.images.length > 0 && (
-          <img src={article.images[0].image} alt={article.title} />
+          <img 
+            src={article.images[0].image} 
+            alt={`${article.title} - Vue principale - Montre de luxe Hoolis`} 
+            loading="lazy"
+          />
         )}
         {article.images && article.images.length > 1 && (
-          <img src={article.images[1].image} alt={article.title} />
+          <img 
+            src={article.images[1].image} 
+            alt={`${article.title} - Vue détaillée - Montre de luxe Hoolis`} 
+            loading="lazy"
+          />
         )}
       </div>
       {!articleIsClicked && 

@@ -1,0 +1,24 @@
+{
+  "name": "Hoolis - Montres de Luxe",
+  "short_name": "Hoolis",
+  "description": "Découvrez notre collection exclusive de montres de luxe. Expertise en horlogerie, service de réparation et entretien professionnel.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#D6955B",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "fr-FR"
+} 

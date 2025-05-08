@@ -1,4 +1,13 @@
-
+html {
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
 
 .hoolis-container {
     width: 100vw;

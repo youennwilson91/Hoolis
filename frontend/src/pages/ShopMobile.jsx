@@ -16,16 +16,6 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     products, setProducts
   } = useStore();
 
-  
-  useEffect(() => {
-    axios.get('http://localhost:8000/store/products/')
-      .then(response => {
-        console.log(response.data);
-        setProducts(response.data);
-      })
-      .catch(error => console.error('Erreur lors de la récupération des produits:', error));
-  }, []); 
-
   useGSAP(() => {
     gsap.to(mobileScreenRef.current, {
       backgroundColor: "#D6955B",
@@ -68,17 +58,19 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div className="mobile-shop-articles">
-        {products && products.length > 0 ? (
+        {Array.isArray(products) && products.length > 0 ? (
           products.map((article) => (
             <div key={article.id} className="mobile-shop-article">
               <div className="mobile-shop-article-image-container">
                 <img 
                   src={article.images?.[0]?.image || '/path/to/default/image.jpg'} 
-                  alt={article.title || 'Product'} 
+                  alt={`${article.title || 'Montre de luxe'} - Vue principale - Collection Hoolis`}
+                  loading="lazy"
                 />
                 <img 
                   src={article.images?.[1]?.image || '/path/to/default/image.jpg'} 
-                  alt={article.title || 'Product'} 
+                  alt={`${article.title || 'Montre de luxe'} - Vue détaillée - Collection Hoolis`}
+                  loading="lazy"
                 />
 
                 <div className="mobile-shop-article-details">
@@ -109,7 +101,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
         <div className="cart-container" ref={mobileCartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <button className="close-cart" onClick={handleCloseMobileCart}>CLOSE</button>
-          <hr className="cart-hr-top"/>
+          {/* <hr className="cart-hr-top"/> */}
           <div className="cart-items">
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
@@ -127,7 +119,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               </div>
             ))}
           </div>
-          <hr className="cart-hr-bottom"/>
+          {/* <hr className="cart-hr-bottom"/> */}
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
             const price = parseInt(item.price);
             const quantity = item.quantity || 1;

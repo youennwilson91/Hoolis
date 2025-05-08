@@ -4,12 +4,15 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "./Calendar.scss";
 import useStore from '../utils/store';
+
 function BookingCalendar() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [formattedDate, setFormattedDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
   const [watch, setWatch] = useState("Montre 1");
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const { isBooking, setIsBooking } = useStore();
 
@@ -29,20 +32,29 @@ function BookingCalendar() {
   // Lorsqu'une date formatée est disponible, on interroge l'API
   useEffect(() => {
     if (formattedDate) {
-      axios.get(`http://localhost:8000/store/available_slots/?date=${formattedDate}`)
-        .then((res) => {
-          console.log(res.data);
-          // La réponse est paginée, les créneaux sont dans results
-          setSlots(res.data);
-        });
+      fetchAvailableSlots(formattedDate);
     }
   }, [formattedDate]);
+
+  // Charge les créneaux disponibles pour la date sélectionnée
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const formattedDate = new Date(date).toISOString().split('T')[0];
+      setSelectedDate(formattedDate);
+      
+      const response = await axios.get(`http://192.168.1.184:8000/store/available_slots/?date=${formattedDate}`);
+      setAvailableSlots(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des créneaux:', error);
+      setAvailableSlots([]);
+    }
+  };
 
   // Réserver un créneau
   const handleBooking = (slot) => {
     if (!name) return alert("Entrez votre nom avant de réserver !");
     
-    axios.post('http://localhost:8000/store/bookings/', {
+    axios.post('http://192.168.1.184:8000/store/bookings/', {
       name: name,
       watch: watch,
       date: formattedDate,
@@ -59,6 +71,27 @@ function BookingCalendar() {
       console.error("Erreur détaillée:", err.response ? err.response.data : err);
       alert("Ce créneau est déjà pris ou une erreur est survenue.");
     });
+  };
+
+  // Soumet la réservation
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://192.168.1.184:8000/store/bookings/', {
+        date: selectedDate,
+        time_slot: selectedTimeSlot,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        watch: currentWatch
+      });
+
+      console.log('Réservation créée:', response.data);
+      setIsSuccess(true);
+    } catch (error) {
+      console.error('Erreur lors de la création de la réservation:', error);
+    }
   };
 
   return (
