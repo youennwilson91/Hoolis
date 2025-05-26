@@ -137,11 +137,6 @@ export default function Shop() {
           ease: "power3.inOut",
           width: width,
         })
-        .to(`#description-${id}`, {  
-          duration: 0.5,
-          ease: "power4.inOut",
-          opacity: isEntering ? 1 : 0,
-        }, "-=1.5"); 
     }
   }
 

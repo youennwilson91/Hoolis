@@ -8,7 +8,7 @@ import "../index.css";
 
 export const buttons = [
   /* {id: 1, landingPosition: {transform: 'translate(245px, 360px)'}, menuPosition: {transform: 'translate(250px, -0vh)'}, label: "ABOUT", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 2, navigate: "/about"}, */
-  {id: 2, landingPosition: {transform: 'translate(235px, 310px)'}, menuPosition: {transform: 'translate(125px, -0vh)'}, label: "FRANK &WATCH", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.6, navigate: "/fw"},
+  {id: 2, landingPosition: {transform: 'translate(235px, 310px)'}, menuPosition: {transform: 'translate(125px, -0vh)'}, label: "FRANK &WATCH", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.5, navigate: "/fw"},
   {id: 3, landingPosition: {transform: 'translate(50px, 210px)'}, menuPosition: {transform: 'translate(0px, -0vh)'}, label: "HOOLIS", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 2, navigate: "/hoolis"},
   {id: 4, landingPosition: {transform: 'translate(-160px, 300px)'}, menuPosition: {transform: 'translate(-125px, -0vh)'}, label: "GALLERIE", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.6, navigate: "/gallery"},
   /* {id: 5, landingPosition: {transform: 'translate(-230px, 380px)'}, menuPosition: {transform: 'translate(-250px, -0vh)'}, label: "SUPPORT", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.5, navigate: "/support"}, */
