@@ -112,8 +112,9 @@
                     pointer-events: none !important;
 
                     h1 {
-                        font-size: 46px;
+                        font-size: 36px;
                         color: white;
+                        text-align: center;
                     }
                 }
 
@@ -356,7 +357,7 @@
 
 /*------------------------------------------- MOBILE -------------------------------------------*/
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .shop-container {
         display: none;
     }
@@ -407,7 +408,7 @@
                     align-items: center;
                     pointer-events: none !important;
                     color: white;
-                    font-size: 30px;
+                    font-size: 20px;
 
                     .add-to-cart {
                         border: 3px solid white;

@@ -19,12 +19,15 @@ export default function FandW() {
     setIsClicked, 
     mobileButtonsVisible, setMobileButtonsVisible,
     isMouseActive, setIsMouseActive,
-    isBooking, setIsBooking
+    isBooking, setIsBooking,
+    setIsMobile,
+    host_address,
+    port
   } = useStore();
 
   const [medias, setMedias] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState('http://192.168.1.184:8000/media/store/F%26W/watch1-wide-1.png');
+  const [backgroundImage, setBackgroundImage] = useState('http://localhost:8000/media/store/F%26W/watch1-wide-1.png');
   const [isBackgroundImage, setIsBackgroundImage] = useState(true);
   const [watchIndex, setWatchIndex] = useState(0);
   const [hoveredDiv, setHoveredDiv] = useState(null);
@@ -61,7 +64,12 @@ export default function FandW() {
       let retries = 3; // Nombre de tentatives
 
       try {
-        const response = await axios.get('http://192.168.1.184:8000/store/watches/');
+        // Adapter l'URL en fonction de l'environnement
+        const apiUrl = window.location.hostname === 'localhost' 
+          ? `http://${host_address}:${port}/store/watches/` 
+          : `http://${window.location.hostname}:${port}/store/watches/`;
+        
+        const response = await axios.get(apiUrl);
         const watches = response.data.results;
 
         if (watches.length > 0) {

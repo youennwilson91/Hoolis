@@ -24,7 +24,7 @@ export default function Shop() {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const { 
     label, setLabel, 
-    bgColor, 
+    bgColor, setBgColor, 
     labelColor, setLabelColor, 
     setIsClicked, 
     galleryVisible, setGalleryVisible, 
@@ -33,7 +33,13 @@ export default function Shop() {
     cartVisible, setCartVisible, 
     addToCart, setAddToCart,
     mobileButtonsVisible, setMobileButtonsVisible,
-    setMedias
+    setMedias,
+    setCrownVisible,
+    setButtonsVisible,
+    collectionChosen,
+    setCollectionChosen,
+    host_address,
+    port
   } = useStore();
   const [clickedArticleId, setClickedArticleId] = useState(null);
 
@@ -53,7 +59,7 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://192.168.1.184:8000/store/images/shop/')
+    axios.get(`http://${host_address}:${port}/store/images/shop/`)
       .then(response => {
         console.log("Données brutes de l'API:", response.data);
         setMedias({

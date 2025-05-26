@@ -15,30 +15,59 @@
     position: absolute;
     left: 0;
     width: 100%;
-    height: 6vh;
+    height: 60vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
   }
   
   .gallery-buttons {
-    position: absolute;
-    top: -105px;
+    display: flex;
+    top: -125px;
     background-color: transparent;
     border: none;
     color: white;
-    padding: 0;
     cursor: pointer;
-    position: absolute;
     opacity: 0;
     font-family: "Agdasima", sans-serif;
     font-weight: 700;
     font-style: normal;
-    font-size: 30px;    
+    font-size: 200px;    
 
   }
 
   .gallery-buttons:hover {
     cursor: pointer;
-    color:burlywood;
+    color: #EFEC8F;
+  }
+
+  .gallery-buttons-open-container {
+    position: absolute;
+    left: 0;
+    top: -5%;
+    width: 100%;
+    height: 6vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  
+  .gallery-buttons-open {
+    display: flex;
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    font-family: "Agdasima", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 50px;    
+
+  }
+
+  .gallery-buttons-open:hover {
+    cursor: pointer;
+    color: #EFEC8F;
   }

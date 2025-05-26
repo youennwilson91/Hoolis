@@ -1,0 +1,11 @@
+# Dépendances de sécurité pour Django
+python-decouple==3.8          # Gestion des variables d'environnement
+django-axes==6.1.1            # Protection contre les attaques par force brute
+django-ratelimit==4.1.0       # Limitation du taux de requêtes
+django-csp==3.7               # Content Security Policy
+bandit==1.7.5                 # Analyse statique de sécurité
+safety==3.2.7                 # Vérification des vulnérabilités des dépendances
+django-security==0.12.0       # Middleware de sécurité avancé (version compatible)
+cryptography==42.0.8          # Cryptographie moderne
+django-environ==0.11.2        # Alternative pour les variables d'environnement
+whitenoise==6.6.0             # Servir les fichiers statiques de manière sécurisée 

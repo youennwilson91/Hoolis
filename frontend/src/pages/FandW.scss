@@ -49,6 +49,8 @@
             position: absolute;
             width: fit-content;
             height: fit-content;
+            top: 4%;
+            left: 2%;
             background-color: white;
             border: 1px solid transparent;
             color: black;
@@ -157,7 +159,7 @@
 
 /*------------------------------------------- MOBILE -------------------------------------------*/
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .fandw-container {
         display: none;
     }
@@ -181,7 +183,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
             opacity: 0;
 
 
@@ -236,11 +238,11 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.75);
             border: none;
             padding: 10px 10px;
             border-radius: 25px;
-            font-size: 30px;
+            font-size: 20px;
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             

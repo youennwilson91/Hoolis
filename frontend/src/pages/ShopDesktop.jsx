@@ -24,7 +24,7 @@ export default function Shop() {
   
   const { 
     label, setLabel, 
-    bgColor, 
+    bgColor, setBgColor, 
     labelColor, setLabelColor, 
     setIsClicked, 
     galleryVisible, setGalleryVisible, 
@@ -32,9 +32,10 @@ export default function Shop() {
     cartVisible, setCartVisible, 
     addToCart, setAddToCart,
     setMobileButtonsVisible,
-    collectionChosen,
+    collectionChosen, setCollectionChosen,
     products, setProducts,
-    isMouseActive, setIsMouseActive
+    isMouseActive, setIsMouseActive,
+    host_address, port
   } = useStore();
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
@@ -58,9 +59,9 @@ export default function Shop() {
     const fetchProducts = async () => {
       try {
         // Charger la première page
-        const response1 = await axios.get('http://192.168.1.184:8000/store/products/?page=1');
+        const response1 = await axios.get(`http://${host_address}:${port}/store/products/?page=1`);
         setProducts(response1.data.results);
-
+        
         
       } catch (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -138,9 +139,9 @@ export default function Shop() {
         })
         .to(`#description-${id}`, {  
           duration: 0.5,
-          ease: "power3.inOut",
+          ease: "power4.inOut",
           opacity: isEntering ? 1 : 0,
-        }, "-=0.5"); 
+        }, "-=1.5"); 
     }
   }
 

@@ -26,7 +26,7 @@ export default function FandW() {
     
     // Vérifier la taille de l'écran au chargement
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 900);
     };
     
     checkScreenSize();
@@ -39,7 +39,7 @@ export default function FandW() {
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
-      backgroundColor: "#D6955B",
+      backgroundColor: "#000000",
       duration: 0.75,
       ease: "power3.inOut",
       opacity: 1

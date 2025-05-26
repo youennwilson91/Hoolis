@@ -1,0 +1,19 @@
+{
+  "name": "hoolis-project",
+  "version": "1.0.0",
+  "description": "Hoolis - Projet React + Django",
+  "scripts": {
+    "dev": "cd frontend & npm run dev",
+    "dev:backend": "cd backend & python manage.py runserver",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev\"",
+    "install:frontend": "cd frontend & npm install",
+    "install:backend": "cd backend & pip install -r requirements.txt",
+    "setup": "npm run install:backend & npm run install:frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["react", "django", "hoolis"],
+  "author": "Hoolis Team",
+  "license": "MIT"
+} 

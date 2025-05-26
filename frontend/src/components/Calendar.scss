@@ -6,6 +6,7 @@ $medium-gray: #e1e1e1;
 $dark-gray: #777;
 $border-radius: 4px;
 $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+$success-color: #2ecc71;
 
 /* Styles généraux */
 .booking-calendar {
@@ -191,6 +192,49 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
   }
 
+  .success-message {
+    background-color: rgba($success-color, 0.1);
+    border-left: 4px solid $success-color;
+    color: darken($success-color, 20%);
+    padding: 10px;
+    border-radius: $border-radius;
+    width: 80%;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: $shadow;
+    animation: fadeIn 0.5s ease-in-out;
+    font-weight: 500;
+    line-height: 1.6;
+
+    p {
+      margin: 10px 0;
+      &:first-child {
+        font-size: 1.2em;
+        font-weight: 600;
+      }
+    }
+
+    .booking-button {
+      margin-top: 15px;
+      background-color: $success-color;
+      
+      &:hover {
+        background-color: darken($success-color, 10%);
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .time-slots-container {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -198,6 +242,73 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     &::-webkit-scrollbar {
         display: none;
     }
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media screen and (max-width: 768px) {
+  .booking-calendar {
+    max-width: 90%;
+    padding: 15px 10px;
+    
+    .close-booking-button {
+      top: -40px;
+      width: 36px;
+      height: 36px;
+      font-size: 24px;
+    }
+    
+    .form-input {
+      width: 90%;
+      padding: 10px 8px;
+    }
+    
+    .slots-list {
+      width: 90%;
+      height: 40vh;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .booking-button {
+      padding: 10px 12px;
+      width: 60%;
+      margin: 8px 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+  
+  /* Improved touch targets for mobile */
+  .slot-item {
+    padding: 16px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  /* Fix for iOS Safari scrolling */
+  .time-slots-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+  }
+}
+
+/* Specific styles for small devices */
+@media screen and (max-width: 480px) {
+  .booking-calendar {
+    max-width: 95%;
+    
+    .dropdown-datepicker,
+    .date-dropdown {
+      font-size: 14px;
+    }
+  }
+  
+  .react-datepicker {
+    font-size: 0.8rem !important;
+  }
+  
+  .react-datepicker__day {
+    width: 1.7rem !important;
+    line-height: 1.7rem !important;
+    margin: 0.1rem !important;
   }
 }
 

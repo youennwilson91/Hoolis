@@ -8,14 +8,12 @@ import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setGalleryVisible, isClicked, galleryVisible, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked} = useStore();
+    const {setGalleryVisible, isClicked, galleryVisible, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked, displayCollection, collectionChosen} = useStore();
     const buttonRefs = useRef([]);
 
     const buttons = [
-        {id: 1, initialPosition: {transform: 'translate(0px, -200px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-300px, -270px)'}, label: "TOPS", upscale: 1.7, navigate: "/shop/tops"},
-        {id: 2, initialPosition: {transform: 'translate(0px, -50px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(-100px, -270px)'}, label: "BOTTOMS", upscale: 1.7, navigate: "/shop/bottoms"},
-        {id: 3, initialPosition: {transform: 'translate(0px, 100px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(100px, -270px)'}, label: "SHOES", upscale: 1.5, navigate: "/shop/shoes"},
-        {id: 4, initialPosition: {transform: 'translate(0px, 250px)', fontSize: "100px"}, galleryPosition: {transform: 'translate(300px, -270px)'}, label: "ACCESSORIES", upscale: 1.5, navigate: "/shop/accessories"}
+        {id: 1,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
+        {id: 2, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"}
     ]
 
 
@@ -34,10 +32,6 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
         }
     }, []);
       
-    function handleHover({ bgColor, label, labelColor, crownVisible }) {
-      if (!isClicked) {
-      }
-    }
     
     function handleClick(index) {
       
@@ -54,7 +48,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
     }
 
     return (
-        <div className="gallery-buttons-container">
+        <div className={`${galleryVisible ? "gallery-buttons-open-container" : "gallery-buttons-container"}`}>
         {buttons.map((button, index) => (
           <button 
             ref={el => {
@@ -63,16 +57,14 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
               }
               buttonRefs.current[index] = el;
             }}
-            className={`gallery-buttons`} 
-            style={galleryVisible ? button.galleryPosition : button.initialPosition}
+            className={`${galleryVisible ? "gallery-buttons-open" : "gallery-buttons"}`} 
             key={button.id}
-            onMouseEnter={() => handleHover({bgColor: button.bgColor, label: button.label, labelColor: button.labelColor, crownVisible: false})}
-            onMouseLeave={() => handleHover({bgColor: "#000000", label: "", labelColor: "#000000", crownVisible: true})}
             onClick={() => handleClick(index)}
           >
             {button.label}
           </button>
         ))}
+        
       </div>
     )
 }

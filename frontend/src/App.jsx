@@ -5,11 +5,45 @@ import useStore from './utils/store'
 import { useEffect } from 'react'
 import WebFontLoader from './utils/fontLoader'
 
+// Simple touch events polyfill for better cross-platform support
+const enableTouchSupport = () => {
+  // For older versions of Windows that may not fully support touch
+  if (window.navigator.msPointerEnabled) {
+    document.documentElement.className += ' ms-touch';
+  }
+  
+  // Check if we're on a touch device
+  const isTouchDevice = ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0) || 
+                        (navigator.msMaxTouchPoints > 0);
+  
+  if (isTouchDevice) {
+    document.documentElement.classList.add('touch-device');
+  } else {
+    document.documentElement.classList.add('no-touch');
+  }
+};
+
 function App() {
   const bgColor = useStore((state) => state.bgColor);
   
   useEffect(() => {
+    // Load custom fonts
     WebFontLoader.loadFonts();
+    
+    // Enable cross-platform touch support
+    enableTouchSupport();
+    
+    // Prevent double-tap zoom on mobile devices
+    document.addEventListener('touchstart', function(event){
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+    
+    return () => {
+      document.removeEventListener('touchstart', function(){}, { passive: false });
+    };
   }, []);
   
   return (

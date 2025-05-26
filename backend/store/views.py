@@ -72,9 +72,11 @@ class CollectionViewSet(ModelViewSet):
 class CartViewSet(ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.prefetch_related('items__product').all()
+    permission_classes = [IsAdminOrReadOnly]
 
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
@@ -152,10 +154,12 @@ class OrderViewSet(ModelViewSet):
 class OrderItemViewSet(ModelViewSet):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
@@ -178,6 +182,7 @@ def process_order_view(request, order_id):
 class SlotsViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = SlotsSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         date_str = self.request.GET.get('date')
@@ -193,6 +198,7 @@ class SlotsViewSet(ModelViewSet):
 class BookingViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
     queryset = Booking.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_serializer_context(self):
         return {
@@ -212,6 +218,7 @@ class BookingViewSet(ModelViewSet):
 
 class WatchViewSet(ModelViewSet):
     serializer_class = WatchSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         return Watch.objects.prefetch_related('images')

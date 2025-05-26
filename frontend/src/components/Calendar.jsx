@@ -11,10 +11,16 @@ function BookingCalendar() {
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
   const [watch, setWatch] = useState("Montre 1");
-  const [availableSlots, setAvailableSlots] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+  const { isBooking, setIsBooking, host_address, port } = useStore();
 
-  const { isBooking, setIsBooking } = useStore();
+  useEffect(() => {
+    if (isSuccess) {
+      setName("");
+      setEmail("");
+    }
+  }, [isSuccess]);
 
   // Quand la date est modifiée, on formate et on stocke
   const handleDateChange = (date) => {
@@ -36,33 +42,35 @@ function BookingCalendar() {
     }
   }, [formattedDate]);
 
-  // Charge les créneaux disponibles pour la date sélectionnée
   const fetchAvailableSlots = async (date) => {
     try {
       const formattedDate = new Date(date).toISOString().split('T')[0];
-      setSelectedDate(formattedDate);
       
-      const response = await axios.get(`http://192.168.1.184:8000/store/available_slots/?date=${formattedDate}`);
-      setAvailableSlots(response.data);
+      const response = await axios.get(`http://${host_address}:${port}/store/available_slots/?date=${formattedDate}`);
+      console.log('API response:', response.data);
+      const slotsArray = response.data.results || [];
+      setSlots(slotsArray);
     } catch (error) {
       console.error('Erreur lors de la récupération des créneaux:', error);
-      setAvailableSlots([]);
+      setSlots([]);
     }
   };
 
   // Réserver un créneau
   const handleBooking = (slot) => {
     if (!name) return alert("Entrez votre nom avant de réserver !");
+    if (!email) return alert("Entrez votre email avant de réserver !");
     
-    axios.post('http://192.168.1.184:8000/store/bookings/', {
+    axios.post(`http://${host_address}:${port}/store/bookings/`, {
       name: name,
       watch: watch,
       date: formattedDate,
       start_time: slot.start_time,
       end_time: slot.end_time
     }).then(() => {
-      alert("Réservation confirmée !");
+      setIsSuccess(true);
       setSlots(slots.filter(s => s.start_time !== slot.start_time)); // retirer le créneau réservé
+      sendConfirmationEmail(name, email, watch, formattedDate, slot.start_time, slot.end_time);
     }).catch(err => {
       console.log("Données envoyées:", {
         name, watch, date: formattedDate, 
@@ -73,73 +81,83 @@ function BookingCalendar() {
     });
   };
 
-  // Soumet la réservation
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post('http://192.168.1.184:8000/store/bookings/', {
-        date: selectedDate,
-        time_slot: selectedTimeSlot,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        watch: currentWatch
-      });
-
-      console.log('Réservation créée:', response.data);
-      setIsSuccess(true);
-    } catch (error) {
-      console.error('Erreur lors de la création de la réservation:', error);
-    }
-  };
+  function sendConfirmationEmail(name, email, watch, date, start_time, end_time) {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('_subject', 'Confirmation de votre réservation chez Franc and Watch');
+    formData.append('message', `Bonjour ${name},\n\nVotre réservation pour la ${watch} est confirmée le ${date} de ${start_time} à ${end_time}.\n\nMerci d'avoir choisi nos services.\n\nL'équipe Franc and Watch`);
+    
+    fetch(`https://formsubmit.co/${email}`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => console.log('Email envoyé avec succès'))
+    .catch(error => console.error('Erreur lors de l\'envoi de l\'email:', error));
+  }
 
   return (
     <div className="booking-calendar">
-      <input
-        type="text"
-        placeholder="Votre nom"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="form-input"
-      />
-      <select
-        value={watch}
-        onChange={(e) => setWatch(e.target.value)}
-        className="form-input"
-      >
-        <option value="watch1">Montre 1</option>
-        <option value="watch2">Montre 2</option>
-        <option value="watch3">Montre 3</option>
-      </select>
-      <br /><br />
-      <DatePicker
-        selected={selectedDate}
-        onChange={handleDateChange}
-        dateFormat="yyyy-MM-dd"
-        placeholderText="Choisissez une date"
-        showPopperArrow={true}
-        className="dropdown-datepicker"
-        calendarClassName="dropdown-calendar"
-        popperClassName="dropdown-popper"
-        popperPlacement="bottom-start"
-        dropdownMode="select"
-      />
-      <br /><br />
-      {slots.length === 0 && selectedDate && <p>Aucun créneau disponible.</p>}
-      <ul className="slots-list">
-        {slots.map((slot, index) => (
-          <li key={index} className="slot-item">
-            {new Date(`${slot.date}T${slot.start_time}`).toLocaleTimeString()} – {new Date(`${slot.date}T${slot.end_time}`).toLocaleTimeString()}
-            <button 
-              onClick={() => handleBooking(slot)}
-              className="booking-button"
-            >
-              Réserver
-            </button>
-          </li>
-        ))}
-      </ul>
+      {!isSuccess && (
+        <>
+          <input
+            type="text"
+            placeholder="Votre nom"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="form-input"
+          />
+          <input
+            type="email"
+            placeholder="Votre email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-input"
+          />
+          <select
+            value={watch}
+            onChange={(e) => setWatch(e.target.value)}
+            className="form-input"
+          >
+            <option value="watch1">Montre 1</option>
+            <option value="watch2">Montre 2</option>
+            <option value="watch3">Montre 3</option>
+          </select>
+          <br /><br />
+          <DatePicker
+            selected={selectedDate}
+            onChange={handleDateChange}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Choisissez une date"
+            showPopperArrow={true}
+            className="dropdown-datepicker"
+            calendarClassName="dropdown-calendar"
+            popperClassName="dropdown-popper"
+            popperPlacement="bottom-start"
+            dropdownMode="select"
+          />
+          <br /><br />
+          {slots.length === 0 && selectedDate && <p>Aucun créneau disponible.</p>}
+          <ul className="slots-list">
+            {slots.map((slot, index) => (
+              <li key={index} className="slot-item">
+                {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
+                <button 
+                  onClick={() => handleBooking(slot)}
+                  className="booking-button"
+                >
+                  Réserver
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {isSuccess && 
+        <div className="success-message">
+          <p>Réservation confirmée !</p>
+          <p>Vous recevrez un email de confirmation.</p>
+        </div>
+      }
       <button 
         onClick={() => setIsBooking(false)}
         className="close-booking-button"

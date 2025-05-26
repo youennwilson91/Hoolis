@@ -1,0 +1,81 @@
+/* Cross-platform compatibility fixes */
+
+/* Fix for iOS momentum scrolling */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Fix for Windows high-contrast mode */
+@media (forced-colors: active) {
+  button, a {
+    forced-color-adjust: none;
+  }
+}
+
+/* Fix for iOS input shadow */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* Fix for Android button styling */
+button {
+  background-image: none;
+}
+
+/* Fix for iOS Safari 100vh issue */
+.fullheight {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Fix for iOS/Safari focus outlines */
+*:focus {
+  outline: none !important;
+}
+*:focus-visible {
+  outline: 2px solid #3498db !important;
+}
+
+/* Fix for touch devices hover state */
+@media (hover: hover) {
+  .hover-element:hover {
+    /* Apply hover styles only on devices that support hover */
+    opacity: 0.8;
+  }
+}
+
+/* Fix for Windows touch events */
+@media (pointer: coarse) {
+  button, a, input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Preserve 3D acceleration for animations */
+.animation-container {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  -ms-perspective: 1000;
+  perspective: 1000;
+} 
