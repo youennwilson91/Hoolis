@@ -76,8 +76,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-        'USER': 'sa',
-        'PASSWORD': '123321!',
+        'USER': os.environ.get('DB_USER', 'sa'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '1433'),
         'OPTIONS': {
