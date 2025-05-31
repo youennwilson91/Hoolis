@@ -165,6 +165,7 @@ SIMPLE_JWT = {
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
+        # Développement local
         "http://localhost:5173",
         "https://localhost:5173",
         "http://127.0.0.1:5173",
@@ -178,14 +179,20 @@ if DEBUG:
         "http://10.81.234.130:5173",
         "https://10.81.234.130:5173",
         "http://192.168.1.184:5173",
-        "https://192.168.1.184:5173"
+        "https://192.168.1.184:5173",
+        # Vercel preview URLs (pour tester en dev)
+        "https://hoolis-frontend.vercel.app",
+        "https://hoolis-frontend-*.vercel.app"
     ]
     # Configuration HTTPS pour le développement
-    SESSION_COOKIE_SECURE = False  # Garde False pour dev avec certificats auto-signés
-    CSRF_COOKIE_SECURE = False     # Garde False pour dev avec certificats auto-signés
-    SECURE_SSL_REDIRECT = False    # Pas de redirection forcée en dev
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
 else:
-    CORS_ALLOWED_ORIGINS = []
+    # Production - Variables d'environnement
+    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins if origin.strip()]
+    
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
