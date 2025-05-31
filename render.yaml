@@ -1,18 +1,16 @@
 services:
-  # Backend Django
+  # Backend Django API
   - type: web
-    name: hoolis-backend
+    name: hoolis-api
     env: python
     region: oregon
     plan: free
+    rootDir: backend
     buildCommand: |
-      cd backend
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
-    startCommand: |
-      cd backend
-      gunicorn mysite.wsgi:application
+    startCommand: gunicorn mysite.wsgi:application
     envVars:
       - key: DEBUG
         value: False
@@ -21,28 +19,28 @@ services:
       - key: PREVIEW_PASSWORD
         value: patesaussice91!
       - key: ALLOWED_HOSTS
-        value: hoolis-backend.onrender.com,localhost
+        value: hoolis-api.onrender.com,localhost
       - key: CORS_ALLOWED_ORIGINS
-        value: https://hoolis-frontend.onrender.com
+        value: https://hoolis.vercel.app/
       - key: DATABASE_URL
         fromDatabase:
           name: hoolis-db
           property: connectionString
 
-  # Frontend React (optionnel - peut être déployé séparément)
+  # Frontend React (optionnel - recommandé sur Vercel/Netlify)
   - type: web
     name: hoolis-frontend
     env: node
     region: oregon
     plan: free
+    rootDir: frontend
     buildCommand: |
-      cd frontend
       npm install
       npm run build
-    staticPublishPath: frontend/dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://hoolis-backend.onrender.com
+        value: https://hoolis-api.onrender.com
 
 # Base de données PostgreSQL
 databases:
