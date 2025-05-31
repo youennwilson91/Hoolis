@@ -1,5 +1,5 @@
 import os
-from .models import Product, Collection, Cart, CartItem, Customer, Order, OrderItem
+from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -69,94 +69,6 @@ class CollectionViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
-class CartViewSet(ModelViewSet):
-    serializer_class = CartSerializer
-    queryset = Cart.objects.prefetch_related('items__product').all()
-    permission_classes = [IsAdminOrReadOnly]
-
-class CartItemViewSet(ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = [IsAdminOrReadOnly]
-
-    def get_queryset(self):
-        return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return AddCartItemSerializer
-        elif self.request.method == 'PATCH':
-            return UpdateCartItemSerializer
-        return CartItemSerializer
-
-    def get_serializer_context(self):
-        return {'cart_id': self.kwargs['cart_pk']}
-    
-
-
-class CustomerViewSet(ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['name', 'email', 'phone']
-    search_fields = ['name', 'email', 'phone', 'address']
-    ordering_fields = ['name', 'created_at']
-    ordering = ['-created_at']
-
-    def get_permissions(self):
-        return [IsAuthenticated()]
-
-    @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
-    def me(self, request):  
-        customer = Customer.objects.get(user_id=request.user.id)
-        if request.method == 'GET':
-            serializer = CustomerSerializer(customer)
-            return Response(serializer.data)
-        elif request.method == 'PUT':
-            serializer = CustomerSerializer(customer, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
-
-
-class OrderViewSet(ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
-
-    def get_permissions(self):
-        if self.request.method in ['PATCH', 'DELETE']:
-            return [IsAdminUser()]
-        return [IsAuthenticated()]
-
-    def create(self, request, *args, **kwargs):
-        serializer = CreateOrderSerializer(data=request.data, context={'user_id': request.user.id})
-        serializer.is_valid(raise_exception=True)
-        order = serializer.save()
-        serializer = OrderSerializer(order)
-        return Response(serializer.data)
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreateOrderSerializer
-        elif self.request.method == 'PATCH':
-            return UpdateOrderSerializer
-        return OrderSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_staff:
-            return Order.objects.all()
-        customer = Customer.objects.get(user_id=user.id)[0]
-        return Order.objects.filter(customer_id=customer.id)
-    
-    def get_serializer_context(self):
-        return {'user_id': self.request.user.id}
-
-
-class OrderItemViewSet(ModelViewSet):
-    serializer_class = OrderItemSerializer
-    queryset = OrderItem.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
-
-
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminOrReadOnly]
@@ -178,11 +90,10 @@ def process_order_view(request, order_id):
     # Retourner une réponse immédiate à l'utilisateur
     return HttpResponse("Votre commande est en cours de traitement")
 
-
-class SlotsViewSet(ModelViewSet):
+class SlotsProductViewSet(ModelViewSet):
     http_method_names = ['get']
-    serializer_class = SlotsSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    serializer_class = SlotsProductSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         date_str = self.request.GET.get('date')
@@ -192,13 +103,50 @@ class SlotsViewSet(ModelViewSet):
             selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
-        return Slots.objects.filter(is_available=True).filter(date=selected_date)
+        return SlotsProduct.objects.filter(is_available=True).filter(date=selected_date)
 
 
-class BookingViewSet(ModelViewSet):
+class BookingProductViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
-    queryset = Booking.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    queryset = BookingProduct.objects.all()
+    permission_classes = [AllowAny]
+    
+    def get_serializer_context(self):
+        return {
+            'date': self.request.data.get('date'),
+            'product': self.request.data.get('product'),
+            'name': self.request.data.get('name'),
+            'start_time': self.request.data.get('start_time'), 
+            'end_time': self.request.data.get('end_time')
+            }
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateBookingProductSerializer
+        elif self.request.method == 'DELETE':
+            return DeleteBookingProductSerializer
+
+
+class SlotsWatchViewSet(ModelViewSet):
+    http_method_names = ['get']
+    serializer_class = SlotsWatchSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        date_str = self.request.GET.get('date')
+        if not date_str:
+            return Response({"error": "Missing 'date' parameter (YYYY-MM-DD)"}, status=400)
+        try:
+            selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+        return SlotsWatch.objects.filter(is_available=True).filter(date=selected_date)
+
+
+class BookingWatchViewSet(ModelViewSet):
+    http_method_names = ['post', 'delete', 'head', 'options']
+    queryset = BookingWatch.objects.all()
+    permission_classes = [AllowAny]
     
     def get_serializer_context(self):
         return {
@@ -211,20 +159,105 @@ class BookingViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return CreateBookingSerializer
+            return CreateBookingWatchSerializer
         elif self.request.method == 'DELETE':
-            return DeleteBookingSerializer
+            return DeleteBookingWatchSerializer
             
 
 class WatchViewSet(ModelViewSet):
     serializer_class = WatchSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return Watch.objects.prefetch_related('images')
 
 
-
+# class CartViewSet(ModelViewSet):
+#     serializer_class = CartSerializer
+#     queryset = Cart.objects.prefetch_related('items__product').all()
+#     permission_classes = [IsAdminOrReadOnly]
+# 
+# class CartItemViewSet(ModelViewSet):
+#     http_method_names = ['get', 'post', 'patch', 'delete']
+#     permission_classes = [IsAdminOrReadOnly]
+# 
+#     def get_queryset(self):
+#         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
+# 
+#     def get_serializer_class(self):
+#         if self.request.method == 'POST':
+#             return AddCartItemSerializer
+#         elif self.request.method == 'PATCH':
+#             return UpdateCartItemSerializer
+#         return CartItemSerializer
+# 
+#     def get_serializer_context(self):
+#         return {'cart_id': self.kwargs['cart_pk']}
+#     
+# 
+# 
+# class CustomerViewSet(ModelViewSet):
+#     queryset = Customer.objects.all()
+#     serializer_class = CustomerSerializer
+#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+#     filterset_fields = ['name', 'email', 'phone']
+#     search_fields = ['name', 'email', 'phone', 'address']
+#     ordering_fields = ['name', 'created_at']
+#     ordering = ['-created_at']
+# 
+#     def get_permissions(self):
+#         return [IsAuthenticated()]
+# 
+#     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
+#     def me(self, request):  
+#         customer = Customer.objects.get(user_id=request.user.id)
+#         if request.method == 'GET':
+#             serializer = CustomerSerializer(customer)
+#             return Response(serializer.data)
+#         elif request.method == 'PUT':
+#             serializer = CustomerSerializer(customer, data=request.data)
+#             serializer.is_valid(raise_exception=True)
+#             serializer.save()
+#             return Response(serializer.data)
+# 
+# 
+# class OrderViewSet(ModelViewSet):
+#     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+# 
+#     def get_permissions(self):
+#         if self.request.method in ['PATCH', 'DELETE']:
+#             return [IsAdminUser()]
+#         return [IsAuthenticated()]
+# 
+#     def create(self, request, *args, **kwargs):
+#         serializer = CreateOrderSerializer(data=request.data, context={'user_id': request.user.id})
+#         serializer.is_valid(raise_exception=True)
+#         order = serializer.save()
+#         serializer = OrderSerializer(order)
+#         return Response(serializer.data)
+# 
+#     def get_serializer_class(self):
+#         if self.request.method == 'POST':
+#             return CreateOrderSerializer
+#         elif self.request.method == 'PATCH':
+#             return UpdateOrderSerializer
+#         return OrderSerializer
+# 
+#     def get_queryset(self):
+#         user = self.request.user
+#         if user.is_staff:
+#             return Order.objects.all()
+#         customer = Customer.objects.get(user_id=user.id)[0]
+#         return Order.objects.filter(customer_id=customer.id)
+#     
+#     def get_serializer_context(self):
+#         return {'user_id': self.request.user.id}
+# 
+# 
+# class OrderItemViewSet(ModelViewSet):
+#     serializer_class = OrderItemSerializer
+#     queryset = OrderItem.objects.all()
+#     permission_classes = [IsAdminOrReadOnly]
 
 
 

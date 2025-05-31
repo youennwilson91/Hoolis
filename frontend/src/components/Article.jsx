@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
+import useStore from "../utils/store";
 
 export default function Article({ 
   article, 
@@ -12,9 +13,13 @@ export default function Article({
   handleAddToCart,
   articleRefs
 }) {
-  // Ajouter un log pour déboguer
+
   console.log("Article data:", article);
-  
+  const { isBooking, setIsBooking } = useStore();
+  const bookButtonRef = useRef(null);
+
+  console.log("isBooking:", isBooking);
+
   return (
     <div 
       ref={el => articleRefs.current[index] = el} 
@@ -60,13 +65,19 @@ export default function Article({
         <div className="article-details">
           <h1 className="article-title">{article.title}</h1>
           <h1 className="article-price">{article.price}€</h1>
-          <h1 className="add-to-cart" onClick={() => handleAddToCart(article)}>SHOP</h1>
+          {/*<h1 className="add-to-cart" onClick={() => handleAddToCart(article)}>SHOP</h1>*/}
+
+          {!isBooking ? 
+            <button ref={bookButtonRef} className="add-to-cart" onClick={() => setIsBooking(true)}>
+              PRENDRE RENDEZ-VOUS
+            </button> : null}
           <p>{article.description}</p>
           <h2 className="close-article" onClick={(e) => handleArticleClose(articleRefs.current[index], e, article.id)}>
             CLOSE
           </h2>
         </div>
       )}
+      
     </div>
   );
 } 

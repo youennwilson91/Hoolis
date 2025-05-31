@@ -35,7 +35,10 @@ export default function FandWMobile({ labelRef }) {
     console.log("URL API utilisée:", apiUrl);
     
     // On va tester avec Axios directement
-    axios.get(apiUrl, { timeout: 5000 })
+    axios.get(apiUrl, { 
+      timeout: 5000,
+      withCredentials: true  // Inclure les credentials pour CORS
+    })
       .then(response => {
         console.log("Données brutes de l'API:", response.data);
         const watches = response.data.results;

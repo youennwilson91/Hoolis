@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './cross-platform.css'
 import App from './App.jsx'
+import './utils/axiosConfig.js'  // Configuration globale d'axios
 
 // Fix for iOS 100vh issue
 const setVhVariable = () => {

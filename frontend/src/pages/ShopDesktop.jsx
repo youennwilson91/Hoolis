@@ -9,7 +9,7 @@ import Article from "../components/Article.jsx";
 import "./Shop.scss";
 import "../components/GalleryButtons.scss";
 import ShopMobile from "./ShopMobile.jsx";
-
+import BookingCalendar from "../components/Calendar.jsx";
 export default function Shop() {
 
   const screenRef = useRef(null);
@@ -18,6 +18,7 @@ export default function Shop() {
   const articleRef = useRef([]);
   const collectionRef = useRef(null);
   const cartRef = useRef(null);
+  const bookingContainerRef = useRef(null);
 
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
@@ -35,6 +36,7 @@ export default function Shop() {
     collectionChosen, setCollectionChosen,
     products, setProducts,
     isMouseActive, setIsMouseActive,
+    isBooking, setIsBooking,
     host_address, port
   } = useStore();
 
@@ -49,20 +51,20 @@ export default function Shop() {
     setArticleIsHovered(false);
     setArticleIsClicked(false);
     setSelectedArticleId(null);
-    setIsClicked(false);
     setCartVisible(false);
     setMobileButtonsVisible(false);
     setIsMouseActive(false);
+    setIsBooking(false);
   }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Charger la première page
-        const response1 = await axios.get(`http://${host_address}:${port}/store/products/?page=1`);
+        const response1 = await axios.get(`http://${host_address}:${port}/store/products/`, {
+          withCredentials: true  // Inclure les credentials pour CORS
+        });
         setProducts(response1.data.results);
-        
-        
+
       } catch (error) {
         console.error('Erreur lors de la récupération des produits:', error);
       }
@@ -118,6 +120,22 @@ export default function Shop() {
         opacity: 1
       });
   }, [collectionChosen]);
+
+  useGSAP(() => {
+    if (bookingContainerRef.current) {
+      gsap.to(bookingContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    } else if (bookingContainerRef.current) {
+      gsap.to(bookingContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 0
+      });
+    }
+  }, [isBooking]);
 
   
   function handleGalleryOpen() {
@@ -238,7 +256,7 @@ export default function Shop() {
           </div>
           }
         {!galleryVisible && <ShopButtons onClick={handleGalleryOpen}/>}
-        <div className="cart-icon" onClick={handleOpenCart}>
+        {/*<div className="cart-icon" onClick={handleOpenCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
@@ -248,9 +266,9 @@ export default function Shop() {
               <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
             </g>
           </svg>
-        </div>
+        </div>*/}
 
-        {cartVisible && 
+        {/*cartVisible && 
         <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
@@ -278,7 +296,16 @@ export default function Shop() {
             ))}
           </div>
         </div>
-        }
+        */}
+
+        
+        {isBooking ? (
+          <div ref={bookingContainerRef} className="booking-container">
+            <BookingCalendar />
+            <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
+          </div>
+        ) : null}
+
         <Button screenRef={screenRef} labelRef={labelRef}/>
       </div>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>

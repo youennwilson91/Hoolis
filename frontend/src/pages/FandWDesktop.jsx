@@ -22,7 +22,8 @@ export default function FandW() {
     isBooking, setIsBooking,
     setIsMobile,
     host_address,
-    port
+    port,
+    watches, setWatches
   } = useStore();
 
   const [medias, setMedias] = useState([]);
@@ -61,42 +62,56 @@ export default function FandW() {
 
   useEffect(() => {
     const fetchWatches = async () => {
-      let retries = 3; // Nombre de tentatives
+      let retries = 3; 
 
-      try {
-        // Adapter l'URL en fonction de l'environnement
-        const apiUrl = window.location.hostname === 'localhost' 
-          ? `http://${host_address}:${port}/store/watches/` 
-          : `http://${window.location.hostname}:${port}/store/watches/`;
-        
-        const response = await axios.get(apiUrl);
-        const watches = response.data.results;
-
-        if (watches.length > 0) {
-          const formattedWatches = watches.map(watch => ({
-            id: watch.id,
-            name: watch.name,
-            description: watch.description,
-            wide: watch.images.filter(img => img.size === 'wide')
-          }));
+      const attemptFetch = async () => {
+        try {
+          // Adapter l'URL en fonction de l'environnement
+          const apiUrl = window.location.hostname === 'localhost' 
+            ? `http://${host_address}:${port}/store/watches/` 
+            : `http://${window.location.hostname}:${port}/store/watches/`;
           
-          cacheRef.current.data = formattedWatches;
-          cacheRef.current.timestamp = Date.now();
-          setMedias(formattedWatches);
-        }
-      } catch (error) {
-        if (retries > 0) {
-          retries--;
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre 1 seconde
-          fetchWatches(); // Réessayer
-        } else {
+          const response = await axios.get(apiUrl, {
+            withCredentials: true  // Inclure les credentials pour CORS
+          });
+          const watchesData = response.data.results;
+          
+          setWatches(watchesData);
+
+          if (watchesData && watchesData.length > 0) {
+            const formattedWatches = watchesData.map(watch => ({
+              id: watch.id,
+              name: watch.name,
+              description: watch.description,
+              wide: watch.images.filter(img => img.size === 'wide')
+            }));
+            
+            cacheRef.current.data = formattedWatches;
+            cacheRef.current.timestamp = Date.now();
+            setMedias(formattedWatches);
+            
+            // Initialiser l'image de fond avec la première image de la première montre
+            if (formattedWatches[0]?.wide && formattedWatches[0].wide.length > 0) {
+              setBackgroundImage(formattedWatches[0].wide[0].media);
+              setIsBackgroundImage(formattedWatches[0].wide[0].type === 'image');
+            }
+          }
+        } catch (error) {
           console.error('Erreur lors de la récupération des images:', error);
+          if (retries > 0) {
+            retries--;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre 1 seconde
+            return attemptFetch(); // Réessayer
+          }
+          throw error;
         }
-      }
+      };
+
+      await attemptFetch();
     };
 
     fetchWatches();
-  }, []);
+  }, [host_address, port]);
   
 
   // Mouse activity tracker
@@ -178,7 +193,6 @@ export default function FandW() {
   // Animation for hover effect
   useGSAP(() => {
     if (hoveredDiv) {
-      // Create neon effect when hovering
       gsap.to(hoveredDiv, {
         duration: 0.25,
         boxShadow: "0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7), 0 0 30px rgba(255, 255, 255, 0.5)",
@@ -191,19 +205,17 @@ export default function FandW() {
     // Animation pour le conteneur de réservation
     useGSAP(() => {
       if (bookingContainerRef.current) {
-        if (isBooking) {
-          gsap.to(bookingContainerRef.current, {
-            duration: 0.75,
-            ease: "power3.inOut",
-            opacity: 1
-          });
-        } else {
-          gsap.to(bookingContainerRef.current, {
-            duration: 0.75,
-            ease: "power3.inOut",
-            opacity: 0
-          });
-        }
+        gsap.to(bookingContainerRef.current, {
+          duration: 0.40,
+          ease: "power3.inOut",
+          opacity: 1
+        });
+      } else if (bookingContainerRef.current) {
+        gsap.to(bookingContainerRef.current, {
+          duration: 0.40,
+          ease: "power3.inOut",
+          opacity: 0
+        });
       }
     }, [isBooking]);
 
@@ -267,7 +279,6 @@ export default function FandW() {
     }
   }, [medias, watchIndex]);
 
-  // Modifier la fonction mediaDiv pour enlever le lazy loading
   function mediaDiv(media, index) {
     return (
       <>
@@ -338,13 +349,21 @@ export default function FandW() {
   };
 
   function handleNextWatch() {
-    if (!medias || medias.length === 0) return;
+    if (!medias || medias.length === 0) {
+      console.log('Aucune média disponible pour naviguer');
+      return;
+    }
+    console.log('Navigation suivante - medias:', medias.length, 'current index:', watchIndex);
     const newIndex = (watchIndex + 1) % medias.length;
     changeImage(newIndex);
   }
 
   function handlePreviousWatch() {
-    if (!medias || medias.length === 0) return;
+    if (!medias || medias.length === 0) {
+      console.log('Aucune média disponible pour naviguer');
+      return;
+    }
+    console.log('Navigation précédente - medias:', medias.length, 'current index:', watchIndex);
     const newIndex = (watchIndex - 1 + medias.length) % medias.length;
     changeImage(newIndex);
   }
@@ -377,7 +396,13 @@ export default function FandW() {
           />
         )}
         <div ref={divRef} className="fandw-div-container">
-          {medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
+          {(() => {
+            console.log('Rendu - watchIndex:', watchIndex);
+            console.log('Rendu - medias:', medias);
+            console.log('Rendu - medias[watchIndex]:', medias[watchIndex]);
+            console.log('Rendu - medias[watchIndex]?.wide:', medias[watchIndex]?.wide);
+            return medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index));
+          })()}
         </div>
         {isBooking ? (
           <div ref={bookingContainerRef} className="booking-container">
