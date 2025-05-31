@@ -4,16 +4,27 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "./Calendar.scss";
 import useStore from '../utils/store';
+import { useLocation } from 'react-router-dom';
 
 function BookingCalendar() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [formattedDate, setFormattedDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
-  const [watch, setWatch] = useState("Montre 1");
   const [isSuccess, setIsSuccess] = useState(false);
   const [email, setEmail] = useState("");
-  const { isBooking, setIsBooking, host_address, port } = useStore();
+  const [selectedWatch, setSelectedWatch] = useState(null);
+
+
+  const { isBooking, setIsBooking, host_address, port, products, watches } = useStore();
+
+  const location = useLocation();
+
+  // Détermine si on est sur la page shop
+  const isShopPage = location.pathname.includes('/shop') || location.pathname.includes('/hoolis');
+
+  // Initialise la valeur par défaut selon la page
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -46,7 +57,9 @@ function BookingCalendar() {
     try {
       const formattedDate = new Date(date).toISOString().split('T')[0];
       
-      const response = await axios.get(`http://${host_address}:${port}/store/available_slots/?date=${formattedDate}`);
+      const response = await axios.get(`http://${host_address}:${port}/store/available_slots/?date=${formattedDate}`, {
+        withCredentials: true  // Inclure les credentials pour CORS
+      });
       console.log('API response:', response.data);
       const slotsArray = response.data.results || [];
       setSlots(slotsArray);
@@ -60,20 +73,24 @@ function BookingCalendar() {
   const handleBooking = (slot) => {
     if (!name) return alert("Entrez votre nom avant de réserver !");
     if (!email) return alert("Entrez votre email avant de réserver !");
+    if (!selectedWatch) return alert("Veuillez sélectionner une montre !");
     
+    console.log(selectedWatch);
     axios.post(`http://${host_address}:${port}/store/bookings/`, {
       name: name,
-      watch: watch,
+      watch: selectedWatch,
       date: formattedDate,
       start_time: slot.start_time,
       end_time: slot.end_time
+    }, {
+      withCredentials: true  // Inclure les credentials pour CORS
     }).then(() => {
       setIsSuccess(true);
       setSlots(slots.filter(s => s.start_time !== slot.start_time)); // retirer le créneau réservé
-      sendConfirmationEmail(name, email, watch, formattedDate, slot.start_time, slot.end_time);
+      sendConfirmationEmail(name, email, selectedWatch, formattedDate, slot.start_time, slot.end_time);
     }).catch(err => {
       console.log("Données envoyées:", {
-        name, watch, date: formattedDate, 
+        name, watch: selectedWatch, date: formattedDate, 
         start_time: slot.start_time, end_time: slot.end_time
       });
       console.error("Erreur détaillée:", err.response ? err.response.data : err);
@@ -84,7 +101,7 @@ function BookingCalendar() {
   function sendConfirmationEmail(name, email, watch, date, start_time, end_time) {
     const formData = new FormData();
     formData.append('email', email);
-    formData.append('_subject', 'Confirmation de votre réservation chez Franc and Watch');
+    formData.append('_subject', 'Confirmation de votre réservation chez Franck and Watch');
     formData.append('message', `Bonjour ${name},\n\nVotre réservation pour la ${watch} est confirmée le ${date} de ${start_time} à ${end_time}.\n\nMerci d'avoir choisi nos services.\n\nL'équipe Franc and Watch`);
     
     fetch(`https://formsubmit.co/${email}`, {
@@ -113,15 +130,33 @@ function BookingCalendar() {
             onChange={(e) => setEmail(e.target.value)}
             className="form-input"
           />
-          <select
-            value={watch}
-            onChange={(e) => setWatch(e.target.value)}
-            className="form-input"
-          >
-            <option value="watch1">Montre 1</option>
-            <option value="watch2">Montre 2</option>
-            <option value="watch3">Montre 3</option>
-          </select>
+          {isShopPage ? (
+            <select
+              value={selectedWatch || ""}
+              onChange={(e) => setSelectedWatch(e.target.value)}
+              className="form-input"
+            >
+              <option value="">Sélectionnez une montre</option>
+              {products.length === 0 ? (
+                <option value="" disabled>Chargement des produits...</option>
+              ) : (
+                products.map((product) => (
+                  <option key={product.id} value={product.title}>{product.title}</option>
+                ))
+              )}
+            </select>
+          ) : (
+            <select
+              value={selectedWatch || ""}
+              onChange={(e) => setSelectedWatch(e.target.value)}
+              className="form-input"
+            >
+              <option value="">Sélectionnez une montre</option>
+              {watches.map((watch) => (
+                <option key={watch.id} value={watch.name}>{watch.name}</option>
+              ))}
+            </select>
+          )}
           <br /><br />
           <DatePicker
             selected={selectedDate}

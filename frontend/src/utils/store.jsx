@@ -37,7 +37,7 @@ const useStore = create(
   articleIsHovered: false,
   selectedArticleId: null,
   products: [],
-  isMouseActive: false,
+
 
   setGalleryVisible: (visible) => set({ galleryVisible: visible }),
   setCollectionChosen: (collection) => set({ collectionChosen: collection }),
@@ -49,15 +49,19 @@ const useStore = create(
     addToCart: callback(state.addToCart) 
   })),
   setProducts: (products) => set({ products: products }),
-  setIsMouseActive: (active) => set({ isMouseActive: active }),
   
   // Mobile Landing Page
   mobileButtonsVisible: false,
   setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
 
   // FandW Page
+  isMouseActive: false,
   isBooking: false,
+  watches: [],
+
+  setIsMouseActive: (active) => set({ isMouseActive: active }),
   setIsBooking: (isBooking) => set({ isBooking: isBooking }),
+  setWatches: (watches) => set({ watches: watches }),
 
   // Mobile state
   isMobile: false,

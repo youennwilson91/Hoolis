@@ -4,6 +4,7 @@ import "./index.css"
 import useStore from './utils/store'
 import { useEffect } from 'react'
 import WebFontLoader from './utils/fontLoader'
+import PasswordProtect from './components/PasswordProtect'
 
 // Simple touch events polyfill for better cross-platform support
 const enableTouchSupport = () => {
@@ -47,9 +48,11 @@ function App() {
   }, []);
   
   return (
-    <div className="app-container" style={{backgroundColor: bgColor}}>
-      <RouterProvider router={router} />
-    </div>
+    <PasswordProtect>
+      <div className="app-container" style={{backgroundColor: bgColor}}>
+        <RouterProvider router={router} />
+      </div>
+    </PasswordProtect>
   );
 }
 

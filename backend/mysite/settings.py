@@ -44,7 +44,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mysite.access.PasswordProtectMiddleware',
 ]
+
+PREVIEW_PASSWORD = 'patesaussice91!' 
 
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
@@ -119,7 +122,7 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 50,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -167,15 +170,39 @@ if DEBUG:
         "http://127.0.0.1:5173",
         "https://127.0.0.1:5173",
         "http://10.81.234.10:5173",
+        "https://10.81.234.10:5173",
         "http://192.168.56.1:5173",
+        "https://192.168.56.1:5173",
         "http://192.168.236.24:5173",
+        "https://192.168.236.24:5173",
         "http://10.81.234.130:5173",
-        "http://192.168.1.184:5173"
+        "https://10.81.234.130:5173",
+        "http://192.168.1.184:5173",
+        "https://192.168.1.184:5173"
     ]
+    # Configuration HTTPS pour le développement
+    SESSION_COOKIE_SECURE = False  # Garde False pour dev avec certificats auto-signés
+    CSRF_COOKIE_SECURE = False     # Garde False pour dev avec certificats auto-signés
+    SECURE_SSL_REDIRECT = False    # Pas de redirection forcée en dev
 else:
     CORS_ALLOWED_ORIGINS = []
+    # Production settings - full HTTPS enforcement
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
-CORS_ALLOW_CREDENTIALS = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 3600
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_COOKIE_HTTPONLY = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -186,26 +213,5 @@ CACHES = {
     }
 }
 
-# Security settings - only for production
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-else:
-    # Development settings - no HTTPS enforcement
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 3600
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-CSRF_COOKIE_HTTPONLY = True
-
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+CORS_ALLOW_CREDENTIALS = True
 
