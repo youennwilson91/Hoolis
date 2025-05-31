@@ -20,8 +20,6 @@ services:
       
       # Redis/Cache
       - REDIS_URL=${REDIS_URL}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
       
       # Email (pour notifications de sécurité)
       - EMAIL_HOST=${EMAIL_HOST}

@@ -1,13 +1,11 @@
-from celery import shared_task
 import time
 import logging
 
 logger = logging.getLogger(__name__)
 
-@shared_task
 def process_order(order_id):
     """
-    Process an order asynchronously
+    Process an order synchronously
     """
     logger.info(f"Starting to process order {order_id}")
     # Simuler un traitement qui prend du temps
