@@ -47,7 +47,7 @@ MIDDLEWARE = [
     'mysite.access.PasswordProtectMiddleware',
 ]
 
-PREVIEW_PASSWORD = 'patesaussice91!' 
+PREVIEW_PASSWORD = os.environ.get('PREVIEW_PASSWORD', 'default_password_change_me')
 
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
