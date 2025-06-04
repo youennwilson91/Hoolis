@@ -7,7 +7,6 @@ import "./FandW.scss";
 import "../components/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar";
 import axios from "axios";
-import FandWMobile from "./FandWMobile";
 
 
 export default function FandW() {
@@ -66,7 +65,7 @@ export default function FandW() {
 
       const attemptFetch = async () => {
         try {
-          // Adapter l'URL en fonction de l'environnement
+          // Use HTTP for development API calls
           const apiUrl = window.location.hostname === 'localhost' 
             ? `http://${host_address}:${port}/store/watches/` 
             : `http://${window.location.hostname}:${port}/store/watches/`;
@@ -115,7 +114,7 @@ export default function FandW() {
   
 
   // Mouse activity tracker
-  useEffect(() => {
+  /* useEffect(() => {
     const handleMouseMove = () => {
       setIsMouseActive(true);
       
@@ -145,10 +144,10 @@ export default function FandW() {
         clearTimeout(mouseTimerRef.current);
       }
     };
-  }, []);
+  }, []); */
 
   // Effect to update button opacity based on mouse activity
-  useGSAP(() => {
+  /* useGSAP(() => {
     if (bookButtonRef.current) {
       gsap.to(bookButtonRef.current,  {
         duration: 0.25,
@@ -177,9 +176,7 @@ export default function FandW() {
         ease: "power2.inOut"
       });
     }
-  }, [isMouseActive]); 
-
-  
+  }, [isMouseActive]); */
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
@@ -396,13 +393,7 @@ export default function FandW() {
           />
         )}
         <div ref={divRef} className="fandw-div-container">
-          {(() => {
-            console.log('Rendu - watchIndex:', watchIndex);
-            console.log('Rendu - medias:', medias);
-            console.log('Rendu - medias[watchIndex]:', medias[watchIndex]);
-            console.log('Rendu - medias[watchIndex]?.wide:', medias[watchIndex]?.wide);
-            return medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index));
-          })()}
+          {medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
         </div>
         {isBooking ? (
           <div ref={bookingContainerRef} className="booking-container">
@@ -425,10 +416,6 @@ export default function FandW() {
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
       <Button screenRef={screenRef} labelRef={labelRef}/>
     </div>
-
-    {/*------------------------------------------- MOBILE -------------------------------------------*/}
-
-    <FandWMobile />
 
   </>
   );
