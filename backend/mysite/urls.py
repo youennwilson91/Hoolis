@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
+    path('', views.api_home, name='api_home'),  # Page d'accueil de l'API
     path('admin/', admin.site.urls),
     path('store/', include('store.urls')),
     path('auth/', include('djoser.urls')),
