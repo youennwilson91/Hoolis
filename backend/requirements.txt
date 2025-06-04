@@ -22,6 +22,9 @@ django-security==0.12.0
 django-redis==5.4.0
 redis==5.2.1
 mssql-django==1.5
+# PostgreSQL pour Render
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
 
 # Media & Static Files
 pillow==11.1.0

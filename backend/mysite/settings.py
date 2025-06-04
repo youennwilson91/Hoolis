@@ -5,6 +5,7 @@ Django settings for mysite project.
 import os
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,7 +18,7 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS = [
         RENDER_EXTERNAL_HOSTNAME,
-        '18.156.158.53',  # IP Render
+        'hoolis-api.onrender.com',
         'localhost',
         '127.0.0.1',
         '0.0.0.0',
@@ -84,20 +85,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-        'USER': os.environ.get('DB_USER', 'sa'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '1433'),
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'extra_params': 'TrustServerCertificate=yes',
-        },
+# Configuration de base de données avec support PostgreSQL pour Render
+if os.environ.get('DATABASE_URL'):
+    # Configuration pour Render (PostgreSQL)
+    DATABASES = {
+        'default': dj_database_url.parse(
+            os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Configuration locale (SQL Server)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mssql',
+            'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+            'USER': os.environ.get('DB_USER', 'sa'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '1433'),
+            'OPTIONS': {
+                'driver': 'ODBC Driver 17 for SQL Server',
+                'extra_params': 'TrustServerCertificate=yes',
+            },
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -202,7 +215,7 @@ if DEBUG:
     SECURE_SSL_REDIRECT = False
 else:
     # Production - Variables d'environnement
-    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://hoolis.vercel.app').split(',')
     CORS_ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins if origin.strip()]
     
     # Production settings - full HTTPS enforcement
