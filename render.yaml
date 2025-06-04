@@ -10,6 +10,7 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
+      python manage.py populate_db --force
     startCommand: gunicorn mysite.wsgi:application
     envVars:
       - key: DEBUG
@@ -24,7 +25,7 @@ services:
         value: https://hoolis.vercel.app/
       - key: DATABASE_URL
         fromDatabase:
-          name: hoolis_db
+          name: hoolis-db
           property: connectionString
 
   # Frontend React (optionnel - recommandé sur Vercel/Netlify)
