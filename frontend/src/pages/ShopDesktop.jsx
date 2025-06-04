@@ -63,14 +63,29 @@ export default function Shop() {
         const response1 = await axios.get(`http://${host_address}:${port}/store/products/`, {
           withCredentials: true  // Inclure les credentials pour CORS
         });
-        setProducts(response1.data.results);
+        
+        console.log("📡 Réponse complète de l'API:", response1.data);
+        
+        // Gestion de différentes structures de réponse
+        let productsData = response1.data.results || response1.data || [];
+        
+        setProducts(productsData);
+        console.log("🛍️ Produits récupérés:", productsData);
+        
+        // Log des collections disponibles
+        if (productsData && productsData.length > 0) {
+          const collections = [...new Set(productsData.map(product => product.collection?.name))];
+          console.log("📦 Collections disponibles:", collections);
+        } else {
+          console.log("⚠️ Aucun produit trouvé dans la réponse");
+        }
 
       } catch (error) {
-        console.error('Erreur lors de la récupération des produits:', error);
+        console.error('❌ Erreur lors de la récupération des produits:', error);
+        console.error('📍 URL appelée:', `http://${host_address}:${port}/store/products/`);
       }
     };
     fetchProducts();
-    console.log(products);
 
   }, []);
 
@@ -96,14 +111,22 @@ export default function Shop() {
 
   
   useEffect(() => {
-    if (collectionChosen && !displayedCollection) {
+    if (collectionChosen) {
       setDisplayedCollection(collectionChosen);
     }
-  }, [collectionChosen, displayedCollection]);
+  }, [collectionChosen]);
 
 
   useGSAP(() => {
-    console.log(collectionChosen);
+    console.log("🎯 Collection choisie:", collectionChosen);
+    console.log("📋 Collection affichée:", displayedCollection);
+    
+    // Debug du filtrage
+    if (products && products.length > 0 && displayedCollection) {
+      const filteredProducts = products.filter(article => article.collection?.name === displayedCollection);
+      console.log(`🔍 Produits filtrés pour "${displayedCollection}":`, filteredProducts);
+    }
+    
     const timeline = gsap.timeline();
     timeline
       .to(collectionRef.current, {

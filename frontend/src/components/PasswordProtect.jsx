@@ -20,7 +20,7 @@ const PasswordProtect = ({ children }) => {
 
       // Vérifier la session Django
       try {
-        const response = await fetch('http://localhost:8000/api/check-access/', {
+        const response = await fetch(`http://localhost:8000/api/check-access/`, {
           method: 'GET',
           credentials: 'include', // Important pour les cookies de session
         });
@@ -49,7 +49,7 @@ const PasswordProtect = ({ children }) => {
 
     try {
       // Appel API au backend Django pour vérifier le mot de passe
-      const response = await fetch('http://localhost:8000/api/verify-access/', {
+      const response = await fetch(`http://localhost:8000/api/verify-access/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

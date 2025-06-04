@@ -8,13 +8,8 @@ class PasswordProtectMiddleware:
         self.password = getattr(settings, 'PREVIEW_PASSWORD', 'demo')
 
     def __call__(self, request):
-        # Ne pas protéger les endpoints API et admin
-        if (request.path.startswith('/api/') or 
-            request.path.startswith('/admin/') or 
-            request.path.startswith('/auth/') or 
-            request.path.startswith('/store/') or
-            request.path == '/'):  # Permettre l'accès à la racine de l'API
-            return self.get_response(request)
+        if request.path.startswith('/api/') or request.path.startswith('/admin/'):
+            return self.get_response(request)  # Ne protège que le frontend
 
         if request.session.get('has_access'):
             return self.get_response(request)

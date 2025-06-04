@@ -3,9 +3,9 @@ Django settings for mysite project.
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,12 +13,12 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h-30p5e_5(a@)%
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-# Configuration spéciale pour Render
+# Configuration pour Azure et Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS = [
         RENDER_EXTERNAL_HOSTNAME,
-        'hoolis-api.onrender.com',
+        '18.156.158.53',  # IP Render
         'localhost',
         '127.0.0.1',
         '0.0.0.0',
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'mysite.access.PasswordProtectMiddleware',
 ]
 
-PREVIEW_PASSWORD = os.environ.get('PREVIEW_PASSWORD', 'default_password_change_me')
+PREVIEW_PASSWORD = os.environ.get('PREVIEW_PASSWORD', 'patesaucisse2025!')
 
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
@@ -85,32 +85,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-# Configuration de base de données avec support PostgreSQL pour Render
-if os.environ.get('DATABASE_URL'):
-    # Configuration pour Render (PostgreSQL)
-    DATABASES = {
-        'default': dj_database_url.parse(
-            os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+# Base de données - SQL Server en local
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mssql',
+#         'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+#         'USER': os.environ.get('DB_USER', 'sa'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT': os.environ.get('DB_PORT', '1433'),
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',
+#             'extra_params': 'TrustServerCertificate=yes',
+#         },
+#     }
+# }
+
+# Base de données PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '258528wY.'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
-else:
-    # Configuration locale (SQL Server)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'mssql',
-            'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-            'USER': os.environ.get('DB_USER', 'sa'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '1433'),
-            'OPTIONS': {
-                'driver': 'ODBC Driver 17 for SQL Server',
-                'extra_params': 'TrustServerCertificate=yes',
-            },
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -190,32 +192,29 @@ SIMPLE_JWT = {
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
-        # Développement local
+        # Développement local - HTTP seulement
         "http://localhost:5173",
-        "https://localhost:5173",
+        "http://localhost:5174",
         "http://127.0.0.1:5173",
-        "https://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
         "http://10.81.234.10:5173",
-        "https://10.81.234.10:5173",
+        "http://10.81.234.10:5174",
         "http://192.168.56.1:5173",
-        "https://192.168.56.1:5173",
+        "http://192.168.56.1:5174",
         "http://192.168.236.24:5173",
-        "https://192.168.236.24:5173",
+        "http://192.168.236.24:5174",
         "http://10.81.234.130:5173",
-        "https://10.81.234.130:5173",
+        "http://10.81.234.130:5174",
         "http://192.168.1.184:5173",
-        "https://192.168.1.184:5173",
-        # Vercel preview URLs (pour tester en dev)
-        "https://hoolis-frontend.vercel.app",
-        "https://hoolis-frontend-*.vercel.app"
+        "http://192.168.1.184:5174",
     ]
-    # Configuration HTTPS pour le développement
+    # Configuration HTTP pour le développement
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
     # Production - Variables d'environnement
-    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://hoolis.vercel.app').split(',')
+    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
     CORS_ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins if origin.strip()]
     
     # Production settings - full HTTPS enforcement

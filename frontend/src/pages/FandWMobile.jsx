@@ -27,7 +27,7 @@ export default function FandWMobile({ labelRef }) {
     setLoading(true);
     setError(null);
     
-    // Essayons avec la nouvelle URL
+    // Use HTTP for development API calls
     const apiUrl = window.location.hostname === 'localhost' 
       ? `http://${host_address}:${port}/store/watches/` 
       : `http://${window.location.hostname}:${port}/store/watches/`;

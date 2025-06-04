@@ -38,13 +38,15 @@ export default function FandW() {
   }, []);
 
   useGSAP(() => {
-    gsap.to(screenRef.current, {
-      backgroundColor: "#000000",
-      duration: 0.75,
-      ease: "power3.inOut",
-      opacity: 1
-    });
-  }, []);
+    if (!isMobile && screenRef.current) {
+      gsap.to(screenRef.current, {
+        backgroundColor: "#000000",
+        duration: 0.75,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [isMobile]);
 
   return (
     <>

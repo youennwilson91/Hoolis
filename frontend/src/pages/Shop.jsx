@@ -38,13 +38,16 @@ export default function Shop() {
   }, []);
 
   useGSAP(() => {
-    gsap.to(screenRef.current, {
-      backgroundColor: "#000000",
-      duration: 0.75,
-      ease: "power3.inOut",
-      opacity: 1
-    });
-  }, []);
+    // Only animate screenRef if we're not in mobile mode and screenRef exists
+    if (!isMobile && screenRef.current) {
+      gsap.to(screenRef.current, {
+        backgroundColor: "#000000",
+        duration: 0.75,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [isMobile]);
 
   return (
     <>
