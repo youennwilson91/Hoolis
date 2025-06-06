@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuration API centralisée
-const API_BASE_URL = 'https://hoolis-api.onrender.com' || 'http://localhost:8000';
+const API_BASE_URL = 'https://hoolis.onrender.com' || 'http://localhost:8000';
 
 // Instance axios configurée
 export const apiClient = axios.create({
@@ -16,7 +16,11 @@ export const API_ENDPOINTS = {
   products: '/store/products/',
   availableSlots: '/store/available-slots-watches/',
   bookings: '/store/bookings-watches/',
+  availableSlotsProducts: '/store/available-slots-products/',
+  bookingsProducts: '/store/bookings-products/',
   collections: '/store/collections/',
+  checkAccess: '/api/check-access/',
+  verifyAccess: '/api/verify-access/',
 };
 
 // Configuration par défaut d'axios pour tout le projet
