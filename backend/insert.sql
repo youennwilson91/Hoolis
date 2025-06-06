@@ -1,8 +1,6 @@
 -- Script SQL pour peupler la base de données Hoolis
 -- Compatible avec les modèles Django
 
--- Désactiver les vérifications de clés étrangères temporairement
-SET session_replication_role = replica;
 
 -- 1. Utilisateurs (core_user)
 INSERT INTO core_user (
@@ -19,26 +17,26 @@ INSERT INTO core_user (
  'pbkdf2_sha256$600000$test$hashpassword', NOW(), NOW());
 
 -- 2. Collections (store_collection)
-INSERT INTO store_collection (name, description) VALUES 
-('VETEMENTS', 'Collection de vêtements tendance et accessoires de mode'),
-('MAROQUINERIE', 'Sacs, portefeuilles et accessoires en cuir de qualité');
+INSERT INTO store_collection (id, name, description) VALUES 
+(1, 'VETEMENTS', 'Collection de vêtements tendance et accessoires de mode'),
+(2, 'MAROQUINERIE', 'Sacs, portefeuilles et accessoires en cuir de qualité');
 
 -- 3. Produits (store_product)
-INSERT INTO store_product (title, price, description, collection_id, is_available) VALUES 
+INSERT INTO store_product (id, title, price, description, collection_id, is_available) VALUES 
 -- VETEMENTS
-('T-shirt Premium Blanc', 89.00, 'T-shirt en coton biologique, coupe moderne et confortable', 1, true),
-('T-shirt Premium Noir', 89.00, 'T-shirt élégant en coton premium, finitions soignées', 1, true),
-('Pantalon Chino Beige', 129.00, 'Pantalon chino coupe droite, tissu stretch confortable', 1, true),
-('Pantalon Cargo Street', 149.00, 'Pantalon cargo moderne avec poches utilitaires', 1, true),
-('Pantalon Jogger Sport', 119.00, 'Pantalon de sport décontracté, matière technique respirante', 1, true),
-('Pull Over Col Rond', 159.00, 'Pull en laine mérinos, douceur et chaleur exceptionnelles', 1, true),
-('Sweat Capuche Urban', 139.00, 'Sweat à capuche streetwear, coton molletonné épais', 1, true),
+(1, 'T-shirt Premium Blanc', 89.00, 'T-shirt en coton biologique, coupe moderne et confortable', 1, true),
+(2, 'T-shirt Premium Noir', 89.00, 'T-shirt élégant en coton premium, finitions soignées', 1, true),
+(3, 'Pantalon Chino Beige', 129.00, 'Pantalon chino coupe droite, tissu stretch confortable', 1, true),
+(4, 'Pantalon Cargo Street', 149.00, 'Pantalon cargo moderne avec poches utilitaires', 1, true),
+(5, 'Pantalon Jogger Sport', 119.00, 'Pantalon de sport décontracté, matière technique respirante', 1, true),
+(6, 'Pull Over Col Rond', 159.00, 'Pull en laine mérinos, douceur et chaleur exceptionnelles', 1, true),
+(7, 'Sweat Capuche Urban', 139.00, 'Sweat à capuche streetwear, coton molletonné épais', 1, true),
 
 -- MAROQUINERIE
-('Portefeuille Cuir Noir', 79.00, 'Portefeuille en cuir véritable, compartiments multiples', 2, true),
-('Sac Bandoulière Vintage', 199.00, 'Sac en cuir vieilli, style vintage authentique', 2, true),
-('Ceinture Cuir Marron', 65.00, 'Ceinture en cuir pleine fleur, boucle métal brossé', 2, true),
-('Porte-cartes Minimaliste', 45.00, 'Porte-cartes compact en cuir, design épuré', 2, true);
+(8, 'Portefeuille Cuir Noir', 79.00, 'Portefeuille en cuir véritable, compartiments multiples', 2, true),
+(9, 'Sac Bandoulière Vintage', 199.00, 'Sac en cuir vieilli, style vintage authentique', 2, true),
+(10, 'Ceinture Cuir Marron', 65.00, 'Ceinture en cuir pleine fleur, boucle métal brossé', 2, true),
+(11, 'Porte-cartes Minimaliste', 45.00, 'Porte-cartes compact en cuir, design épuré', 2, true);
 
 -- 4. Images produits (store_productimage) - avec les vraies images
 INSERT INTO store_productimage (product_id, image) VALUES 
@@ -57,7 +55,7 @@ INSERT INTO store_productimage (product_id, image) VALUES
 (11, 'store/Shop/Articles/acc-4-0.jpg');
 
 
-- Insertion des montres
+-- Insertion des montres
 INSERT INTO store_watch (id, name, description) VALUES 
 (1, 'Watch1', 'Une montre élégante et moderne avec un design sophistiqué. Parfaite pour toutes les occasions.'),
 (2, 'Watch2', 'Montre de luxe au style contemporain, alliant performance et esthétique raffinée.'),
@@ -195,8 +193,6 @@ INSERT INTO tags_taggeditem (tag_id, content_type_id, object_id, created_at) VAL
 UPDATE store_collection SET featured_product_id = 1 WHERE id = 1; -- T-shirt pour VETEMENTS
 UPDATE store_collection SET featured_product_id = 8 WHERE id = 2; -- Portefeuille pour MAROQUINERIE
 
--- Réactiver les vérifications de clés étrangères
-SET session_replication_role = DEFAULT;
 
 -- Mise à jour des séquences pour éviter les conflits d'ID
 SELECT setval('core_user_id_seq', (SELECT MAX(id) FROM core_user));
