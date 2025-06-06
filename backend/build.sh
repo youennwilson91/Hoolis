@@ -11,6 +11,3 @@ python manage.py collectstatic --noinput
 # Run migrations (if needed)
 python manage.py makemigrations
 python manage.py migrate 
-
-# Run insert.sql
-python populate_db.py
