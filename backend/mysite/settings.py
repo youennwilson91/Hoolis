@@ -213,6 +213,7 @@ if DEBUG:
         "http://10.81.234.130:5174",
         "http://192.168.1.184:5173",
         "http://192.168.1.184:5174",
+        "https://hoolis.vercel.app",
     ]
     # Configuration HTTP pour le développement
     SESSION_COOKIE_SECURE = False
