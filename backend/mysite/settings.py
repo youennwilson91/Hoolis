@@ -217,7 +217,7 @@ if DEBUG:
     SECURE_SSL_REDIRECT = False
 else:
     # Production - Variables d'environnement
-    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://hoolis.vercel.app, https://64.29.17.129:5173, https://216.198.79.129:5173').split(',')
     CORS_ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins if origin.strip()]
     
     # Production settings - full HTTPS enforcement
