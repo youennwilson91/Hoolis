@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import useStore from "../utils/store";
 import "./FandW.scss";
-import axios from "axios";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import BookingCalendar from "../components/Calendar";
 
 export default function FandWMobile({ labelRef }) {
@@ -12,7 +12,7 @@ export default function FandWMobile({ labelRef }) {
   const bookButtonRef = useRef(null);
   const bookingContainerRef = useRef(null);
   
-  const { isBooking, setIsBooking, host_address, port } = useStore();
+  const { isBooking, setIsBooking } = useStore();
   const [medias, setMedias] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,24 +21,15 @@ export default function FandWMobile({ labelRef }) {
     setIsBooking(false);
   }, []);
 
-  // Essayons une approche directe avec des données en dur si nécessaire
+  // Appels API avec configuration centralisée
   useEffect(() => {
     console.log("Tentative de connexion à l'API...");
     setLoading(true);
     setError(null);
     
-    // Use HTTP for development API calls
-    const apiUrl = window.location.hostname === 'localhost' 
-      ? `http://${host_address}:${port}/store/watches/` 
-      : `http://${window.location.hostname}:${port}/store/watches/`;
+    console.log("URL API utilisée:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.watches}`);
     
-    console.log("URL API utilisée:", apiUrl);
-    
-    // On va tester avec Axios directement
-    axios.get(apiUrl, { 
-      timeout: 5000,
-      withCredentials: true  // Inclure les credentials pour CORS
-    })
+    apiClient.get(API_ENDPOINTS.watches)
       .then(response => {
         console.log("Données brutes de l'API:", response.data);
         const watches = response.data.results;
