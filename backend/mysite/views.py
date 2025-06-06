@@ -14,7 +14,6 @@ def api_home(request):
             'store': '/store/',
             'authentication': '/auth/',
             'verify_access': '/api/verify-access/',
-            'check_access': '/api/check-access/',
         },
         'documentation': 'https://github.com/votre-repo/hoolis',
         'contact': 'admin@hoolis.com'
@@ -39,14 +38,5 @@ def verify_access(request):
                 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
-    
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
-
-@csrf_exempt
-def check_access(request):
-    """Vérifier si l'utilisateur a déjà accès via la session Django"""
-    if request.method == 'GET':
-        has_access = request.session.get('has_access', False)
-        return JsonResponse({'has_access': has_access})
     
     return JsonResponse({'error': 'Method not allowed'}, status=405) 
