@@ -27,22 +27,6 @@ services:
         fromDatabase:
           name: hoolis-db
           property: connectionString
-
-  # Frontend React (optionnel - recommandé sur Vercel/Netlify)
-  - type: web
-    name: hoolis-frontend
-    env: node
-    region: oregon
-    plan: free
-    rootDir: frontend
-    buildCommand: |
-      npm install
-      npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://hoolis-api.onrender.com
-
 # Base de données PostgreSQL
 databases:
   - name: hoolis_db
