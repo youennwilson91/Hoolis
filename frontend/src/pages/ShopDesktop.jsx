@@ -35,13 +35,13 @@ export default function Shop() {
     addToCart, setAddToCart,
     setMobileButtonsVisible,
     collectionChosen, setCollectionChosen,
-    products, setProducts,
+    products = [], setProducts,
     isMouseActive, setIsMouseActive,
     isBooking, setIsBooking
   } = useStore();
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
-  const [displayedCollection, setDisplayedCollection] = useState("VETEMENTS");
+  const [displayedCollection, setDisplayedCollection] = useState("");
 
   useEffect(() => {
     setIsClicked(false);
@@ -69,6 +69,12 @@ export default function Shop() {
         // Gestion de différentes structures de réponse
         let productsData = response1.data.results || response1.data || [];
         
+        // Ensure productsData is always an array
+        if (!Array.isArray(productsData)) {
+          console.warn("⚠️ Les données reçues ne sont pas un tableau, conversion en tableau vide");
+          productsData = [];
+        }
+        
         setProducts(productsData);
         console.log("🛍️ Produits récupérés:", productsData);
         
@@ -83,6 +89,8 @@ export default function Shop() {
       } catch (error) {
         console.error('❌ Erreur lors de la récupération des produits:', error);
         console.error('📍 URL appelée:', `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
+        // Ensure products is set to empty array on error
+        setProducts([]);
       }
     };
     fetchProducts();
@@ -122,8 +130,8 @@ export default function Shop() {
     console.log("🎯 Collection choisie:", collectionChosen);
     console.log("📋 Collection affichée:", displayedCollection);
     
-    // Debug du filtrage
-    if (products && products.length > 0 && displayedCollection) {
+    // Debug du filtrage - Add safer array check
+    if (Array.isArray(products) && products.length > 0 && displayedCollection) {
       const filteredProducts = products.filter(article => article.collection?.name === displayedCollection);
       console.log(`🔍 Produits filtrés pour "${displayedCollection}":`, filteredProducts);
     }
@@ -264,20 +272,31 @@ export default function Shop() {
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
             <div className="shop-gallery-articles" ref={collectionRef}> 
 
-              {Array.isArray(products) && products.filter(article => article.collection?.name === displayedCollection).map((article, index) => (
-                <Article 
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  articleIsClicked={articleIsClicked}
-                  clickedArticleId={clickedArticleId}
-                  handleArticleHover={handleArticleHover}
-                  handleArticleClick={handleArticleClick}
-                  handleArticleClose={handleArticleClose}
-                  handleAddToCart={handleAddToCart}
-                  articleRefs={articleRef}
-                />
-              ))}
+              {(() => {
+                // Safe filtering with multiple checks
+                if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                  return null;
+                }
+                
+                const filteredProducts = products.filter(article => 
+                  article && article.collection && article.collection.name === displayedCollection
+                );
+
+                return filteredProducts.map((article, index) => (
+                  <Article 
+                    key={article.id}
+                    article={article}
+                    index={index}
+                    articleIsClicked={articleIsClicked}
+                    clickedArticleId={clickedArticleId}
+                    handleArticleHover={handleArticleHover}
+                    handleArticleClick={handleArticleClick}
+                    handleArticleClose={handleArticleClose}
+                    handleAddToCart={handleAddToCart}
+                    articleRefs={articleRef}
+                  />
+                ));
+              })()}
             </div>
           </div>
           }
