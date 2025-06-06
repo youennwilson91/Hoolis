@@ -1,4 +1,3 @@
-import axios from "axios";
 import Button from "../components/NavButtons.jsx";
 import useStore from "../utils/store.jsx";
 import { useRef, useEffect, useState } from "react";
@@ -10,6 +9,8 @@ import "./Shop.scss";
 import "../components/GalleryButtons.scss";
 import ShopMobile from "./ShopMobile.jsx";
 import BookingCalendar from "../components/Calendar.jsx";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+
 export default function Shop() {
 
   const screenRef = useRef(null);
@@ -36,8 +37,7 @@ export default function Shop() {
     collectionChosen, setCollectionChosen,
     products, setProducts,
     isMouseActive, setIsMouseActive,
-    isBooking, setIsBooking,
-    host_address, port
+    isBooking, setIsBooking
   } = useStore();
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
@@ -60,9 +60,9 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response1 = await axios.get(`http://${host_address}:${port}/store/products/`, {
-          withCredentials: true  // Inclure les credentials pour CORS
-        });
+        console.log("URL API utilisée:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
+        
+        const response1 = await apiClient.get(API_ENDPOINTS.products);
         
         console.log("📡 Réponse complète de l'API:", response1.data);
         
@@ -82,7 +82,7 @@ export default function Shop() {
 
       } catch (error) {
         console.error('❌ Erreur lors de la récupération des produits:', error);
-        console.error('📍 URL appelée:', `http://${host_address}:${port}/store/products/`);
+        console.error('📍 URL appelée:', `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
       }
     };
     fetchProducts();

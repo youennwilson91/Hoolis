@@ -14,18 +14,12 @@ const useStore = create(
   buttonsVisible: true,
   isClicked: false,
   
-  // API Configuration
-  host_address: "localhost",
-  port: "8000",
-  
   setBgColor: (color) => set({ bgColor: color }),
   setLabel: (text) => set({ label: text }),
   setLabelColor: (color) => set({ labelColor: color }),
   setCrownVisible: (visible) => set({ crownVisible: visible }),
   setButtonsVisible: (visible) => set({ buttonsVisible: visible }),
   setIsClicked: (visible) => set({ isClicked: visible }),
-  setHostAddress: (address) => set({ host_address: address }),
-  setPort: (port) => set({ port: port }),
 
   // Shop Page
   galleryVisible: false,
@@ -82,10 +76,6 @@ const useStore = create(
     galleryVisible: false,
     cartVisible: false,
     addToCart: [],
-    
-    // API Configuration
-    host_address: "localhost",
-    port: "8000",
 
     // Mobile Landing Page
     mobileButtonsVisible: true,

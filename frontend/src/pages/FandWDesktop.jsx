@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import "./FandW.scss";
 import "../components/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar";
-import axios from "axios";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 
 
 export default function FandW() {
@@ -20,8 +20,6 @@ export default function FandW() {
     isMouseActive, setIsMouseActive,
     isBooking, setIsBooking,
     setIsMobile,
-    host_address,
-    port,
     watches, setWatches
   } = useStore();
 
@@ -65,14 +63,9 @@ export default function FandW() {
 
       const attemptFetch = async () => {
         try {
-          // Use HTTP for development API calls
-          const apiUrl = window.location.hostname === 'localhost' 
-            ? `http://${host_address}:${port}/store/watches/` 
-            : `http://${window.location.hostname}:${port}/store/watches/`;
+          console.log("URL API utilisée:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.watches}`);
           
-          const response = await axios.get(apiUrl, {
-            withCredentials: true  // Inclure les credentials pour CORS
-          });
+          const response = await apiClient.get(API_ENDPOINTS.watches);
           const watchesData = response.data.results;
           
           setWatches(watchesData);
@@ -110,7 +103,7 @@ export default function FandW() {
     };
 
     fetchWatches();
-  }, [host_address, port]);
+  }, []);
   
 
   // Mouse activity tracker

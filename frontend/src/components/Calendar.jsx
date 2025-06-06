@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import "./Calendar.scss";
-import useStore from '../utils/store';
+import './Calendar.scss';
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import useStore from "../utils/store";
 import { useLocation } from 'react-router-dom';
 
-function BookingCalendar() {
-  const [selectedDate, setSelectedDate] = useState(null);
+const BookingCalendar = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [formattedDate, setFormattedDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
   const [email, setEmail] = useState("");
-  const [selectedWatch, setSelectedWatch] = useState(null);
-
-
-  const { isBooking, setIsBooking, host_address, port, products, watches } = useStore();
+  const [selectedWatch, setSelectedWatch] = useState("");
+  const [availableWatches, setAvailableWatches] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  
+  const { isBooking, setIsBooking, products, watches, medias } = useStore();
 
   const location = useLocation();
 
@@ -57,9 +57,7 @@ function BookingCalendar() {
     try {
       const formattedDate = new Date(date).toISOString().split('T')[0];
       
-      const response = await axios.get(`http://${host_address}:${port}/store/available_slots/?date=${formattedDate}`, {
-        withCredentials: true  // Inclure les credentials pour CORS
-      });
+      const response = await apiClient.get(`${API_ENDPOINTS.availableSlots}?date=${formattedDate}`);
       console.log('API response:', response.data);
       const slotsArray = response.data.results || [];
       setSlots(slotsArray);
@@ -76,14 +74,12 @@ function BookingCalendar() {
     if (!selectedWatch) return alert("Veuillez sélectionner une montre !");
     
     console.log(selectedWatch);
-    axios.post(`http://${host_address}:${port}/store/bookings/`, {
+    apiClient.post(API_ENDPOINTS.bookings, {
       name: name,
       watch: selectedWatch,
       date: formattedDate,
       start_time: slot.start_time,
       end_time: slot.end_time
-    }, {
-      withCredentials: true  // Inclure les credentials pour CORS
     }).then(() => {
       setIsSuccess(true);
       setSlots(slots.filter(s => s.start_time !== slot.start_time)); // retirer le créneau réservé

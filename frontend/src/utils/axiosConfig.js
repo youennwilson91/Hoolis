@@ -1,5 +1,24 @@
 import axios from 'axios';
 
+// Configuration API centralisée
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+// Instance axios configurée
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+  timeout: 10000,
+});
+
+// Endpoints API centralisés
+export const API_ENDPOINTS = {
+  watches: '/store/watches/',
+  products: '/store/products/',
+  availableSlots: '/store/available-slots-watches/',
+  bookings: '/store/bookings-watches/',
+  collections: '/store/collections/',
+};
+
 // Configuration par défaut d'axios pour tout le projet
 axios.defaults.withCredentials = true;
 
