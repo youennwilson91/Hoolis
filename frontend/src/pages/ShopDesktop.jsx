@@ -9,7 +9,7 @@ import "./Shop.scss";
 import "../components/GalleryButtons.scss";
 import ShopMobile from "./ShopMobile.jsx";
 import BookingCalendar from "../components/Calendar.jsx";
-import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS, API_BASE_URL } from "../utils/axiosConfig";
 
 export default function Shop() {
 
@@ -60,14 +60,12 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        console.log("URL API utilisée:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
+        console.log("URL API utilisée:", `${API_BASE_URL}${API_ENDPOINTS.products}`);
         
-        const response1 = await apiClient.get(API_ENDPOINTS.products);
-        
-        console.log("📡 Réponse complète de l'API:", response1.data);
-        
+        const response = await apiClient.get(`${API_BASE_URL}${API_ENDPOINTS.products}`);
+                
         // Gestion de différentes structures de réponse
-        let productsData = response1.data.results || response1.data || [];
+        let productsData = response.data.results || response.data || [];
         
         // Ensure productsData is always an array
         if (!Array.isArray(productsData)) {
@@ -88,7 +86,7 @@ export default function Shop() {
 
       } catch (error) {
         console.error('❌ Erreur lors de la récupération des produits:', error);
-        console.error('📍 URL appelée:', `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
+        console.error('�� URL appelée:', `${API_BASE_URL}${API_ENDPOINTS.products}`);
         // Ensure products is set to empty array on error
         setProducts([]);
       }
