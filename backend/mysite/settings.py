@@ -217,7 +217,7 @@ if DEBUG:
     SECURE_SSL_REDIRECT = False
 else:
     # Production - Variables d'environnement
-    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://hoolis.vercel.app, https://64.29.17.129:5173, https://216.198.79.129:5173').split(',')
+    allowed_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://hoolis.vercel.app').split(',')
     CORS_ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins if origin.strip()]
     
     # Production settings - full HTTPS enforcement
@@ -247,9 +247,8 @@ CACHES = {
     }
 }
 
+# Configuration CORS robuste
 CORS_ALLOW_CREDENTIALS = True
-
-# Ajouter les configurations CORS manquantes
 CORS_ALLOW_ALL_ORIGINS = False
 
 # Permettre toutes les méthodes HTTP
@@ -283,4 +282,7 @@ CORS_EXPOSE_HEADERS = [
     'Content-Type',
     'X-CSRFToken',
 ]
+
+# Bypass CORS check pour certaines URLs (notamment pour les OPTIONS requests)
+CORS_URLS_REGEX = r'^.*$'
 

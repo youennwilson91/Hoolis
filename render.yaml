@@ -13,22 +13,22 @@ services:
       python manage.py populate_db --force
     startCommand: gunicorn mysite.wsgi:application
     envVars:
-      - key: DEBUG
+      - key: DJANGO_DEBUG
         value: False
       - key: SECRET_KEY
         generateValue: true
       - key: PREVIEW_PASSWORD
         value: patesaussice91!
-      - key: ALLOWED_HOSTS
+      - key: DJANGO_ALLOWED_HOSTS
         value: hoolis-api.onrender.com,localhost
       - key: CORS_ALLOWED_ORIGINS
-        value: https://hoolis.vercel.app
+        value: https://hoolis.vercel.app,https://hoolis-api.onrender.com
       - key: DATABASE_URL
         fromDatabase:
           name: hoolis-db
           property: connectionString
 # Base de données PostgreSQL
 databases:
-  - name: hoolis_db
+  - name: hoolis-db
     region: oregon
     plan: free 

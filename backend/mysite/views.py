@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.conf import settings
 import json
 
@@ -20,7 +21,17 @@ def api_home(request):
     })
 
 @csrf_exempt
+@require_http_methods(["GET", "POST", "OPTIONS"])
 def verify_access(request):
+    # Gérer les requêtes preflight OPTIONS
+    if request.method == 'OPTIONS':
+        response = JsonResponse({'status': 'ok'})
+        response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+        response['Access-Control-Allow-Credentials'] = 'true'
+        return response
+    
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -32,11 +43,22 @@ def verify_access(request):
             if password == preview_password:
                 # Créer la session Django pour lever la protection du middleware
                 request.session['has_access'] = True
-                return JsonResponse({'success': True})
+                response = JsonResponse({'success': True})
             else:
-                return JsonResponse({'success': False}, status=401)
+                response = JsonResponse({'success': False}, status=401)
+                
+            # Ajouter les headers CORS explicitement
+            response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
+            response['Access-Control-Allow-Credentials'] = 'true'
+            return response
                 
         except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+            response = JsonResponse({'error': 'Invalid JSON'}, status=400)
+            response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
+            response['Access-Control-Allow-Credentials'] = 'true'
+            return response
     
-    return JsonResponse({'error': 'Method not allowed'}, status=405) 
+    response = JsonResponse({'error': 'Method not allowed'}, status=405)
+    response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
+    response['Access-Control-Allow-Credentials'] = 'true'
+    return response 
