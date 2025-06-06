@@ -34,7 +34,6 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
       
     
     function handleClick(index) {
-      
       if (!galleryVisible) {
         setGalleryVisible(true);
         setCollectionChosen(buttons[index].label);

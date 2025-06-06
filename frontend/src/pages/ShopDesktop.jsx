@@ -9,7 +9,7 @@ import "./Shop.scss";
 import "../components/GalleryButtons.scss";
 import ShopMobile from "./ShopMobile.jsx";
 import BookingCalendar from "../components/Calendar.jsx";
-import { apiClient, API_ENDPOINTS, API_BASE_URL } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 
 export default function Shop() {
 
@@ -60,28 +60,20 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-
-        const response = await apiClient.get(`https://hoolis.onrender.com/store/products/`);
-                
-        // Gestion de différentes structures de réponse
-        let productsData = response.data.results || response.data || [];
+        const response = await apiClient.get(API_ENDPOINTS.products);
+        let productsData = response.data.results;
         
-        setProducts(productsData);
-        console.log("🛍️ Produits récupérés:", productsData);
-        
-        // Log des collections disponibles
-        if (productsData && productsData.length > 0) {
-          const collections = [...new Set(productsData.map(product => product.collection?.name))];
-          console.log("📦 Collections disponibles:", collections);
+        if (productsData && Array.isArray(productsData)) {
+          setProducts(productsData);
+          console.log("✅ Produits récupérés:", productsData.length);
         } else {
-          console.log("⚠️ Aucun produit trouvé dans la réponse");
+          console.log("⚠️ Aucun produit trouvé");
+          setProducts([]);
         }
 
       } 
       catch (error) {
         console.error('❌ Erreur lors de la récupération des produits:', error);
-        console.error('�� URL appelée:', `${API_BASE_URL}${API_ENDPOINTS.products}`);
-        // Ensure products is set to empty array on error
         setProducts([]);
       }
     };
@@ -109,25 +101,8 @@ export default function Shop() {
     }
   }, [galleryVisible]);
 
-  
-  useEffect(() => {
-    if (collectionChosen) {
-      console.log("🎯 Collection choisie (useEffect):", collectionChosen);
-      setDisplayedCollection(collectionChosen);
-    }
-  }, [collectionChosen]);
-
 
   useGSAP(() => {
-    console.log("🎯 Collection choisie:", collectionChosen);
-    console.log("📋 Collection affichée:", displayedCollection);
-    
-    // Debug du filtrage - Add safer array check
-    if (Array.isArray(products) && products.length > 0 && displayedCollection) {
-      const filteredProducts = products.filter(article => article.collection?.name === displayedCollection);
-      console.log(`🔍 Produits filtrés pour "${displayedCollection}":`, filteredProducts);
-    }
-    
     if (collectionChosen && collectionRef.current) {
       const timeline = gsap.timeline();
       timeline
@@ -185,7 +160,6 @@ export default function Shop() {
   }
 
   function handleArticleClick(articleRef, id) {
-    console.log("Article cliqué, id:", id);
     if (!articleIsClicked) {
       setArticleIsClicked(true);
       setClickedArticleId(id);
@@ -265,7 +239,6 @@ export default function Shop() {
             <div className="shop-gallery-articles" ref={collectionRef}> 
 
               {(() => {
-                // Safe filtering with multiple checks
                 if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                   return null;
                 }
