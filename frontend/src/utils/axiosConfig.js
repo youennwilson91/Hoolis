@@ -102,8 +102,17 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Si c'est une erreur 401, supprimer les tokens et forcer la reconnexion
+    // Si c'est une erreur 401, vérifier le contexte de la requête
     if (error.response?.status === 401) {
+      const requestUrl = error.config?.url || '';
+      
+      // Si c'est une tentative de connexion initiale, ne pas recharger la page
+      if (requestUrl.includes('/auth/jwt/create/')) {
+        console.log('❌ Erreur de connexion - identifiants incorrects');
+        return Promise.reject(error);
+      }
+      
+      // Si c'est une autre requête avec un token invalide, supprimer les tokens et recharger
       console.log('❌ Token invalide, suppression des tokens');
       clearTokens();
       // Recharger la page pour forcer la reconnexion
