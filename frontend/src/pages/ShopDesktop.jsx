@@ -41,7 +41,7 @@ export default function Shop() {
   } = useStore();
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
-  const [displayedCollection, setDisplayedCollection] = useState(null);
+  const [displayedCollection, setDisplayedCollection] = useState("VETEMENTS");
 
   useEffect(() => {
     setIsClicked(false);
@@ -112,6 +112,7 @@ export default function Shop() {
   
   useEffect(() => {
     if (collectionChosen) {
+      console.log("🎯 Collection choisie (useEffect):", collectionChosen);
       setDisplayedCollection(collectionChosen);
     }
   }, [collectionChosen]);
@@ -127,21 +128,23 @@ export default function Shop() {
       console.log(`🔍 Produits filtrés pour "${displayedCollection}":`, filteredProducts);
     }
     
-    const timeline = gsap.timeline();
-    timeline
-      .to(collectionRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 0,
-        onComplete: () => {
-          setDisplayedCollection(collectionChosen);
-        }
-      })
-      .to(collectionRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 1
-      });
+    if (collectionChosen && collectionRef.current) {
+      const timeline = gsap.timeline();
+      timeline
+        .to(collectionRef.current, {
+          duration: 0.40,
+          ease: "power3.inOut",
+          opacity: 0,
+          onComplete: () => {
+            setDisplayedCollection(collectionChosen);
+          }
+        })
+        .to(collectionRef.current, {
+          duration: 0.40,
+          ease: "power3.inOut",
+          opacity: 1
+        });
+    }
   }, [collectionChosen]);
 
   useGSAP(() => {
@@ -261,7 +264,7 @@ export default function Shop() {
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
             <div className="shop-gallery-articles" ref={collectionRef}> 
 
-              {Array.isArray(products) && products.filter(article => article.collection.name === displayedCollection).map((article, index) => (
+              {Array.isArray(products) && products.filter(article => article.collection?.name === displayedCollection).map((article, index) => (
                 <Article 
                   key={article.id}
                   article={article}
