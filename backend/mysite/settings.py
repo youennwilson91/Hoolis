@@ -249,3 +249,38 @@ CACHES = {
 
 CORS_ALLOW_CREDENTIALS = True
 
+# Ajouter les configurations CORS manquantes
+CORS_ALLOW_ALL_ORIGINS = False
+
+# Permettre toutes les méthodes HTTP
+CORS_ALLOWED_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Permettre tous les headers nécessaires
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Durée de cache pour les requêtes preflight
+CORS_PREFLIGHT_MAX_AGE = 86400
+
+# Permettre les headers d'exposition
+CORS_EXPOSE_HEADERS = [
+    'Content-Type',
+    'X-CSRFToken',
+]
+
