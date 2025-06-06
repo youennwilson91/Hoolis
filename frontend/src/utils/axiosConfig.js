@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-// Configuration API centralisée
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://hoolis.onrender.com';
+// Configuration axios pour l'API Django
+export const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://hoolis.onrender.com'
+  : 'http://localhost:8000';
 
 // Instance axios configurée
 export const apiClient = axios.create({
@@ -19,7 +21,6 @@ export const API_ENDPOINTS = {
   availableSlotsProducts: '/store/available-slots-products/',
   bookingsProducts: '/store/bookings-products/',
   collections: '/store/collections/',
-  checkAccess: '/api/check-access/',
   verifyAccess: '/api/verify-access/',
 };
 
