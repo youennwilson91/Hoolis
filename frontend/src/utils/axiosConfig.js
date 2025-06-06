@@ -55,5 +55,4 @@ axios.interceptors.response.use(
   }
 );
 
-export { API_BASE_URL };
 export default axios; 
