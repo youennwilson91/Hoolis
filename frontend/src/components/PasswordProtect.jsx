@@ -7,6 +7,9 @@ const PasswordProtect = ({ children }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+  // Configuration de l'URL de l'API basée sur l'environnement
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
   useEffect(() => {
     const checkAuthStatus = async () => {
       // Vérifier si déjà authentifié localement
@@ -20,7 +23,7 @@ const PasswordProtect = ({ children }) => {
 
       // Vérifier la session Django
       try {
-        const response = await fetch(`http://localhost:8000/api/check-access/`, {
+        const response = await fetch(`${API_BASE_URL}/api/check-access/`, {
           method: 'GET',
           credentials: 'include', // Important pour les cookies de session
         });
@@ -40,7 +43,7 @@ const PasswordProtect = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,7 +52,7 @@ const PasswordProtect = ({ children }) => {
 
     try {
       // Appel API au backend Django pour vérifier le mot de passe
-      const response = await fetch(`http://localhost:8000/api/verify-access/`, {
+      const response = await fetch(`${API_BASE_URL}/api/verify-access/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
