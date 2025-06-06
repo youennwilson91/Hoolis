@@ -60,18 +60,11 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        console.log("URL API utilisée:", `${API_BASE_URL}${API_ENDPOINTS.products}`);
-        
-        const response = await apiClient.get(`${API_BASE_URL}${API_ENDPOINTS.products}`);
+
+        const response = await apiClient.get(`https://hoolis.onrender.com/store/products/`);
                 
         // Gestion de différentes structures de réponse
         let productsData = response.data.results || response.data || [];
-        
-        // Ensure productsData is always an array
-        if (!Array.isArray(productsData)) {
-          console.warn("⚠️ Les données reçues ne sont pas un tableau, conversion en tableau vide");
-          productsData = [];
-        }
         
         setProducts(productsData);
         console.log("🛍️ Produits récupérés:", productsData);
@@ -84,7 +77,8 @@ export default function Shop() {
           console.log("⚠️ Aucun produit trouvé dans la réponse");
         }
 
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('❌ Erreur lors de la récupération des produits:', error);
         console.error('�� URL appelée:', `${API_BASE_URL}${API_ENDPOINTS.products}`);
         // Ensure products is set to empty array on error
