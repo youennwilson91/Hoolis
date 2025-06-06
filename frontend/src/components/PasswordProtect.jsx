@@ -1,12 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './PasswordProtect.scss';
-import { API_BASE_URL } from '../utils/axiosConfig';
+import { apiClient, API_ENDPOINTS } from '../utils/axiosConfig';
 
 const PasswordProtect = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Vérifier si l'utilisateur est déjà authentifié au chargement
+  useEffect(() => {
+    const checkExistingAuth = async () => {
+      const refreshToken = localStorage.getItem('hoolis_token_refresh');
+      const accessToken = localStorage.getItem('hoolis_token_access');
+
+      if (accessToken) {
+        try {
+          const response = await apiClient.post(API_ENDPOINTS.jwtVerify, {
+            token: accessToken
+          });
+          setIsAuthenticated(true);
+        } catch (error) {
+          // Token invalide, on le supprime
+          try {
+            const response = await apiClient.post(API_ENDPOINTS.jwtRefresh, {
+              refresh: refreshToken
+            });
+            localStorage.setItem('hoolis_token_access', response.data.access);
+            localStorage.setItem('hoolis_token_refresh', response.data.refresh);
+            setIsAuthenticated(true);
+          } catch (error) {
+            console.error('Erreur lors de la suppression des tokens:', error);
+            localStorage.removeItem('hoolis_token_access');
+            localStorage.removeItem('hoolis_token_refresh');
+          }
+        }
+      }
+      
+      setIsCheckingAuth(false);
+    };
+
+    checkExistingAuth();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,38 +51,47 @@ const PasswordProtect = ({ children }) => {
     setIsLoading(true);
 
     try {
-      // Appel API au backend Django pour vérifier le mot de passe
-      const response = await fetch(`${API_BASE_URL}/api/verify-access/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ password: password }),
+      const response = await apiClient.post(API_ENDPOINTS.jwtCreate, {
+        username: username,
+        password: password
       });
 
-      if (response.ok) {
-        localStorage.setItem('hoolis_access', 'true');
-        setIsAuthenticated(true);
+      // Sauvegarder les tokens
+      localStorage.setItem('hoolis_token_access', response.data.access);
+      localStorage.setItem('hoolis_token_refresh', response.data.refresh);
+      setIsAuthenticated(true);
+      
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setError('Nom d\'utilisateur ou mot de passe incorrect');
       } else {
-        setError('Mot de passe incorrect');
+        setError('Erreur de connexion au serveur');
       }
-    } catch (err) {
-      setError('Erreur de connexion au serveur');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Vérifier si déjà authentifié localement
-  if (localStorage.getItem('hoolis_access') === 'true' && !isAuthenticated) {
-    setIsAuthenticated(true);
+  // Affichage pendant la vérification de l'authentification
+  if (isCheckingAuth) {
+    return (
+      <div className="password-protect">
+        <div className="password-card">
+          <div className="password-header">
+            <h1>Maison Hoolis</h1>
+            <p>Vérification...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
+  // Si authentifié, afficher le contenu protégé
   if (isAuthenticated) {
     return children;
   }
 
+  // Sinon, afficher le formulaire de connexion
   return (
     <div className="password-protect">
       <div className="password-card">
@@ -63,20 +109,30 @@ const PasswordProtect = ({ children }) => {
           
           <div className="form-group">
             <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nom d'utilisateur"
+              className={error ? 'error' : ''}
+              disabled={isLoading}
+              autoFocus
+              required
+            />
+            <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Mot de passe"
               className={error ? 'error' : ''}
               disabled={isLoading}
-              autoFocus
+              required
             />
           </div>
           
           <button 
             type="submit" 
             className="access-button"
-            disabled={isLoading || !password}
+            disabled={isLoading || !username || !password}
           >
             {isLoading ? 'Vérification...' : 'Entrer'}
           </button>

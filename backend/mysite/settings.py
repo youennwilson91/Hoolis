@@ -7,6 +7,7 @@ import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h-30p5e_5(a@)%@bjo7rmqs4*e=x=sjsaz(4l=n_y*hi^%1s^z')
@@ -57,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'mysite.access.PasswordProtectMiddleware',
 ]
 
 PREVIEW_PASSWORD = os.environ.get('PREVIEW_PASSWORD', '2025!')
@@ -83,9 +83,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
 
-#Base de données - SQL Server en local
+# Base de données - SQL Server en local
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'mssql',
@@ -169,45 +168,9 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {
-        'user_create': 'core.serializers.UserCreateSerializer',
-        'user': 'core.serializers.UserSerializer',
-        'current_user': 'core.serializers.UserSerializer',
-    },
-    'LOGIN_FIELD': 'email',
-    'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-}
-
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,
-}
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
-        # Développement local - HTTP seulement
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://10.81.234.10:5173",
-        "http://192.168.56.1:5173",
-        "http://192.168.236.24:5173",
-        "http://10.81.234.130:5173",
-        "http://192.168.1.184:5173",
-        "http://64.29.17.129:5173",
-        "http://216.198.79.129:5173",
-        "https://64.29.17.129:5173",
-        "https://216.198.79.129:5173",
     ]
     # Configuration HTTP pour le développement
     SESSION_COOKIE_SECURE = False
@@ -284,3 +247,19 @@ CORS_EXPOSE_HEADERS = [
 # Bypass CORS check pour certaines URLs (notamment pour les OPTIONS requests)
 CORS_URLS_REGEX = r'^.*$'
 
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=int(os.environ.get('ACCESS_TOKEN_LIFETIME', '24'))),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=int(os.environ.get('REFRESH_TOKEN_LIFETIME', '15'))),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'core.serializers.UserCreateSerializer',
+        'user': 'core.serializers.UserSerializer',
+        'current_user': 'core.serializers.UserSerializer',
+    },
+}
