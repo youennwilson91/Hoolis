@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuration API centralisée
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = 'https://hoolis-api.onrender.com' || 'http://localhost:8000';
 
 // Instance axios configurée
 export const apiClient = axios.create({

@@ -12,7 +12,7 @@ const PasswordProtect = ({ children }) => {
   });
 
   // Configuration de l'URL de l'API basée sur l'environnement
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const API_BASE_URL = 'https://hoolis-api.onrender.com' || 'http://localhost:8000';
 
   useEffect(() => {
     const checkAuthStatus = async () => {
