@@ -200,20 +200,16 @@ if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         # Développement local - HTTP seulement
         "http://localhost:5173",
-        "http://localhost:5174",
         "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
         "http://10.81.234.10:5173",
-        "http://10.81.234.10:5174",
         "http://192.168.56.1:5173",
-        "http://192.168.56.1:5174",
         "http://192.168.236.24:5173",
-        "http://192.168.236.24:5174",
         "http://10.81.234.130:5173",
-        "http://10.81.234.130:5174",
         "http://192.168.1.184:5173",
-        "http://192.168.1.184:5174",
-        "https://hoolis.vercel.app",
+        "http://64.29.17.129:5173",
+        "http://216.198.79.129:5173",
+        "https://64.29.17.129:5173",
+        "https://216.198.79.129:5173",
     ]
     # Configuration HTTP pour le développement
     SESSION_COOKIE_SECURE = False
