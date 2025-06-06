@@ -52,7 +52,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'mysite.cors_middleware.ForceCorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -250,7 +249,7 @@ CACHES = {
 
 # Configuration CORS robuste
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Permettre toutes les méthodes HTTP
 CORS_ALLOWED_METHODS = [
