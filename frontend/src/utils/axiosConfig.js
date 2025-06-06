@@ -22,16 +22,73 @@ export const API_ENDPOINTS = {
   bookingsProducts: '/store/bookings-products/',
   collections: '/store/collections/',
   verifyAccess: '/api/verify-access/',
+  // Endpoints JWT
+  jwtCreate: '/auth/jwt/create/',
+  jwtRefresh: '/auth/jwt/refresh/',
+  jwtVerify: '/auth/jwt/verify/',
+};
+
+// Fonction pour obtenir le token d'accès
+const getAccessToken = () => {
+  return localStorage.getItem('hoolis_token_access');
+};
+
+// Fonction pour obtenir le token de rafraîchissement
+const getRefreshToken = () => {
+  return localStorage.getItem('hoolis_token_refresh');
+};
+
+// Fonction pour sauvegarder les tokens
+const setTokens = (accessToken, refreshToken) => {
+  localStorage.setItem('hoolis_token_access', accessToken);
+  if (refreshToken) {
+    localStorage.setItem('hoolis_token_refresh', refreshToken);
+  }
+};
+
+// Fonction pour supprimer les tokens
+const clearTokens = () => {
+  localStorage.removeItem('hoolis_token_access');
+  localStorage.removeItem('hoolis_token_refresh');
+};
+
+// Fonction pour rafraîchir le token
+const refreshAccessToken = async () => {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) {
+    throw new Error('No refresh token available');
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}${API_ENDPOINTS.jwtRefresh}`,
+      { refresh: refreshToken }
+    );
+    
+    const { access, refresh: newRefresh } = response.data;
+    setTokens(access, newRefresh || refreshToken);
+    return access;
+  } catch (error) {
+    clearTokens();
+    throw error;
+  }
 };
 
 // Configuration par défaut d'axios pour tout le projet
 axios.defaults.withCredentials = true;
 
-// Intercepteur pour ajouter automatiquement les credentials à toutes les requêtes
-axios.interceptors.request.use(
+// Intercepteur pour ajouter automatiquement le token JWT à toutes les requêtes
+apiClient.interceptors.request.use(
   (config) => {
     // S'assurer que les credentials sont toujours inclus
     config.withCredentials = true;
+    
+    // Ajouter le token JWT si disponible
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    
     return config;
   },
   (error) => {
@@ -40,17 +97,19 @@ axios.interceptors.request.use(
 );
 
 // Intercepteur pour gérer les erreurs de réponse
-axios.interceptors.response.use(
+apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    // Gestion centralisée des erreurs
-    if (error.response?.status === 403) {
-      console.log('Accès refusé - vérification des permissions nécessaire');
-    } else if (error.response?.status === 401) {
-      console.log('Non autorisé - authentification requise');
+    // Si c'est une erreur 401, supprimer les tokens et forcer la reconnexion
+    if (error.response?.status === 401) {
+      console.log('❌ Token invalide, suppression des tokens');
+      clearTokens();
+      // Recharger la page pour forcer la reconnexion
+      window.location.reload();
     }
+    
     return Promise.reject(error);
   }
 );

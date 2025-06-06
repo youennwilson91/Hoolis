@@ -14,11 +14,8 @@ export default function Article({
   articleRefs
 }) {
 
-  console.log("Article data:", article);
   const { isBooking, setIsBooking } = useStore();
   const bookButtonRef = useRef(null);
-
-  console.log("isBooking:", isBooking);
 
   return (
     <div 
