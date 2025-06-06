@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './PasswordProtect.scss';
-
+import { apiClient, API_BASE_URL } from '../utils/axiosConfig';
 const PasswordProtect = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -10,9 +10,6 @@ const PasswordProtect = ({ children }) => {
     isConnected: null, // null = checking, true = connected, false = disconnected
     message: 'Vérification de la connexion...'
   });
-
-  // Configuration de l'URL de l'API basée sur l'environnement
-  const API_BASE_URL = 'https://hoolis-api.onrender.com' || 'http://localhost:8000';
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -31,10 +28,7 @@ const PasswordProtect = ({ children }) => {
 
       // Vérifier la session Django
       try {
-        const response = await fetch(`${API_BASE_URL}/api/check-access/`, {
-          method: 'GET',
-          credentials: 'include', // Important pour les cookies de session
-        });
+        const response = await apiClient.get('/api/check-access/');
 
         if (response.ok) {
           const data = await response.json();
