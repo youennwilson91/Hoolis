@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuration API centralisée
-const API_BASE_URL = 'https://hoolis.onrender.com' || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://hoolis.onrender.com';
 
 // Instance axios configurée
 export const apiClient = axios.create({
@@ -54,4 +54,5 @@ axios.interceptors.response.use(
   }
 );
 
+export { API_BASE_URL };
 export default axios; 
