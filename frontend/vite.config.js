@@ -8,6 +8,20 @@ export default defineConfig({
     react(),
     // mkcert() // Désactivé pour utiliser HTTP en développement
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          animations: ['gsap', '@gsap/react'],
+          utils: ['axios', 'zustand']
+        }
+      }
+    },
+    minify: 'terser',
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000
+  },
   server: {
     https: false, // Désactive HTTPS pour le développement
     host: true,   // Permet l'accès depuis le réseau local
