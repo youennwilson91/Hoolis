@@ -42,6 +42,7 @@ export default function Shop() {
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
     setIsClicked(false);
@@ -103,46 +104,49 @@ export default function Shop() {
 
   // Function to preload images for a collection
   const preloadCollectionImages = (collection) => {
-    return new Promise((resolve) => {
-      if (!Array.isArray(products) || products.length === 0 || !collection) {
-        resolve();
-        return;
+    setImagesLoaded(false);
+    
+    if (!Array.isArray(products) || products.length === 0 || !collection) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const filteredProducts = products.filter(article => 
+      article && article.collection && article.collection.name === collection
+    );
+
+    if (filteredProducts.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const imagePromises = [];
+    
+    filteredProducts.forEach(article => {
+      if (article.images && article.images.length > 0) {
+        article.images.forEach(imageObj => {
+          if (imageObj.image) {
+            const promise = new Promise((imgResolve) => {
+              const img = new Image();
+              img.onload = () => imgResolve();
+              img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
+              img.src = imageObj.image;
+            });
+            imagePromises.push(promise);
+          }
+        });
       }
+    });
 
-      const filteredProducts = products.filter(article => 
-        article && article.collection && article.collection.name === collection
-      );
+    if (imagePromises.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
 
-      if (filteredProducts.length === 0) {
-        resolve();
-        return;
-      }
-
-      const imagePromises = [];
-      
-      filteredProducts.forEach(article => {
-        if (article.images && article.images.length > 0) {
-          article.images.forEach(imageObj => {
-            if (imageObj.image) {
-              const promise = new Promise((imgResolve) => {
-                const img = new Image();
-                img.onload = () => imgResolve();
-                img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
-                img.src = imageObj.image;
-              });
-              imagePromises.push(promise);
-            }
-          });
-        }
-      });
-
-      if (imagePromises.length === 0) {
-        resolve();
-        return;
-      }
-
-      Promise.all(imagePromises).then(() => {
-        resolve();
+    Promise.all(imagePromises).then(() => {
+      // Wait for next frame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        setImagesLoaded(true);
       });
     });
   };
@@ -150,24 +154,28 @@ export default function Shop() {
   useGSAP(() => {
     if (collectionChosen && collectionRef.current) {
       const timeline = gsap.timeline();
-      timeline
-        .to(collectionRef.current, {
-          duration: 0.40,
-          ease: "power3.inOut",
-          opacity: 0,
-          onComplete: async () => {
-            setDisplayedCollection(collectionChosen);
-            // Wait for images to load before showing the collection
-            await preloadCollectionImages(collectionChosen);
-          }
-        })
-        .to(collectionRef.current, {
-          duration: 0.40,
-          ease: "power3.inOut",
-          opacity: 1
-        });
+      timeline.to(collectionRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 0,
+        onComplete: () => {
+          setDisplayedCollection(collectionChosen);
+          preloadCollectionImages(collectionChosen);
+        }
+      });
     }
   }, [collectionChosen, products]);
+
+  // Separate useGSAP for the fade-in animation when images are loaded
+  useGSAP(() => {
+    if (imagesLoaded && collectionRef.current && displayedCollection) {
+      gsap.to(collectionRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [imagesLoaded, displayedCollection]);
 
   useGSAP(() => {
     if (bookingContainerRef.current) {
