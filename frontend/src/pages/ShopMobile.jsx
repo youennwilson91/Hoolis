@@ -84,17 +84,20 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
                   src={article.images?.[0]?.image || '/path/to/default/image.jpg'} 
                   alt={`${article.title || 'Montre de luxe'} - Vue principale - Collection Hoolis`}
                   loading="lazy"
+                  decoding="async"
+                  style={{ backgroundColor: '#f0f0f0' }}
                 />
                 <img 
                   src={article.images?.[1]?.image || '/path/to/default/image.jpg'} 
                   alt={`${article.title || 'Montre de luxe'} - Vue détaillée - Collection Hoolis`}
                   loading="lazy"
+                  decoding="async"
+                  style={{ backgroundColor: '#f0f0f0' }}
                 />
 
                 <div className="mobile-shop-article-details">
                   <h1>{article.title}</h1>
                   <h1>{article.price}€</h1>
-                  {/*<h1 className="add-to-cart" onClick={() => handleAddToCart(article)}>SHOP</h1>*/}
                 </div>
               </div>
             </div>

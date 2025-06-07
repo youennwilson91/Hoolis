@@ -21,9 +21,25 @@ export default function FandWMobile({ labelRef }) {
     setIsBooking(false);
   }, []);
 
-  // Appels API avec configuration centralisée
+  // Appels API avec cache simple
   useEffect(() => {
     console.log("Tentative de connexion à l'API...");
+    
+    // Cache simple
+    const cacheKey = 'watches-cache';
+    const cached = localStorage.getItem(cacheKey);
+    const cacheExpiry = 5 * 60 * 1000; // 5 minutes
+    
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < cacheExpiry) {
+        console.log("Utilisation du cache");
+        setMedias(data);
+        setLoading(false);
+        return;
+      }
+    }
+    
     setLoading(true);
     setError(null);
     
@@ -44,6 +60,12 @@ export default function FandWMobile({ labelRef }) {
           
           console.log("Montres formatées:", formattedWatches);
           setMedias(formattedWatches);
+          
+          // Sauvegarder en cache
+          localStorage.setItem(cacheKey, JSON.stringify({
+            data: formattedWatches,
+            timestamp: Date.now()
+          }));
         } else {
           console.log("Aucune montre trouvée dans l'API");
           setMedias([]);
