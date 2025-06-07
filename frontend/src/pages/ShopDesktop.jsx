@@ -101,6 +101,51 @@ export default function Shop() {
     }
   }, [galleryVisible]);
 
+  // Function to preload images for a collection
+  const preloadCollectionImages = (collection) => {
+    return new Promise((resolve) => {
+      if (!Array.isArray(products) || products.length === 0 || !collection) {
+        resolve();
+        return;
+      }
+
+      const filteredProducts = products.filter(article => 
+        article && article.collection && article.collection.name === collection
+      );
+
+      if (filteredProducts.length === 0) {
+        resolve();
+        return;
+      }
+
+      const imagePromises = [];
+      
+      filteredProducts.forEach(article => {
+        if (article.images && article.images.length > 0) {
+          article.images.forEach(imageObj => {
+            if (imageObj.image) {
+              const promise = new Promise((imgResolve) => {
+                const img = new Image();
+                img.onload = () => imgResolve();
+                img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
+                img.src = imageObj.image;
+              });
+              imagePromises.push(promise);
+            }
+          });
+        }
+      });
+
+      if (imagePromises.length === 0) {
+        resolve();
+        return;
+      }
+
+      Promise.all(imagePromises).then(() => {
+        resolve();
+      });
+    });
+  };
 
   useGSAP(() => {
     if (collectionChosen && collectionRef.current) {
@@ -110,8 +155,10 @@ export default function Shop() {
           duration: 0.40,
           ease: "power3.inOut",
           opacity: 0,
-          onComplete: () => {
+          onComplete: async () => {
             setDisplayedCollection(collectionChosen);
+            // Wait for images to load before showing the collection
+            await preloadCollectionImages(collectionChosen);
           }
         })
         .to(collectionRef.current, {
@@ -120,7 +167,7 @@ export default function Shop() {
           opacity: 1
         });
     }
-  }, [collectionChosen]);
+  }, [collectionChosen, products]);
 
   useGSAP(() => {
     if (bookingContainerRef.current) {
