@@ -30,7 +30,6 @@ class ProductViewSet(ModelViewSet):
     filterset_class = ProductFilter
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
-    permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
