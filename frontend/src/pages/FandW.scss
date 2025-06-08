@@ -5,7 +5,95 @@
 }
 
 .mobile-fandw-container {
-    display: none;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    
+    .booking-container {
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1500;
+        opacity: 0;
+    }
+
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+    }
+
+    .mobile-fandw-watches {
+        flex: 1;
+        width: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        -webkit-overflow-scrolling: touch;
+        
+        &::-webkit-scrollbar {
+            display: none;
+        }
+            
+        .mobile-fandw-watch-image-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            border: 3px solid white;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;                    
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            
+            img, video {
+                flex: 0 0 100%;
+                width: 100%;
+                object-fit: cover;
+                scroll-snap-align: start;
+            }
+        }
+
+        .mobile-fandw-watch-details {
+            margin-top: 10px;
+            padding: 10px;
+            
+            h1 {
+                font-size: 24px;
+                color: white;
+                text-align: center;
+            }
+        }
+    }
+
+    .button-book {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 255, 255, 0.75);
+        border: none;
+        padding: 10px 10px;
+        border-radius: 25px;
+        font-size: 20px;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        
+        &:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+    }
 }
 
 .fandw-container {
@@ -158,102 +246,6 @@
     0% { opacity: 0.5; }
     50% { opacity: 1; }
     100% { opacity: 0.5; }
-}
-
-/*------------------------------------------- MOBILE -------------------------------------------*/
-
-@media (max-width: 900px) {
-    .fandw-container {
-        display: none;
-    }
-
-    .mobile-fandw-container {
-        display: flex;
-        flex-direction: column;
-        width: 100vw;
-        height: 100vh;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-
-        .booking-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-
-
-        }
-
-        .mobile-fandw-watches {
-            flex: 1;
-            width: 100%;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            -webkit-overflow-scrolling: touch;
-            
-            &::-webkit-scrollbar {
-                display: none;
-            }
-                
-            .mobile-fandw-watch-image-container {
-                width: 100%;
-                height: 100vh;
-                display: flex;
-                border: 3px solid white;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;                    
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-                
-                img, video {
-                    flex: 0 0 100%;
-                    width: 100%;
-                    object-fit: cover;
-                    scroll-snap-align: start;
-                }
-            }
-
-            .mobile-fandw-watch-details {
-                margin-top: 10px;
-                padding: 10px;
-                
-                h1 {
-                    font-size: 24px;
-                    color: white;
-                    text-align: center;
-                }
-            }
-        }
-
-        .button-book {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.75);
-            border: none;
-            padding: 10px 10px;
-            border-radius: 25px;
-            font-size: 20px;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            
-            &:active {
-                transform: translateX(-50%) scale(0.98);
-            }
-        }
-    }
 }
 
 @media screen and (max-width: 768px) {
