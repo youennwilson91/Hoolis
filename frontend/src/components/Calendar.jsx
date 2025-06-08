@@ -71,7 +71,7 @@ const BookingCalendar = () => {
   const handleBooking = (slot) => {
     if (!name) return alert("Entrez votre nom avant de réserver !");
     if (!email) return alert("Entrez votre email avant de réserver !");
-    if (!selectedWatch) return alert("Veuillez sélectionner une montre !");
+    if (!selectedWatch) return alert("Veuillez sélectionner un article !");
     
     console.log(selectedWatch);
     apiClient.post(API_ENDPOINTS.bookings, {
@@ -132,7 +132,7 @@ const BookingCalendar = () => {
               onChange={(e) => setSelectedWatch(e.target.value)}
               className="form-input"
             >
-              <option value="">Sélectionnez une montre</option>
+              <option value="">Sélectionnez un article</option>
               {products.length === 0 ? (
                 <option value="" disabled>Chargement des produits...</option>
               ) : (

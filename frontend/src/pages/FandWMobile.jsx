@@ -134,14 +134,14 @@ export default function FandWMobile({ labelRef }) {
   }, []);
 
   useGSAP(() => {
-    if (!loading && watchesContainerRef.current) {
+    if (watchesContainerRef.current) {
       gsap.to(watchesContainerRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
       });
     }
-  }, [loading]);
+  }, [medias]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
