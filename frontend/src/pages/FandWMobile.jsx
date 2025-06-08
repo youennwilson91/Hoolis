@@ -171,7 +171,7 @@ export default function FandWMobile({ labelRef }) {
       <div ref={watchesContainerRef} className="mobile-fandw-watches" style={{ opacity: 0 }}>
         {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
         
-        {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
         
         {loading ? (
           <div style={{color: 'white', padding: '20px'}}>Chargement des produits...</div>

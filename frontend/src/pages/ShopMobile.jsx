@@ -76,7 +76,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   useGSAP(() => {
     gsap.to(mobileScreenRef.current, {
-      backgroundColor: "#D6955B",
+      backgroundColor: "#000000",
       duration: 0.75,
       ease: "power3.inOut",
       opacity: 1
@@ -137,7 +137,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div ref={articlesContainerRef} className="mobile-shop-articles" style={{ opacity: 0 }}>
-        {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
         {imagesLoaded && Array.isArray(products) && products.length > 0 ? (
           products.map((article) => (
             <div key={article.id} className="mobile-shop-article">
