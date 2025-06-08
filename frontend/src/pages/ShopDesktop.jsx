@@ -155,16 +155,23 @@ export default function Shop() {
 
   useGSAP(() => {
     if (collectionChosen && collectionRef.current) {
-      const timeline = gsap.timeline();
-      timeline.to(collectionRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 0,
-        onComplete: () => {
-          setDisplayedCollection(collectionChosen);
-          preloadCollectionImages(collectionChosen);
-        }
-      });
+      // Only fade out if we already have a displayed collection
+      if (displayedCollection) {
+        const timeline = gsap.timeline();
+        timeline.to(collectionRef.current, {
+          duration: 0.40,
+          ease: "power3.inOut",
+          opacity: 0,
+          onComplete: () => {
+            setDisplayedCollection(collectionChosen);
+            preloadCollectionImages(collectionChosen);
+          }
+        });
+      } else {
+        // First time opening, set collection and preload immediately
+        setDisplayedCollection(collectionChosen);
+        preloadCollectionImages(collectionChosen);
+      }
     }
   }, [collectionChosen, products]);
 
