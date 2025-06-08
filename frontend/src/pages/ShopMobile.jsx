@@ -1,17 +1,19 @@
 import Button from "../components/NavButtons";
 import useStore from "../utils/store";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Shop.scss";
 import axios from "axios";
 import BookingCalendar from "../components/Calendar";
+import { BarLoader } from "react-spinners";
 
 export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem }) {
   const mobileScreenRef = useRef(null);
   const mobileCartRef = useRef(null);
   const bookingContainerRef = useRef(null);
   const bookButtonRef = useRef(null);
+  const articlesContainerRef = useRef(null);
   
   const { 
     cartVisible, setCartVisible, 
@@ -20,9 +22,57 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     isBooking, setIsBooking
   } = useStore();
 
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
   useEffect(() => {
     setIsBooking(false);
   }, []);
+
+  // Function to preload all product images
+  const preloadAllImages = () => {
+    setImagesLoaded(false);
+    
+    if (!Array.isArray(products) || products.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const imagePromises = [];
+    
+    products.forEach(article => {
+      if (article.images && article.images.length > 0) {
+        article.images.forEach(imageObj => {
+          if (imageObj.image) {
+            const promise = new Promise((imgResolve) => {
+              const img = new Image();
+              img.onload = () => imgResolve();
+              img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
+              img.src = imageObj.image;
+            });
+            imagePromises.push(promise);
+          }
+        });
+      }
+    });
+
+    if (imagePromises.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    Promise.all(imagePromises).then(() => {
+      // Wait for next frame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        setImagesLoaded(true);
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      preloadAllImages();
+    }
+  }, [products]);
 
   useGSAP(() => {
     gsap.to(mobileScreenRef.current, {
@@ -32,6 +82,17 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
       opacity: 1
     });
   }, []);
+
+  // Animation for articles container when images are loaded
+  useGSAP(() => {
+    if (imagesLoaded && articlesContainerRef.current) {
+      gsap.to(articlesContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [imagesLoaded]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
@@ -75,8 +136,9 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
-      <div className="mobile-shop-articles">
-        {Array.isArray(products) && products.length > 0 ? (
+      <div ref={articlesContainerRef} className="mobile-shop-articles" style={{ opacity: 0 }}>
+        {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        {imagesLoaded && Array.isArray(products) && products.length > 0 ? (
           products.map((article) => (
             <div key={article.id} className="mobile-shop-article">
               <div className="mobile-shop-article-image-container">
@@ -102,9 +164,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               </div>
             </div>
           ))
-        ) : (
-          <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', color: 'white'}}>Loading products...</div>
-        )}
+        ) : null}
 
 
 
