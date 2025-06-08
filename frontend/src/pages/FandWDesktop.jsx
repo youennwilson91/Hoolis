@@ -447,7 +447,7 @@ export default function FandW() {
           />
         )}
         <div ref={watchesContainerRef} className="fandw-watches-container" style={{ opacity: 0 }}>
-          {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+          {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
           <div ref={divRef} className="fandw-div-container">
             {imagesLoaded && medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
           </div>
