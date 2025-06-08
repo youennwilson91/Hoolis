@@ -147,7 +147,7 @@ const BookingCalendar = () => {
               onChange={(e) => setSelectedWatch(e.target.value)}
               className="form-input"
             >
-              <option value="">Sélectionnez une montre</option>
+              <option value="">Sélectionnez un article</option>
               {watches.map((watch) => (
                 <option key={watch.id} value={watch.name}>{watch.name}</option>
               ))}
