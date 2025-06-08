@@ -225,14 +225,15 @@
                 border: 1px solid white;
                 overflow: hidden;
                 position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 
                 img, video {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    display: block;
                 }
             }
         }   
