@@ -295,7 +295,7 @@ export default function Shop() {
 
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
-        <video src="../public/shop-img/bg-vid-shop.mp4" autoPlay muted loop />
+        <video src="/shop-img/bg-vid-shop.mp4" autoPlay muted loop />
         {galleryVisible && 
           <div ref={galleryRef} className="shop-gallery">
             <ShopButtons/>
