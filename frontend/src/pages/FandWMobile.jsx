@@ -18,18 +18,14 @@ export default function FandWMobile({ labelRef }) {
   const [medias, setMedias] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   
   useEffect(() => {
     setIsBooking(false);
   }, []);
 
-  // Function to preload watch images
-  const preloadWatchImages = () => {
-    setImagesLoaded(false);
-    
+  function preloadWatchImages() {
     if (!Array.isArray(medias) || medias.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
@@ -52,14 +48,14 @@ export default function FandWMobile({ labelRef }) {
     });
 
     if (imagePromises.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
     Promise.all(imagePromises).then(() => {
       // Wait for next frame to ensure DOM is ready
       requestAnimationFrame(() => {
-        setImagesLoaded(true);
+        setLoading(false);
       });
     });
   };
@@ -90,8 +86,8 @@ export default function FandWMobile({ labelRef }) {
         } else {
           console.log("Aucune montre trouvée dans l'API");
           setMedias([]);
+          setLoading(false);
         }
-        setLoading(false);
       })
       .catch(error => {
         console.error('Erreur lors de la requête:', error.message);
@@ -137,16 +133,15 @@ export default function FandWMobile({ labelRef }) {
     }
   }, []);
 
-  // Animation for watches container when images are loaded
   useGSAP(() => {
-    if (imagesLoaded && watchesContainerRef.current) {
+    if (!loading && watchesContainerRef.current) {
       gsap.to(watchesContainerRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
       });
     }
-  }, [imagesLoaded]);
+  }, [loading]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
@@ -171,11 +166,9 @@ export default function FandWMobile({ labelRef }) {
       <div ref={watchesContainerRef} className="mobile-fandw-watches" style={{ opacity: 0 }}>
         {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
         
-        {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
         
-        {loading ? (
-          <div style={{color: 'white', padding: '20px'}}>Chargement des produits...</div>
-        ) : imagesLoaded && medias && medias.length > 0 ? (
+        {!loading && medias && medias.length > 0 ? (
           medias.map((media, index) => (
             <div 
               key={media.id} 
