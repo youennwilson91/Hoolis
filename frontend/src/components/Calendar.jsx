@@ -20,7 +20,13 @@ const BookingCalendar = () => {
 
   const location = useLocation();
 
-  // Détermine si on est sur la page shop
+  const apiAvailableSlots = 
+    location.pathname.includes('/fw') 
+    ? API_ENDPOINTS.availableSlots : API_ENDPOINTS.availableSlotsProducts;
+  const apiBookings = 
+    location.pathname.includes('/fw') 
+    ? API_ENDPOINTS.bookings : API_ENDPOINTS.bookingsProducts;
+    
   const isShopPage = location.pathname.includes('/shop') || location.pathname.includes('/hoolis');
 
   // Initialise la valeur par défaut selon la page
@@ -57,7 +63,7 @@ const BookingCalendar = () => {
     try {
       const formattedDate = new Date(date).toISOString().split('T')[0];
       
-      const response = await apiClient.get(`${API_ENDPOINTS.availableSlots}?date=${formattedDate}`);
+      const response = await apiClient.get(`${apiAvailableSlots}?date=${formattedDate}`);
       console.log('API response:', response.data);
       const slotsArray = response.data.results || [];
       setSlots(slotsArray);
@@ -74,7 +80,7 @@ const BookingCalendar = () => {
     if (!selectedWatch) return alert("Veuillez sélectionner un article !");
     
     console.log(selectedWatch);
-    apiClient.post(API_ENDPOINTS.bookings, {
+    apiClient.post(apiBookings, {
       name: name,
       watch: selectedWatch,
       date: formattedDate,
