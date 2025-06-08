@@ -248,7 +248,8 @@ $success-color: #2ecc71;
 /* Responsive styles for mobile devices */
 @media screen and (max-width: 768px) {
   .booking-calendar {
-    max-width: 90%;
+    max-width: 80%;
+    min-height: 70vh;
     padding: 15px 10px;
     
     .close-booking-button {
@@ -294,7 +295,7 @@ $success-color: #2ecc71;
 @media screen and (max-width: 480px) {
   .booking-calendar {
     max-width: 95%;
-    
+    min-height: 70vh;
     .dropdown-datepicker,
     .date-dropdown {
       font-size: 14px;

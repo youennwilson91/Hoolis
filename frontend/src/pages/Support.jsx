@@ -21,7 +21,7 @@ export default function Support() {
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
-      backgroundColor: "#D6955B",
+      backgroundColor: "#000000",
       duration: 0.75,
       ease: "power3.inOut",
       opacity: 1
