@@ -261,8 +261,19 @@ export default function FandW() {
 
   // Animation for watches container when images are loaded
   useGSAP(() => {
-    if (imagesLoaded && watchesContainerRef.current) {
+    if (watchesContainerRef.current) {
       gsap.to(watchesContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [medias]);
+
+  // Animation pour afficher le contenu une fois les images chargées
+  useGSAP(() => {
+    if (imagesLoaded && divRef.current) {
+      gsap.to(divRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
@@ -448,7 +459,7 @@ export default function FandW() {
         )}
         <div ref={watchesContainerRef} className="fandw-watches-container" style={{ opacity: 0 }}>
           {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
-          <div ref={divRef} className="fandw-div-container">
+          <div ref={divRef} className="fandw-div-container" style={{ opacity: 0 }}>
             {imagesLoaded && medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
           </div>
         </div>
