@@ -454,7 +454,6 @@ export default function FandW() {
           autoPlay 
           loop 
           muted 
-          style={{width: '100%', height: '100%', objectFit: 'cover'}} 
           />
         )}
         <div ref={watchesContainerRef} className="fandw-watches-container" style={{ opacity: 0 }}>
