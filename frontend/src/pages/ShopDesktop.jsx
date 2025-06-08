@@ -44,7 +44,7 @@ export default function Shop() {
 
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsClicked(false);
@@ -106,10 +106,10 @@ export default function Shop() {
 
   // Function to preload images for a collection
   function preloadCollectionImages(collection) {
-    setImagesLoaded(false);
+    setLoading(true);
     
     if (!Array.isArray(products) || products.length === 0 || !collection) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
@@ -118,7 +118,7 @@ export default function Shop() {
     );
 
     if (filteredProducts.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
@@ -141,14 +141,14 @@ export default function Shop() {
     });
 
     if (imagePromises.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
     Promise.all(imagePromises).then(() => {
       // Wait for next frame to ensure DOM is ready
       requestAnimationFrame(() => {
-        setImagesLoaded(true);
+        setLoading(false);
       });
     });
   };
@@ -177,14 +177,14 @@ export default function Shop() {
 
   // Separate useGSAP for the fade-in animation when images are loaded
   useGSAP(() => {
-    if (imagesLoaded && collectionRef.current && displayedCollection) {
+    if (!loading && collectionRef.current && displayedCollection) {
       gsap.to(collectionRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
       });
     }
-  }, [imagesLoaded, displayedCollection]);
+  }, [loading, displayedCollection]);
 
   useGSAP(() => {
     if (bookingContainerRef.current) {
@@ -301,7 +301,10 @@ export default function Shop() {
             <ShopButtons/>
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
             <div className="shop-gallery-articles" ref={collectionRef}> 
-              {imagesLoaded ? 
+              {loading && 
+                <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+              }
+              {!loading && 
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                     return null;
@@ -326,7 +329,7 @@ export default function Shop() {
                     />
                   ));
                 })()
-              : <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+              }
             </div>
           </div>
           }
