@@ -8,6 +8,8 @@ export default defineConfig({
     react(),
     // mkcert() // Désactivé pour utiliser HTTP en développement
   ],
+  // Configuration pour le déploiement
+  base: './',
   build: {
     rollupOptions: {
       output: {
@@ -20,11 +22,19 @@ export default defineConfig({
     },
     minify: 'esbuild',
     sourcemap: false,
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    // Configuration pour les assets
+    assetsDir: 'assets',
+    outDir: 'dist'
   },
   server: {
     https: false, // Désactive HTTPS pour le développement
     host: true,   // Permet l'accès depuis le réseau local
     port: 5173    // Port par défaut
+  },
+  // Configuration pour la production
+  preview: {
+    port: 4173,
+    host: true
   }
 })

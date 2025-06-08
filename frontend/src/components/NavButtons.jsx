@@ -177,7 +177,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
         {mobileButtonsVisible && (
         <div className="mobile-buttons-container">
-         <img src="../public/hoolis-img/coquillage-tee-polito.jpg" alt="T-shirt Coquillage" />
+         <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="T-shirt Coquillage" />
           {location.pathname !== "/" && (
             <button 
               className="exit-button"
