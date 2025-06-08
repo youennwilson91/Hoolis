@@ -1,14 +1,13 @@
 import "./GalleryButtons.scss";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useNavigate, useLocation } from "react-router-dom";
 import useStore from "../utils/store";
 import {useRef, useState} from "react";
 import "../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 
-    const {setGalleryVisible, isClicked, galleryVisible, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked, displayCollection, collectionChosen} = useStore();
+    const {isClicked, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked, displayCollection, collectionChosen} = useStore();
     const buttonRefs = useRef([]);
 
     const buttons = [
@@ -34,20 +33,14 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
       
     
     function handleClick(index) {
-      if (!galleryVisible) {
-        setGalleryVisible(true);
-        setCollectionChosen(buttons[index].label);
-      }
-      else {
         setCollectionChosen(buttons[index].label);
         setArticleIsClicked(false);
         setArticleIsHovered(false);
         setSelectedArticleId(null);
-      }
     }
 
     return (
-        <div className={`${galleryVisible ? "gallery-buttons-open-container" : "gallery-buttons-container"}`}>
+        <div className={"gallery-buttons-open-container"}>
         {buttons.map((button, index) => (
           <button 
             ref={el => {
@@ -56,7 +49,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
               }
               buttonRefs.current[index] = el;
             }}
-            className={`${galleryVisible ? "gallery-buttons-open" : "gallery-buttons"}`} 
+            className={"gallery-buttons-open"} 
             key={button.id}
             onClick={() => handleClick(index)}
           >

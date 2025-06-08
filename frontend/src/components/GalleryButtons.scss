@@ -21,26 +21,7 @@
     justify-content: space-evenly;
     align-items: center;
   }
-  
-  .gallery-buttons {
-    display: flex;
-    top: -125px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    opacity: 0;
-    font-family: "Agdasima", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 200px;    
 
-  }
-
-  .gallery-buttons:hover {
-    cursor: pointer;
-    color: #EFEC8F;
-  }
 
   .gallery-buttons-open-container {
     position: absolute;
@@ -51,6 +32,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    font-size: px; 
   }
   
   .gallery-buttons-open {
