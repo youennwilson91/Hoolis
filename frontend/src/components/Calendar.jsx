@@ -26,7 +26,7 @@ const BookingCalendar = () => {
   const apiBookings = 
     location.pathname.includes('/fw') 
     ? API_ENDPOINTS.bookings : API_ENDPOINTS.bookingsProducts;
-    
+
   const isShopPage = location.pathname.includes('/shop') || location.pathname.includes('/hoolis');
 
   // Initialise la valeur par défaut selon la page
@@ -173,8 +173,10 @@ const BookingCalendar = () => {
             dropdownMode="select"
           />
           <br /><br />
-          {slots.length === 0 && selectedDate && <p>Aucun créneau disponible.</p>}
-          <ul className="slots-list">
+          {slots.length === 0 ? (
+            <p>Aucun créneau disponible.</p>
+          ) : (
+            <ul className="slots-list">
             {slots.map((slot, index) => (
               <li key={index} className="slot-item">
                 {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
@@ -187,6 +189,7 @@ const BookingCalendar = () => {
               </li>
             ))}
           </ul>
+          )}
         </>
       )}
       {isSuccess && 
