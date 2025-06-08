@@ -7,6 +7,7 @@ import "./FandW.scss";
 import "../components/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { BarLoader } from "react-spinners";
 
 
 export default function FandW() {
@@ -29,6 +30,7 @@ export default function FandW() {
   const [isBackgroundImage, setIsBackgroundImage] = useState(true);
   const [watchIndex, setWatchIndex] = useState(0);
   const [hoveredDiv, setHoveredDiv] = useState(null);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const screenRef = useRef(null);
   const labelRef = useRef(null);
@@ -41,6 +43,7 @@ export default function FandW() {
   const bookingContainerRef = useRef(null);
   const mouseTimerRef = useRef(null);
   const preloadedImagesRef = useRef({});
+  const watchesContainerRef = useRef(null);
 
   // Ajout d'une référence pour le cache
   const cacheRef = useRef({
@@ -56,6 +59,46 @@ export default function FandW() {
     setMobileButtonsVisible(false);
     setIsBooking(false);
   }, []);
+
+  // Function to preload watch images
+  const preloadWatchImages = () => {
+    setImagesLoaded(false);
+    
+    if (!Array.isArray(medias) || medias.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const imagePromises = [];
+    
+    medias.forEach(watch => {
+      if (watch.wide && watch.wide.length > 0) {
+        watch.wide.forEach(media => {
+          if (media.type === 'image' && media.media) {
+            const promise = new Promise((imgResolve) => {
+              const img = new Image();
+              img.onload = () => imgResolve();
+              img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
+              img.src = media.media;
+            });
+            imagePromises.push(promise);
+          }
+        });
+      }
+    });
+
+    if (imagePromises.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    Promise.all(imagePromises).then(() => {
+      // Wait for next frame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        setImagesLoaded(true);
+      });
+    });
+  };
 
   useEffect(() => {
     const fetchWatches = async () => {
@@ -104,6 +147,13 @@ export default function FandW() {
 
     fetchWatches();
   }, []);
+
+  // Preload images when medias change
+  useEffect(() => {
+    if (medias && medias.length > 0) {
+      preloadWatchImages();
+    }
+  }, [medias]);
   
 
   // Mouse activity tracker
@@ -208,6 +258,17 @@ export default function FandW() {
         });
       }
     }, [isBooking]);
+
+  // Animation for watches container when images are loaded
+  useGSAP(() => {
+    if (imagesLoaded && watchesContainerRef.current) {
+      gsap.to(watchesContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [imagesLoaded]);
 
   // Handle mouse enter for all divs
   const handleMouseEnter = (media, event) => {
@@ -385,8 +446,11 @@ export default function FandW() {
           style={{width: '100%', height: '100%', objectFit: 'cover'}} 
           />
         )}
-        <div ref={divRef} className="fandw-div-container">
-          {medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
+        <div ref={watchesContainerRef} className="fandw-watches-container" style={{ opacity: 0 }}>
+          {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+          <div ref={divRef} className="fandw-div-container">
+            {imagesLoaded && medias[watchIndex]?.wide && medias[watchIndex].wide.map((media, index) => mediaDiv(media, index))}
+          </div>
         </div>
         {isBooking ? (
           <div ref={bookingContainerRef} className="booking-container">
