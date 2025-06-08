@@ -296,44 +296,40 @@ export default function Shop() {
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <video src="/shop-img/bg-vid-shop.mp4" autoPlay muted loop />
-        {galleryVisible && 
-          <div ref={galleryRef} className="shop-gallery">
-            <ShopButtons/>
-            <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
-            <div className="shop-gallery-articles" ref={collectionRef}> 
-              {loading && 
-                <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
-              }
-              {!loading && 
-                (() => {
-                  if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
-                    return null;
-                  }
-
-                  const filteredProducts = products.filter(article => 
-                    article && article.collection && article.collection.name === displayedCollection
-                  );
-
-                  return filteredProducts.map((article, index) => (
-                    <Article 
-                      key={article.id}
-                      article={article}
-                      index={index}
-                      articleIsClicked={articleIsClicked}
-                      clickedArticleId={clickedArticleId}
-                      handleArticleHover={handleArticleHover}
-                      handleArticleClick={handleArticleClick}
-                      handleArticleClose={handleArticleClose}
-                      //handleAddToCart={handleAddToCart}
-                      articleRefs={articleRef}
-                    />
-                  ));
-                })()
-              }
-            </div>
+        <div ref={galleryRef} className="shop-gallery">
+          <ShopButtons/>
+          <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
+          <div className="shop-gallery-articles" ref={collectionRef}> 
+            {loading && 
+              <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+            }
+            {!loading && 
+              (() => {
+                if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                  return null;
+                }
+                const filteredProducts = products.filter(article => 
+                  article && article.collection && article.collection.name === displayedCollection
+                );
+                return filteredProducts.map((article, index) => (
+                  <Article 
+                    key={article.id}
+                    article={article}
+                    index={index}
+                    articleIsClicked={articleIsClicked}
+                    clickedArticleId={clickedArticleId}
+                    handleArticleHover={handleArticleHover}
+                    handleArticleClick={handleArticleClick}
+                    handleArticleClose={handleArticleClose}
+                    //handleAddToCart={handleAddToCart}
+                    articleRefs={articleRef}
+                  />
+                ));
+              })()
+            }
           </div>
-          }
-        {!galleryVisible && <ShopButtons onClick={handleGalleryOpen}/>}
+        </div>
+          
         {/*<div className="cart-icon" onClick={handleOpenCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
