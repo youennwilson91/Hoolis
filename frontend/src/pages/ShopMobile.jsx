@@ -22,7 +22,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     isBooking, setIsBooking
   } = useStore();
 
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsBooking(false);
@@ -30,10 +30,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   // Function to preload all product images
   const preloadAllImages = () => {
-    setImagesLoaded(false);
+    setLoading(true);
     
     if (!Array.isArray(products) || products.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
@@ -56,14 +56,14 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     });
 
     if (imagePromises.length === 0) {
-      setImagesLoaded(true);
+      setLoading(false);
       return;
     }
 
     Promise.all(imagePromises).then(() => {
       // Wait for next frame to ensure DOM is ready
       requestAnimationFrame(() => {
-        setImagesLoaded(true);
+        setLoading(false);
       });
     });
   };
@@ -85,14 +85,14 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   // Animation for articles container when images are loaded
   useGSAP(() => {
-    if (imagesLoaded && articlesContainerRef.current) {
+    if (!loading && articlesContainerRef.current) {
       gsap.to(articlesContainerRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
       });
     }
-  }, [imagesLoaded]);
+  }, [loading]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
@@ -137,8 +137,8 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div ref={articlesContainerRef} className="mobile-shop-articles" style={{ opacity: 0 }}>
-        {!imagesLoaded && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
-        {imagesLoaded && Array.isArray(products) && products.length > 0 ? (
+        {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        {!loading && Array.isArray(products) && products.length > 0 ? (
           products.map((article) => (
             <div key={article.id} className="mobile-shop-article">
               <div className="mobile-shop-article-image-container">
