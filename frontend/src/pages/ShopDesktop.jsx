@@ -293,33 +293,35 @@ export default function Shop() {
           <div ref={galleryRef} className="shop-gallery">
             <ShopButtons/>
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
-            <div className="shop-gallery-articles" ref={collectionRef}> 
-              {imagesLoaded ? null : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
-              {(() => {
-                if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
-                  return null;
-                }
-                
-                const filteredProducts = products.filter(article => 
-                  article && article.collection && article.collection.name === displayedCollection
-                );
+            {imagesLoaded ? 
+              <div className="shop-gallery-articles" ref={collectionRef}> 
+                {(() => {
+                  if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                    return null;
+                  }
 
-                return filteredProducts.map((article, index) => (
-                  <Article 
-                    key={article.id}
-                    article={article}
-                    index={index}
-                    articleIsClicked={articleIsClicked}
-                    clickedArticleId={clickedArticleId}
-                    handleArticleHover={handleArticleHover}
-                    handleArticleClick={handleArticleClick}
-                    handleArticleClose={handleArticleClose}
-                    //handleAddToCart={handleAddToCart}
-                    articleRefs={articleRef}
-                  />
-                ));
-              })()}
-            </div>
+                  const filteredProducts = products.filter(article => 
+                    article && article.collection && article.collection.name === displayedCollection
+                  );
+
+                  return filteredProducts.map((article, index) => (
+                    <Article 
+                      key={article.id}
+                      article={article}
+                      index={index}
+                      articleIsClicked={articleIsClicked}
+                      clickedArticleId={clickedArticleId}
+                      handleArticleHover={handleArticleHover}
+                      handleArticleClick={handleArticleClick}
+                      handleArticleClose={handleArticleClose}
+                      //handleAddToCart={handleAddToCart}
+                      articleRefs={articleRef}
+                    />
+                  ));
+                })()}
+              </div>
+              : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+            }
           </div>
           }
         {!galleryVisible && <ShopButtons onClick={handleGalleryOpen}/>}
