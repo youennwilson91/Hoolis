@@ -454,6 +454,8 @@ export default function FandW() {
           autoPlay 
           loop 
           muted 
+          playsInline
+          preload="metadata"
           />
         )}
         <div ref={watchesContainerRef} className="fandw-watches-container" style={{ opacity: 0 }}>

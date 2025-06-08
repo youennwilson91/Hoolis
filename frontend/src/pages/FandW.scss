@@ -136,6 +136,13 @@
             object-fit: cover;
         }
 
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .fandw-watches-container {
             position: relative;
             width: 100%;
