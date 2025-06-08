@@ -29,8 +29,23 @@ const BookingCalendar = () => {
 
   const isShopPage = location.pathname.includes('/shop') || location.pathname.includes('/hoolis');
 
+  // Fonction utilitaire pour formater une date en YYYY-MM-DD
+  function formatDate(date) {
+    if (!date) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Initialise la valeur par défaut selon la page
 
+  // Formater la date initiale au chargement du composant
+  useEffect(() => {
+    if (selectedDate && !formattedDate) {
+      setFormattedDate(formatDate(selectedDate));
+    }
+  }, [selectedDate, formattedDate]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -42,14 +57,7 @@ const BookingCalendar = () => {
   // Quand la date est modifiée, on formate et on stocke
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    if (date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      setFormattedDate(`${year}-${month}-${day}`);
-    } else {
-      setFormattedDate("");
-    }
+    setFormattedDate(formatDate(date));
   };
 
   // Lorsqu'une date formatée est disponible, on interroge l'API
@@ -61,9 +69,8 @@ const BookingCalendar = () => {
 
   const fetchAvailableSlots = async (date) => {
     try {
-      const formattedDate = new Date(date).toISOString().split('T')[0];
-      
-      const response = await apiClient.get(`${apiAvailableSlots}?date=${formattedDate}`);
+      // Le paramètre 'date' est déjà formaté en YYYY-MM-DD
+      const response = await apiClient.get(`${apiAvailableSlots}?date=${date}`);
       console.log('API response:', response.data);
       const slotsArray = response.data.results || [];
       setSlots(slotsArray);
@@ -173,10 +180,8 @@ const BookingCalendar = () => {
             dropdownMode="select"
           />
           <br /><br />
-          {slots.length === 0 ? (
-            <p>Aucun créneau disponible.</p>
-          ) : (
-            <ul className="slots-list">
+          {slots.length === 0 && selectedDate && <p>Aucun créneau disponible.</p>}
+          <ul className="slots-list">
             {slots.map((slot, index) => (
               <li key={index} className="slot-item">
                 {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
@@ -189,7 +194,6 @@ const BookingCalendar = () => {
               </li>
             ))}
           </ul>
-          )}
         </>
       )}
       {isSuccess && 
