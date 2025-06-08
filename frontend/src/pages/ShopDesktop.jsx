@@ -105,7 +105,7 @@ export default function Shop() {
   }, [galleryVisible]);
 
   // Function to preload images for a collection
-  const preloadCollectionImages = (collection) => {
+  function preloadCollectionImages(collection) {
     setImagesLoaded(false);
     
     if (!Array.isArray(products) || products.length === 0 || !collection) {
@@ -319,7 +319,7 @@ export default function Shop() {
                     />
                   ));
                 })()
-              : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+              : <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
             </div>
           </div>
           }
