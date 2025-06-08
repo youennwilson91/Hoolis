@@ -4,9 +4,9 @@ import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Shop.scss";
-import axios from "axios";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 
 export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem }) {
   const mobileScreenRef = useRef(null);
@@ -22,16 +22,55 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     isBooking, setIsBooking
   } = useStore();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setIsBooking(false);
   }, []);
 
+  // Récupération des produits depuis l'API
+  useEffect(() => {
+    console.log("Tentative de connexion à l'API...");
+    setLoading(true);
+    setError(null);
+    
+    console.log("URL API utilisée:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.products}`);
+    
+    apiClient.get(API_ENDPOINTS.products)
+      .then(response => {
+        console.log("Données brutes de l'API:", response.data);
+        let productsData = response.data.results;
+        
+        if (productsData && Array.isArray(productsData)) {
+          setProducts(productsData);
+          console.log("✅ Produits récupérés:", productsData.length);
+        } else {
+          console.log("⚠️ Aucun produit trouvé");
+          setProducts([]);
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la requête:', error.message);
+        if (error.response) {
+          console.error('Statut:', error.response.status);
+          console.error('Données:', error.response.data);
+          setError(`Erreur ${error.response.status}: ${error.message}`);
+        } else if (error.request) {
+          console.error('Pas de réponse reçue du serveur');
+          setError("Pas de réponse du serveur");
+        } else {
+          console.error('Erreur de configuration de la requête');
+          setError("Erreur de connexion");
+        }
+        setProducts([]);
+        setLoading(false);
+      });
+  }, []);
+
   // Function to preload all product images
   const preloadAllImages = () => {
-    setLoading(true);
-    
     if (!Array.isArray(products) || products.length === 0) {
       setLoading(false);
       return;
@@ -68,6 +107,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     });
   };
 
+  // Preload images when products change
   useEffect(() => {
     if (products && products.length > 0) {
       preloadAllImages();
@@ -83,16 +123,16 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     });
   }, []);
 
-  // Animation for articles container when images are loaded
+  // Animation for articles container based on products (like FandWMobile)
   useGSAP(() => {
-    if (!loading && articlesContainerRef.current) {
+    if (articlesContainerRef.current) {
       gsap.to(articlesContainerRef.current, {
         duration: 0.40,
         ease: "power3.inOut",
         opacity: 1
       });
     }
-  }, [loading]);
+  }, [products]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
@@ -137,7 +177,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div ref={articlesContainerRef} className="mobile-shop-articles" style={{ opacity: 0 }}>
+        {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
+        
         {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+        
         {!loading && Array.isArray(products) && products.length > 0 ? (
           products.map((article) => (
             <div key={article.id} className="mobile-shop-article">
@@ -164,9 +207,9 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               </div>
             </div>
           ))
-        ) : null}
-
-
+        ) : !loading && (
+          <div style={{color: 'white', padding: '20px'}}>Aucun produit trouvé</div>
+        )}
 
         {/*<div className="cart-icon" onClick={handleOpenMobileCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
