@@ -10,6 +10,7 @@ import "../components/GalleryButtons.scss";
 import ShopMobile from "./ShopMobile.jsx";
 import BookingCalendar from "../components/Calendar.jsx";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { BarLoader } from "react-spinners";
 
 export default function Shop() {
 
@@ -20,6 +21,7 @@ export default function Shop() {
   const collectionRef = useRef(null);
   const cartRef = useRef(null);
   const bookingContainerRef = useRef(null);
+  const loaderRef = useRef(null);
 
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
@@ -239,47 +241,47 @@ export default function Shop() {
     });
   }
 
-  function handleAddToCart(article) {
-    setAddToCart(prevCart => {
-      return [...prevCart, {...article, cartid: prevCart.length + 1}]
-    });
-  }
+ //function handleAddToCart(article) {
+ //  setAddToCart(prevCart => {
+ //    return [...prevCart, {...article, cartid: prevCart.length + 1}]
+ //  });
+ //}
 
-  function handleRemoveItem(item) {
-    setAddToCart(prevCart => prevCart.filter(
-      cartItem => cartItem.cartid !== item.cartid
-    ));
-  }
-  
-  function handleOpenCart() {
-    setCartVisible(true);
-    requestAnimationFrame(() => {
-      if (cartRef.current) {
-        gsap.to(cartRef.current, {
-          duration: 0.5,
-          ease: "power3.inOut",
-          opacity: 1,
-          immediateRender: false
-        });
-      }
-    });
-  }
-
-  function handleCloseCart() {
-    if (cartRef.current) {
-      gsap.to(cartRef.current, {
-        duration: 0.5,
-        ease: "power3.inOut",
-        opacity: 0,
-        onComplete: () => {
-          setCartVisible(false);
-          if (cartRef.current) {
-            cartRef.current.style.opacity = 0;
-          }
-        }
-      });
-    }
-  }
+  //function handleRemoveItem(item) {
+  //  setAddToCart(prevCart => prevCart.filter(
+  //    cartItem => cartItem.cartid !== item.cartid
+  //  ));
+  //}
+  //
+  //function handleOpenCart() {
+  //  setCartVisible(true);
+  //  requestAnimationFrame(() => {
+  //    if (cartRef.current) {
+  //      gsap.to(cartRef.current, {
+  //        duration: 0.5,
+  //        ease: "power3.inOut",
+  //        opacity: 1,
+  //        immediateRender: false
+  //      });
+  //    }
+  //  });
+  //}
+//
+  //function handleCloseCart() {
+  //  if (cartRef.current) {
+  //    gsap.to(cartRef.current, {
+  //      duration: 0.5,
+  //      ease: "power3.inOut",
+  //      opacity: 0,
+  //      onComplete: () => {
+  //        setCartVisible(false);
+  //        if (cartRef.current) {
+  //          cartRef.current.style.opacity = 0;
+  //        }
+  //      }
+  //    });
+  //  }
+  //}
 
   return (
   <>
@@ -292,7 +294,7 @@ export default function Shop() {
             <ShopButtons/>
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
             <div className="shop-gallery-articles" ref={collectionRef}> 
-
+              {imagesLoaded ? null : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
               {(() => {
                 if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                   return null;
@@ -312,7 +314,7 @@ export default function Shop() {
                     handleArticleHover={handleArticleHover}
                     handleArticleClick={handleArticleClick}
                     handleArticleClose={handleArticleClose}
-                    handleAddToCart={handleAddToCart}
+                    //handleAddToCart={handleAddToCart}
                     articleRefs={articleRef}
                   />
                 ));

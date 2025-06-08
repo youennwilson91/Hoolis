@@ -6,20 +6,63 @@ import useStore from "../utils/store";
 import "./FandW.scss";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import BookingCalendar from "../components/Calendar";
+import { BarLoader } from "react-spinners";
 
 export default function FandWMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
   const bookButtonRef = useRef(null);
   const bookingContainerRef = useRef(null);
+  const watchesContainerRef = useRef(null);
   
   const { isBooking, setIsBooking } = useStore();
   const [medias, setMedias] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   
   useEffect(() => {
     setIsBooking(false);
   }, []);
+
+  // Function to preload watch images
+  const preloadWatchImages = () => {
+    setImagesLoaded(false);
+    
+    if (!Array.isArray(medias) || medias.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const imagePromises = [];
+    
+    medias.forEach(watch => {
+      if (watch.small && watch.small.length > 0) {
+        watch.small.forEach(media => {
+          if (media.type === 'image' && media.media) {
+            const promise = new Promise((imgResolve) => {
+              const img = new Image();
+              img.onload = () => imgResolve();
+              img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
+              img.src = media.media;
+            });
+            imagePromises.push(promise);
+          }
+        });
+      }
+    });
+
+    if (imagePromises.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    Promise.all(imagePromises).then(() => {
+      // Wait for next frame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        setImagesLoaded(true);
+      });
+    });
+  };
 
   // Appels API simple sans cache
   useEffect(() => {
@@ -67,6 +110,13 @@ export default function FandWMobile({ labelRef }) {
         setLoading(false);
       });
   }, []);
+
+  // Preload images when medias change
+  useEffect(() => {
+    if (medias && medias.length > 0) {
+      preloadWatchImages();
+    }
+  }, [medias]);
   
 
   useGSAP(() => {
@@ -86,6 +136,17 @@ export default function FandWMobile({ labelRef }) {
       });
     }
   }, []);
+
+  // Animation for watches container when images are loaded
+  useGSAP(() => {
+    if (imagesLoaded && watchesContainerRef.current) {
+      gsap.to(watchesContainerRef.current, {
+        duration: 0.40,
+        ease: "power3.inOut",
+        opacity: 1
+      });
+    }
+  }, [imagesLoaded]);
 
   useGSAP(() => {
     if (bookingContainerRef.current && isBooking) {
@@ -107,12 +168,14 @@ export default function FandWMobile({ labelRef }) {
 
   return (
     <div ref={mobileScreenRef} className="mobile-fandw-container">
-      <div className="mobile-fandw-watches">
+      <div ref={watchesContainerRef} className="mobile-fandw-watches" style={{ opacity: 0 }}>
         {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
+        
+        {!imagesLoaded && <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
         
         {loading ? (
           <div style={{color: 'white', padding: '20px'}}>Chargement des produits...</div>
-        ) : medias && medias.length > 0 ? (
+        ) : imagesLoaded && medias && medias.length > 0 ? (
           medias.map((media, index) => (
             <div 
               key={media.id} 
@@ -147,7 +210,7 @@ export default function FandWMobile({ labelRef }) {
               </div>
             </div>
           ))
-        ) : (
+        ) : !loading && (
           <div style={{color: 'white', padding: '20px'}}>Aucun produit trouvé</div>
         )}
       </div>
