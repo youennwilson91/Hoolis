@@ -293,9 +293,9 @@ export default function Shop() {
           <div ref={galleryRef} className="shop-gallery">
             <ShopButtons/>
             <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
-            {imagesLoaded ? 
-              <div className="shop-gallery-articles" ref={collectionRef}> 
-                {(() => {
+            <div className="shop-gallery-articles" ref={collectionRef}> 
+              {imagesLoaded ? 
+                (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                     return null;
                   }
@@ -318,10 +318,9 @@ export default function Shop() {
                       articleRefs={articleRef}
                     />
                   ));
-                })()}
-              </div>
-              : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
-            }
+                })()
+              : <BarLoader color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+            </div>
           </div>
           }
         {!galleryVisible && <ShopButtons onClick={handleGalleryOpen}/>}
