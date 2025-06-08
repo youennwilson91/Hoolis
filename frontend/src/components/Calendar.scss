@@ -248,8 +248,8 @@ $success-color: #2ecc71;
 /* Responsive styles for mobile devices */
 @media screen and (max-width: 768px) {
   .booking-calendar {
-    max-width: 80%;
-    min-height: 70vh;
+    width: 90vw;
+    height: 70vh;
     padding: 15px 10px;
     display: flex;
     flex-direction: column;
