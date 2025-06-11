@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './PasswordProtect.scss';
-import { apiClient, API_ENDPOINTS } from '../utils/axiosConfig';
+import { apiClient, API_ENDPOINTS, API_BASE_URL } from '../utils/axiosConfig';
+import axios from 'axios';
 
 const PasswordProtect = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,10 +10,46 @@ const PasswordProtect = ({ children }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [serverStatus, setServerStatus] = useState('checking'); // 'online', 'offline', 'checking'
+
+  // Vérifier le statut du serveur
+  const checkServerStatus = async () => {
+    try {
+      // Créer une instance axios simple sans intercepteurs pour éviter le reload automatique
+      const simpleAxios = axios.create({
+        baseURL: API_BASE_URL,
+      });
+      
+      await simpleAxios.post(API_ENDPOINTS.jwtVerify, { token: 'test' });
+      setServerStatus('online');
+      return true;
+    } 
+    
+    catch (error) {
+      if (error.response) {
+        setServerStatus('online');
+        return true; 
+      } 
+      
+      else {
+        console.error('Serveur inaccessible:', error);
+        setServerStatus('offline');
+        return false; 
+      }
+    }
+  };
 
   // Vérifier si l'utilisateur est déjà authentifié au chargement
   useEffect(() => {
     const checkExistingAuth = async () => {
+      
+      const isServerOnline = await checkServerStatus();
+      
+      if (!isServerOnline) {
+        setIsCheckingAuth(false);
+        return;
+      }
+      
       const refreshToken = localStorage.getItem('hoolis_token_refresh');
       const accessToken = localStorage.getItem('hoolis_token_access');
 
@@ -98,6 +135,13 @@ const PasswordProtect = ({ children }) => {
         <div className="password-header">
           <h1>Maison Hoolis</h1>
           <p>Accès restreint</p>
+          <div className="server-status">
+            <p className={`server-${serverStatus}`}>
+              {serverStatus === 'online' && 'Serveur en ligne'}
+              {serverStatus === 'offline' && 'Serveur hors ligne'}
+              {serverStatus === 'checking' && 'Vérification du serveur...'}
+            </p>
+          </div>
         </div>
         
         <form onSubmit={handleSubmit} className="password-form">
