@@ -25,6 +25,9 @@ export default function Shop() {
 
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [clickedArticleId, setClickedArticleId] = useState(null);
+  const [displayedCollection, setDisplayedCollection] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const { 
     label, setLabel, 
@@ -41,10 +44,6 @@ export default function Shop() {
     isMouseActive, setIsMouseActive,
     isBooking, setIsBooking
   } = useStore();
-
-  const [clickedArticleId, setClickedArticleId] = useState(null);
-  const [displayedCollection, setDisplayedCollection] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsClicked(false);
@@ -202,10 +201,6 @@ export default function Shop() {
     }
   }, [isBooking]);
 
-  
-  function handleGalleryOpen() {
-    setGalleryVisible(true);
-  }
 
   function handleArticleHover({width, articleRef, id, isEntering}) {
     if (!articleIsClicked) {
