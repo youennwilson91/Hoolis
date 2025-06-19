@@ -28,30 +28,69 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
                     }, index * 0.1);
                 }
             });
+            gsap.to(buttonRefs.current[0], {
+                color: "#EFEC8F",
+                duration: 0.5,
+                ease: "power3.inOut",
+            });
         }
     }, []);
       
     
-    function handleClick(index) {
-        setCollectionChosen(buttons[index].label);
+    function handleButtonClick(clickedIndex) {
+        setCollectionChosen(buttons[clickedIndex].label);
         setArticleIsClicked(false);
         setArticleIsHovered(false);
         setSelectedArticleId(null);
+
+        gsap.to(
+          buttonRefs.current[clickedIndex], {
+            color: "#EFEC8F",
+            duration: 0.5,
+            ease: "power3.inOut",
+        });
+        
+          buttonRefs.current.forEach((buttonRef, index) => {
+            if (index !== clickedIndex && buttonRef) {
+                gsap.to(buttonRef, {
+                    color: "#FFFFFFF",
+                    duration: 0.5,
+                    ease: "power3.inOut",
+                });
+            }
+        });
     }
+
+    function handleButtonHover(hoveredIndex, isEntering) {
+      const targetButton = buttonRefs.current[hoveredIndex];
+            
+      if (isEntering) {
+          gsap.to(targetButton, {
+              scale: 1.1,
+              duration: 0.3,
+              ease: "power3.inOut",
+          });
+      } else {
+          gsap.to(targetButton, {
+              scale: 1,
+              duration: 0.3,
+              ease: "power3.inOut",
+          });
+      }
+  }
 
     return (
         <div className={"gallery-buttons-open-container"}>
         {buttons.map((button, index) => (
           <button 
             ref={el => {
-              if (!buttonRefs.current) {
-                buttonRefs.current = [];
-              }
               buttonRefs.current[index] = el;
             }}
             className={"gallery-buttons-open"} 
             key={button.id}
-            onClick={() => handleClick(index)}
+            onClick={() => handleButtonClick(index)}
+            onMouseEnter={() => handleButtonHover(index, true)}
+            onMouseLeave={() => handleButtonHover(index, false)}
           >
             {button.label}
           </button>

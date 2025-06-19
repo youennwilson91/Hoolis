@@ -221,7 +221,7 @@ export default function FandWMobile({ labelRef }) {
 
       {isBooking ? (
         <div ref={bookingContainerRef} className="booking-container">
-          <BookingCalendar />
+          <BookingCalendar type="watch" />
           <button className="close-booking-button" onClick={closeBooking}>×</button>
         </div>
       ) : null}

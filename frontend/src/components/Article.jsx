@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
+import { useGSAP } from "@gsap/react";
 
 export default function Article({ 
   article, 
@@ -16,6 +17,7 @@ export default function Article({
 
   const { isBooking, setIsBooking } = useStore();
   const bookButtonRef = useRef(null);
+  
 
   return (
     <div 
@@ -53,11 +55,6 @@ export default function Article({
           />
         )}
       </div>
-      {!articleIsClicked && 
-      <div id={`description-${article.id}`} className="article-description" >
-        <h1>{article.title}</h1>
-      </div>
-      }
       {articleIsClicked && clickedArticleId === article.id && (
         <div className="article-details">
           <h1 className="article-title">{article.title}</h1>

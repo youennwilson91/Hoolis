@@ -6,15 +6,18 @@ import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import useStore from "../utils/store";
 import { useLocation } from 'react-router-dom';
 
-const BookingCalendar = () => {
+function BookingCalendar({ type }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [formattedDate, setFormattedDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [selectedWatch, setSelectedWatch] = useState("");
   const [availableWatches, setAvailableWatches] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [verificationStep, setVerificationStep] = useState('form'); // 'form', 'verify', 'success'
+  const [verificationCode, setVerificationCode] = useState("");
+  const [requestId, setRequestId] = useState("");
   
   const { isBooking, setIsBooking, products, watches, medias } = useStore();
 
@@ -50,7 +53,7 @@ const BookingCalendar = () => {
   useEffect(() => {
     if (isSuccess) {
       setName("");
-      setEmail("");
+      setPhone("");
     }
   }, [isSuccess]);
 
@@ -80,50 +83,106 @@ const BookingCalendar = () => {
     }
   };
 
-  // Réserver un créneau
-  const handleBooking = (slot) => {
-    if (!name) return alert("Entrez votre nom avant de réserver !");
-    if (!email) return alert("Entrez votre email avant de réserver !");
-    if (!selectedWatch) return alert("Veuillez sélectionner un article !");
-    
-    console.log(selectedWatch);
-    apiClient.post(apiBookings, {
-      name: name,
-      watch: selectedWatch,
-      date: formattedDate,
-      start_time: slot.start_time,
-      end_time: slot.end_time
-    }).then(() => {
-      setIsSuccess(true);
-      setSlots(slots.filter(s => s.start_time !== slot.start_time)); // retirer le créneau réservé
-      sendConfirmationEmail(name, email, selectedWatch, formattedDate, slot.start_time, slot.end_time);
-    }).catch(err => {
-      console.log("Données envoyées:", {
-        name, watch: selectedWatch, date: formattedDate, 
-        start_time: slot.start_time, end_time: slot.end_time
-      });
-      console.error("Erreur détaillée:", err.response ? err.response.data : err);
-      alert("Ce créneau est déjà pris ou une erreur est survenue.");
-    });
-  };
+  // Étape 1 : Envoyer le code de vérification SMS
+  function handleSendVerification(slot) {
+    if (!name) return alert("Entrez votre nom avant de réserver.");
+    if (!phone) return alert("Entrez votre téléphone avant de réserver.");
+    if (phone.length !== 10) return alert("Le numéro de téléphone doit contenir 10 chiffres.");
+    if (!selectedWatch) return alert("Veuillez sélectionner un article.");
 
-  function sendConfirmationEmail(name, email, watch, date, start_time, end_time) {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('_subject', 'Confirmation de votre réservation chez Franck and Watch');
-    formData.append('message', `Bonjour ${name},\n\nVotre réservation pour la ${watch} est confirmée le ${date} de ${start_time} à ${end_time}.\n\nMerci d'avoir choisi nos services.\n\nL'équipe Franc and Watch`);
+    // Formater le numéro au format international
+    const internationalPhone = phone.startsWith('0') ? `+33${phone.substring(1)}` : phone;
     
-    fetch(`https://formsubmit.co/${email}`, {
-      method: 'POST',
-      body: formData
+    console.log('Données envoyées:', {
+      phone: internationalPhone,
+      originalPhone: phone
+    });
+
+    // Utiliser votre endpoint existant
+    apiClient.post(API_ENDPOINTS.sendConfirmationCode, {
+      phone: internationalPhone,
+      type: type
+    }).then(response => {
+      console.log('Code SMS envoyé:', response.data);
+      setVerificationStep('verify');
+      setRequestId(response.data.request_id);
+      console.log('Request ID:', response.data.request_id);
+      // Stocker le slot pour l'utiliser après vérification
+      window.selectedSlot = slot;
+    }).catch(error => {
+      console.error('Erreur lors de l\'envoi du code:', error);
+      console.error('Réponse du serveur:', error.response?.data);
+      
+      // Afficher un message d'erreur plus spécifique
+      if (error.response?.status === 400) {
+        const errorMessage = error.response.data?.error || 'Erreur de validation';
+        alert(`Erreur: ${errorMessage}`);
+      } else if (error.response?.status === 409) {
+        const errorMessage = error.response.data?.detail || error.response.data?.error || 'Ce numéro de téléphone est déjà utilisé.';
+        alert(errorMessage);
+      } else {
+        alert('Erreur lors de l\'envoi du code SMS. Réessayez.');
+      }
+    });
+  }
+
+  // Étape 2 : Vérifier le code et faire la réservation
+  function handleVerifyAndBook() {
+    if (!verificationCode || verificationCode.length !== 4) {
+      return alert("Entrez le code à 4 chiffres reçu par SMS.");
+    }
+    
+    // Formater le numéro au format international (même logique que dans handleSendVerification)
+    const internationalPhone = phone.startsWith('0') ? `+33${phone.substring(1)}` : phone;
+
+    // Vérifier le code SMS avec votre endpoint
+    apiClient.post(API_ENDPOINTS.verifyConfirmationCode, {
+      code: verificationCode,
+      request_id: requestId
+    }).then(response => {
+      console.log(response.data);
+      
+      // Si le code est valide, procéder à la réservation
+      const slot = window.selectedSlot;
+      return apiClient.post(apiBookings, {
+        name: name,
+        phone: internationalPhone,
+        watch: selectedWatch,
+        date: formattedDate,
+        start_time: slot.start_time,
+        end_time: slot.end_time
+      });
     })
-    .then(response => console.log('Email envoyé avec succès'))
-    .catch(error => console.error('Erreur lors de l\'envoi de l\'email:', error));
+    .then(() => {
+      setIsSuccess(true);
+      setVerificationStep('success');
+      const slot = window.selectedSlot;
+      setSlots(slots.filter(s => s.start_time !== slot.start_time));
+    })
+    .catch(err => {
+      console.error("Erreur lors de la vérification ou réservation:", err);
+      if (err.response?.status === 400) {
+        alert("Code de vérification incorrect. Réessayez.");
+      } else if (err.response?.status === 409) {
+        // Erreur de conflit - numéro de téléphone déjà utilisé
+        const errorMessage = err.response.data?.detail || err.response.data?.error || 'Ce numéro de téléphone est déjà utilisé.';
+        alert(errorMessage);
+      } else {
+        alert("Erreur lors de la réservation. Réessayez.");
+      }
+    });
+  }
+
+  function cancelVerification() {
+    apiClient.post(API_ENDPOINTS.cancelVerification, {
+      request_id: requestId
+    });
   }
 
   return (
     <div className="booking-calendar">
-      {!isSuccess && (
+      {/* Formulaire initial */}
+      {verificationStep === 'form' && (
         <>
           <input
             type="text"
@@ -133,10 +192,10 @@ const BookingCalendar = () => {
             className="form-input"
           />
           <input
-            type="email"
-            placeholder="Votre email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="tel"
+            placeholder="Votre téléphone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             className="form-input"
           />
           {isShopPage ? (
@@ -186,7 +245,7 @@ const BookingCalendar = () => {
               <li key={index} className="slot-item">
                 {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
                 <button 
-                  onClick={() => handleBooking(slot)}
+                  onClick={() => handleSendVerification(slot)}
                   className="booking-button"
                 >
                   Réserver
@@ -196,10 +255,39 @@ const BookingCalendar = () => {
           </ul>
         </>
       )}
-      {isSuccess && 
+
+      {/* Vérification du code SMS */}
+      {verificationStep === 'verify' && (
+        <div className="verification-step">
+          <h3>Vérification SMS</h3>
+          <p>Nous avons envoyé un code à 4 chiffres au {phone}</p>
+          <input
+            type="text"
+            placeholder="Code de vérification"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            className="form-input"
+            maxLength="6"
+          />
+          <button 
+            onClick={handleVerifyAndBook}
+            className="booking-button"
+          >
+            Vérifier
+          </button>
+          <button 
+            onClick={() => setVerificationStep('form') && cancelVerification()}
+            className="back-button"
+          >
+            Retour
+          </button>
+        </div>
+      )}
+      {/* Étape 3: Succès */}
+      {verificationStep === 'success' && 
         <div className="success-message">
           <p>Réservation confirmée !</p>
-          <p>Vous recevrez un email de confirmation.</p>
+          <p>Vous recevrez une confirmation par SMS.</p>
         </div>
       }
       <button 
