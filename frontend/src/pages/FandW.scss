@@ -98,183 +98,230 @@
     }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap');
+
+.shop-container * {
+  font-family: "Agdasima", sans-serif !important;
+}
+
+.mobile-shop-container {
+    display: none;
+}
+
 .fandw-container {
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    opacity: 0;
+    align-items: center;
+    opacity: 1;
+    z-index: 0;
+    background-color: black;
     position: relative;
-    overflow: hidden;
-    
-      .booking-container {
+
+    .booking-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fandw-gallery-articles {
         position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: transparent;
+        width: 80%;
+        height: 80%;
         display: flex;
+        flex-direction: row;
         justify-content: center;
-        align-items: center;
-        background-color: rgba(255, 255, 255, 0.95);
-        opacity: 0;
-        z-index: 1000;
-      }
-      
-    .fandw-landing {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-        img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        gap: 5px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+                
+        &::-webkit-scrollbar {
+            display: none;
         }
 
-        video {
+        .loader {
             position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background-color: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
         }
 
-        .fandw-watches-container {
+        .watch {
             position: relative;
             width: 100%;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            cursor: pointer;
             
-            .loader {
+            &::before,
+            &::after {
+                content: '';
                 position: absolute;
                 top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translateY(-50%);
+                width: 30px;
+                height: 30px;
+                background-color: rgba(0, 0, 0, 0.6);
+                border-radius: 50%;
                 z-index: 10;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
-        }
-        
-        .button-book {
-            position: absolute;
-            width: fit-content;
-            height: fit-content;
-            top: 4%;
-            left: 2%;
-            background-color: white;
-            border: 1px solid transparent;
-            color: black;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 10px;
-            opacity: 0.7;
-            font-size: 26px;
 
-            &:hover {   
-                cursor: pointer;
-                background-color: wheat
+            &::before {
+                left: 10px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E%3C/svg%3E");
+                background-size: 20px;
+                background-position: center;
+                background-repeat: no-repeat;
             }
-          }
 
-
-        .next-button {
-            position: absolute;
-            right: 0;
-            background-color: transparent;
-            border: none;
-            font-size: 36px;
-            color: gray;
-            cursor: pointer;    
-            padding-right: 20px;
-            border-radius: 10px;
-
-            &:hover {
-                cursor: pointer;
-                color: white;
+            &::after {
+                right: 10px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E");
+                background-size: 20px;
+                background-position: center;
+                background-repeat: no-repeat;
             }
-        }
 
-        .previous-button {
-            position: absolute;
-            left: 0;
-            background-color: transparent;
-            border: none;
-            font-size: 36px;
-            color: gray;
-            cursor: pointer;
-            padding-left: 20px;
-            border-radius: 10px;
-
-            &:hover {
-                cursor: pointer;
-                color: white;
+            &.watch-clicked {
+                &::before,
+                &::after {
+                    opacity: 1;
+                }
             }
-        }
 
-        
-
-        .fandw-div-container {
-            position: absolute;
-            width: 90%;
-            height: 120px;
-            bottom: 20px;
-            left: 5%;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            grid-gap: 10px;
-            overflow: visible;
-            
-            .media-div {
+            .article-image-container {
+                position: relative;
                 width: 100%;
                 height: 100%;
-                border: 1px solid white;
-                overflow: hidden;
-                position: relative;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: start;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
                 
                 img, video {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
+                    position: relative;
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    display: block;
                 }
             }
-        }   
+            
+            .watch-description {
+                position: absolute;
+                
+                width: fit-content;
+                height: fit-content;
+                opacity: 0;
+                display: flex;
+                flex-direction: column;
+                pointer-events: none !important;
+
+                h1 {
+                    font-size: 36px;
+                    color: white;
+                    text-align: center;
+                }
+            }
+
+            .watch-details {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                pointer-events: none !important;
+            }
+
+            .watch-title {
+                position: absolute;
+                top: 2%;
+                left: 2%;
+                font-size: 36px;
+                color: white;
+            }
+
+            .add-to-cart {
+                position: absolute;
+                top: 10%;
+                left: 2%;
+                border: 3px solid black;
+                padding: 10px;
+                border-radius: 10px;
+                font-size: 22px;
+                color: black;
+                cursor: pointer;
+                pointer-events: all !important;
+                background-color: rgba(255, 255, 255, 0.1);
+
+                &:hover {
+                    cursor: pointer;
+                    color: black;
+                    border: 3px solid black;
+                    background-color: wheat;
+                }
+            }
+
+            p {
+                position: absolute;
+                bottom: 2%;
+                left: 2%;
+                pointer-events: none !important;
+                font-size: 26px;
+            }
+
+            .close-watch {
+                position: absolute;
+                top: 0%;
+                right: 2%;
+                font-size: 36px;
+                color: black;
+                cursor: pointer;
+                pointer-events: all !important;
+
+                &:hover {
+                    cursor: pointer;
+                    color: white;
+                }
+            }
+        }
     }
-    
 }
-
-.title-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2rem;
-  font-weight: bold;
-  z-index: 10;
-}
-
-@keyframes neonBorder {
-    0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3); }
-    50% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7), 0 0 30px rgba(255, 255, 255, 0.5); }
-    100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3); }
-}
-
-@keyframes neonGlow {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-@media screen and (max-width: 768px) {
-  .fandw-container {
-    display: none;
-  }
-}
-
 
 

@@ -18,6 +18,7 @@ export default function Shop() {
   const labelRef = useRef(null);
   const galleryRef = useRef(null);
   const articleRef = useRef([]);
+  // const descriptionRef = useRef(null); // Plus utilisé
   const collectionRef = useRef(null);
   const cartRef = useRef(null);
   const bookingContainerRef = useRef(null);
@@ -25,6 +26,9 @@ export default function Shop() {
 
   const [articleIsHovered, setArticleIsHovered] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [clickedArticleId, setClickedArticleId] = useState(null);
+  const [displayedCollection, setDisplayedCollection] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const { 
     label, setLabel, 
@@ -42,15 +46,12 @@ export default function Shop() {
     isBooking, setIsBooking
   } = useStore();
 
-  const [clickedArticleId, setClickedArticleId] = useState(null);
-  const [displayedCollection, setDisplayedCollection] = useState("");
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     setIsClicked(false);
     setLabel("");
     setLabelColor(bgColor);
     setGalleryVisible(false); 
+    setCollectionChosen("VETEMENTS");
     setArticleIsHovered(false);
     setArticleIsClicked(false);
     setSelectedArticleId(null);
@@ -202,10 +203,6 @@ export default function Shop() {
     }
   }, [isBooking]);
 
-  
-  function handleGalleryOpen() {
-    setGalleryVisible(true);
-  }
 
   function handleArticleHover({width, articleRef, id, isEntering}) {
     if (!articleIsClicked) {
@@ -227,12 +224,29 @@ export default function Shop() {
     if (!articleIsClicked) {
       setArticleIsClicked(true);
       setClickedArticleId(id);
-      gsap.to(articleRef, {
-        duration: 0.5,
-        ease: "power3.inOut",
-        width: "100%",
-        height: "100%"
-      });
+      const timeline = gsap.timeline();
+
+      timeline
+        .to(articleRef, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          width: "100%",
+          height: "100%"
+        })
+        .call(() => {
+          // Attendre que l'élément soit monté avant d'animer
+          const detailsElement = articleRef.querySelector('.article-details');
+          if (detailsElement) {
+            gsap.fromTo(detailsElement, 
+              { opacity: 0 }, 
+              { 
+                opacity: 1, 
+                duration: 0.25, 
+                ease: "power3.inOut"
+              }
+            );
+          }
+        });
     }
   }
 
@@ -375,7 +389,7 @@ export default function Shop() {
         
         {isBooking ? (
           <div ref={bookingContainerRef} className="booking-container">
-            <BookingCalendar />
+            <BookingCalendar type="product" />
             <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
           </div>
         ) : null}
