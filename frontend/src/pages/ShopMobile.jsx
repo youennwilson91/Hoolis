@@ -262,7 +262,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
       {isBooking ? (
         <div ref={bookingContainerRef} className="booking-container">
-          <BookingCalendar />
+          <BookingCalendar type="product" />
           <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
         </div>
       ) : null}

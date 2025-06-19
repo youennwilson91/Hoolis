@@ -12,6 +12,15 @@ const PasswordProtect = ({ children }) => {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [serverStatus, setServerStatus] = useState('checking'); // 'online', 'offline', 'checking'
 
+  // Fonction pour nettoyer les tokens corrompus
+  const clearTokens = () => {
+    localStorage.removeItem('hoolis_token_access');
+    localStorage.removeItem('hoolis_token_refresh');
+    // Aussi nettoyer les anciens tokens s'ils existent
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  };
+
   // Vérifier le statut du serveur
   const checkServerStatus = async () => {
     try {
@@ -58,22 +67,33 @@ const PasswordProtect = ({ children }) => {
           const response = await apiClient.post(API_ENDPOINTS.jwtVerify, {
             token: accessToken
           });
+          console.log('✅ Token valide, authentification réussie');
           setIsAuthenticated(true);
         } catch (error) {
-          // Token invalide, on le supprime
-          try {
-            const response = await apiClient.post(API_ENDPOINTS.jwtRefresh, {
-              refresh: refreshToken
-            });
-            localStorage.setItem('hoolis_token_access', response.data.access);
-            localStorage.setItem('hoolis_token_refresh', response.data.refresh);
-            setIsAuthenticated(true);
-          } catch (error) {
-            console.error('Erreur lors de la suppression des tokens:', error);
-            localStorage.removeItem('hoolis_token_access');
-            localStorage.removeItem('hoolis_token_refresh');
+          console.log('❌ Token invalide, tentative de rafraîchissement...');
+          // Token invalide, tenter de le rafraîchir
+          if (refreshToken) {
+            try {
+              const response = await apiClient.post(API_ENDPOINTS.jwtRefresh, {
+                refresh: refreshToken
+              });
+              localStorage.setItem('hoolis_token_access', response.data.access);
+              if (response.data.refresh) {
+                localStorage.setItem('hoolis_token_refresh', response.data.refresh);
+              }
+              console.log('✅ Token rafraîchi avec succès');
+              setIsAuthenticated(true);
+            } catch (refreshError) {
+              console.log('❌ Impossible de rafraîchir le token, nettoyage...');
+              clearTokens();
+            }
+          } else {
+            console.log('❌ Pas de refresh token, nettoyage...');
+            clearTokens();
           }
         }
+      } else {
+        console.log('ℹ️ Aucun token trouvé');
       }
       
       setIsCheckingAuth(false);
@@ -88,6 +108,7 @@ const PasswordProtect = ({ children }) => {
     setIsLoading(true);
 
     try {
+      console.log('🔐 Tentative de connexion...');
       const response = await apiClient.post(API_ENDPOINTS.jwtCreate, {
         username: username,
         password: password
@@ -96,9 +117,11 @@ const PasswordProtect = ({ children }) => {
       // Sauvegarder les tokens
       localStorage.setItem('hoolis_token_access', response.data.access);
       localStorage.setItem('hoolis_token_refresh', response.data.refresh);
+      console.log('✅ Connexion réussie, tokens sauvegardés');
       setIsAuthenticated(true);
       
     } catch (error) {
+      console.error('❌ Erreur de connexion:', error);
       if (error.response?.status === 401) {
         setError('Nom d\'utilisateur ou mot de passe incorrect');
       } else {
@@ -107,6 +130,14 @@ const PasswordProtect = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Fonction pour forcer la déconnexion (utile pour déboguer)
+  const handleForceLogout = () => {
+    console.log('🔄 Déconnexion forcée...');
+    clearTokens();
+    setIsAuthenticated(false);
+    setError('');
   };
 
   // Affichage pendant la vérification de l'authentification
@@ -181,6 +212,25 @@ const PasswordProtect = ({ children }) => {
             {isLoading ? 'Vérification...' : 'Entrer'}
           </button>
         </form>
+        
+        {/* Bouton de debug pour nettoyer les tokens corrompus */}
+        <div className="debug-actions" style={{ marginTop: '20px', textAlign: 'center' }}>
+          <button 
+            type="button"
+            onClick={handleForceLogout}
+            style={{ 
+              background: 'transparent', 
+              border: '1px solid #ccc', 
+              color: '#666',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontSize: '0.8rem',
+              cursor: 'pointer'
+            }}
+          >
+            Nettoyer les données de connexion
+          </button>
+        </div>
         
         <div className="password-footer">
           <p>Veuillez entrer le mot de passe pour accéder au site</p>
