@@ -35,6 +35,7 @@ class Collection(models.Model):
 
 class BookingProduct(models.Model):
     name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100, default='0000000000', unique=True)
     product = models.CharField(max_length=100, default='product')
     date = models.DateField(default=datetime.now)
     start_time = models.TimeField()
@@ -43,7 +44,7 @@ class BookingProduct(models.Model):
     is_canceled = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('date', 'product', 'start_time', 'end_time')  # évite les doublons pour la même date, montre et les mêmes heures
+        unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, et les mêmes heures
         ordering = ['start_time']
 
     def __str__(self):
@@ -79,6 +80,7 @@ class WatchMedia(models.Model):
 
 class BookingWatch(models.Model):
     name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100, default='0000000000', unique=True)
     watch = models.CharField(max_length=100, default='watch')
     date = models.DateField(default=datetime.now)
     start_time = models.TimeField()
@@ -87,7 +89,7 @@ class BookingWatch(models.Model):
     is_canceled = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('date', 'watch', 'start_time', 'end_time')  # évite les doublons pour la même date, montre et les mêmes heures
+        unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, montre et les mêmes heures
         ordering = ['start_time']
 
     def __str__(self):
@@ -109,7 +111,7 @@ class SlotsWatch(models.Model):
 #     description = models.TextField()
 #     discount = models.DecimalField(max_digits=10, decimal_places=2)
 #     created_at = models.DateTimeField(auto_now_add=True)
-
+#
 #     def __str__(self):
 #         return self.name
     

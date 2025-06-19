@@ -50,15 +50,10 @@ class SlotsProductSerializer(serializers.ModelSerializer):
 class CreateBookingProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingProduct
-        fields = ['name', 'product', 'date', 'start_time', 'end_time']
+        fields = ['name', 'phone', 'product', 'date', 'start_time', 'end_time']
     
     def create(self, validated_data):
-        if BookingProduct.objects.filter(
-                date=validated_data['date'], 
-                product=validated_data['product'],
-                start_time=validated_data['start_time'], 
-                end_time=validated_data['end_time']).exists():
-            raise serializers.ValidationError('This time slot is already booked.')
+        # La contrainte unique sur le phone est gérée automatiquement par le modèle
         booking = BookingProduct.objects.create(**validated_data)
         SlotsProduct.objects.filter(
             date=validated_data['date'], 
@@ -69,11 +64,12 @@ class CreateBookingProductSerializer(serializers.ModelSerializer):
 class DeleteBookingProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingProduct
-        fields = ['name', 'date', 'start_time', 'end_time']
+        fields = ['name', 'phone', 'date', 'start_time', 'end_time']
 
     def update(self):
         instance = BookingProduct.objects.get(
             name=self.context['name'], 
+            phone=self.context['phone'],
             start_time=self.context['start_time'], 
             end_time=self.context['end_time']
             )
@@ -90,15 +86,10 @@ class SlotsWatchSerializer(serializers.ModelSerializer):
 class CreateBookingWatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingWatch
-        fields = ['name', 'watch', 'date', 'start_time', 'end_time']
+        fields = ['name', 'phone', 'watch', 'date', 'start_time', 'end_time']
     
     def create(self, validated_data):
-        if BookingWatch.objects.filter(
-                date=validated_data['date'], 
-                watch=validated_data['watch'],
-                start_time=validated_data['start_time'], 
-                end_time=validated_data['end_time']).exists():
-            raise serializers.ValidationError('This time slot is already booked.')
+        # La contrainte unique sur le phone est gérée automatiquement par le modèle
         booking = BookingWatch.objects.create(**validated_data)
         SlotsWatch.objects.filter(
             date=validated_data['date'], 
@@ -109,11 +100,12 @@ class CreateBookingWatchSerializer(serializers.ModelSerializer):
 class DeleteBookingWatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingWatch
-        fields = ['name', 'date', 'start_time', 'end_time']
+        fields = ['name', 'phone', 'date', 'start_time', 'end_time']
 
     def update(self):
         instance = BookingWatch.objects.get(
             name=self.context['name'], 
+            phone=self.context['phone'],
             start_time=self.context['start_time'], 
             end_time=self.context['end_time']
             )
