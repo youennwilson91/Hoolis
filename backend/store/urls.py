@@ -30,4 +30,7 @@ urlpatterns = [
     path('bookings-watches/', views.BookingWatchViewSet.as_view({'post': 'create'})),
     path('available-slots-watches/', views.SlotsWatchViewSet.as_view({'get': 'list'})),
     path('available-slots-products/', views.SlotsProductViewSet.as_view({'get': 'list'})),
+    path('send-confirmation-code/', views.send_confirmation_code),
+    path('verify-confirmation-code/', views.verify_confirmation_code),
+    path('cancel-verification/', views.cancel_verification),
 ]

@@ -9,18 +9,24 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from rest_framework.permissions import *
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
+from datetime import datetime, timedelta, time, date
+from django.http import HttpResponse, JsonResponse
+from django.utils.timezone import make_aware
+from django.conf import settings
+from django.db import IntegrityError
+
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
 from .tasks import process_order
-from django.http import HttpResponse, JsonResponse
-from rest_framework.pagination import PageNumberPagination
-from datetime import datetime, timedelta, time, date
-from django.utils.timezone import make_aware
+
+import vonage
 from django.conf import settings
+import os
 
 
 
@@ -115,6 +121,7 @@ class BookingProductViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {
             'date': self.request.data.get('date'),
+            'phone': self.request.data.get('phone'),
             'product': self.request.data.get('product'),
             'name': self.request.data.get('name'),
             'start_time': self.request.data.get('start_time'), 
@@ -126,6 +133,22 @@ class BookingProductViewSet(ModelViewSet):
             return CreateBookingProductSerializer
         elif self.request.method == 'DELETE':
             return DeleteBookingProductSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError as e:
+            # Vérifier si c'est une erreur de contrainte d'unicité sur le téléphone
+            if 'phone' in str(e).lower():
+                return Response(
+                    {
+                        'error': 'Ce numéro de téléphone est déjà utilisé.',
+                        'detail': 'Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou annuler votre réservation existante.'
+                    },
+                    status=status.HTTP_409_CONFLICT
+                )
+            # Pour les autres erreurs d'intégrité, on relance l'exception
+            raise
 
 
 class SlotsWatchViewSet(ModelViewSet):
@@ -154,6 +177,7 @@ class BookingWatchViewSet(ModelViewSet):
             'date': self.request.data.get('date'),
             'watch': self.request.data.get('watch'),
             'name': self.request.data.get('name'),
+            'phone': self.request.data.get('phone'),
             'start_time': self.request.data.get('start_time'), 
             'end_time': self.request.data.get('end_time')
             }
@@ -163,6 +187,22 @@ class BookingWatchViewSet(ModelViewSet):
             return CreateBookingWatchSerializer
         elif self.request.method == 'DELETE':
             return DeleteBookingWatchSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError as e:
+            # Vérifier si c'est une erreur de contrainte d'unicité sur le téléphone
+            if 'phone' in str(e).lower():
+                return Response(
+                    {
+                        'error': 'Ce numéro de téléphone est déjà utilisé.',
+                        'detail': 'Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou annuler votre réservation existante.'
+                    },
+                    status=status.HTTP_409_CONFLICT
+                )
+            # Pour les autres erreurs d'intégrité, on relance l'exception
+            raise
             
 
 class WatchViewSet(ModelViewSet):
@@ -171,6 +211,72 @@ class WatchViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Watch.objects.prefetch_related('images')
+
+
+
+
+@api_view(['POST'])
+def send_confirmation_code(request):
+    phone = request.data.get('phone')
+    type = request.data.get('type')  
+    print(f"Numéro de téléphone reçu: {phone}")
+    print(f"Type de réservation: {type}")
+    
+    if not phone:
+        print("Erreur: Numéro manquant")
+        return Response({"error": "Numéro manquant"}, status=400)
+
+    # Vérifier si le numéro de téléphone existe déjà en base
+    phone_exists_product = BookingProduct.objects.filter(phone=phone, is_canceled=False).exists()
+    phone_exists_watch = BookingWatch.objects.filter(phone=phone, is_canceled=False).exists()
+    
+    if phone_exists_product or phone_exists_watch:
+        print(f"Numéro de téléphone {phone} déjà utilisé")
+        return Response({
+            "error": "Ce numéro de téléphone est déjà utilisé.",
+            "detail": "Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou contactez nous pour reprogrammer votre rendez-vous."
+        }, status=409)
+    try:
+        print("Tentative d'envoi du code via Vonage...")
+        client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
+        verify = vonage.Verify(client)
+        response = verify.start_verification(number=phone, brand="Hoolis - F&W")
+
+        print(f"Réponse Vonage: {response}")
+        
+        if response["status"] == "0":
+            print(f"Code envoyé avec succès, request_id: {response['request_id']}")
+            return Response({"message": "Code envoyé", "request_id": response["request_id"]})
+        else:
+            print(f"Erreur Vonage: {response.get('error_text', 'Erreur inconnue')}")
+            return Response({"error": response.get("error_text", "Erreur lors de l'envoi du code")}, status=400)
+    
+    except Exception as e:
+        print(f"Exception lors de l'envoi du code: {str(e)}")
+        return Response({"error": str(e)}, status=500)
+
+
+@api_view(['POST'])
+def verify_confirmation_code(request):
+    client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
+    verify = client.verify
+    response = verify.check(request_id=request.data.get('request_id'), code=request.data.get('code'))
+
+    if response["status"] == "0":
+        return Response({"message": "Code de vérification valide", "event_id": response["event_id"]})
+    else:
+        return Response({"error": response["error_text"]}, status=400)
+
+
+
+@api_view(['POST'])
+def cancel_verification(request):
+    client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
+    verify = client.verify
+    response = verify.cancel(REQUEST_ID=request.data.get('request_id'))
+
+
+
 
 
 # class CartViewSet(ModelViewSet):
