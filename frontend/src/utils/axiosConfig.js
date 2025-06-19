@@ -26,6 +26,9 @@ export const API_ENDPOINTS = {
   jwtCreate: '/auth/jwt/create/',
   jwtRefresh: '/auth/jwt/refresh/',
   jwtVerify: '/auth/jwt/verify/',
+  sendConfirmationCode: '/store/send-confirmation-code/',
+  verifyConfirmationCode: '/store/verify-confirmation-code/',
+  cancelVerification: '/store/cancel-verification/',
 };
 
 // Fonction pour obtenir le token d'accès
@@ -106,17 +109,26 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       const requestUrl = error.config?.url || '';
       
+      console.log('❌ Erreur 401 détectée pour:', requestUrl);
+      
       // Si c'est une tentative de connexion initiale, ne pas recharger la page
       if (requestUrl.includes('/auth/jwt/create/')) {
         console.log('❌ Erreur de connexion - identifiants incorrects');
         return Promise.reject(error);
       }
       
-      // Si c'est une autre requête avec un token invalide, supprimer les tokens et recharger
-      console.log('❌ Token invalide, suppression des tokens');
+      // Si c'est une vérification de token ou un rafraîchissement, ne pas recharger
+      if (requestUrl.includes('/auth/jwt/verify/') || requestUrl.includes('/auth/jwt/refresh/')) {
+        console.log('❌ Erreur de vérification/rafraîchissement de token');
+        return Promise.reject(error);
+      }
+      
+      // Pour les autres requêtes avec un token invalide, nettoyer et laisser PasswordProtect gérer
+      console.log('❌ Token invalide pour une requête protégée, nettoyage des tokens');
       clearTokens();
-      // Recharger la page pour forcer la reconnexion
-      window.location.reload();
+      
+      // Ne pas recharger automatiquement la page, laisser PasswordProtect gérer l'état
+      // window.location.reload(); // Commenté pour éviter les rechargements automatiques
     }
     
     return Promise.reject(error);

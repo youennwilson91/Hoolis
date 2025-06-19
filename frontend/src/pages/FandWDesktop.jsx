@@ -229,7 +229,7 @@ export default function FandW() {
         </div>
         {isBooking && (
           <div className="booking-container">
-            <BookingCalendar />
+            <BookingCalendar type="watch" />
           </div>
         )}
         <Button screenRef={screenRef} labelRef={labelRef}/>
