@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap');
+@font-face {
+  font-family: "Champagne Limousines";
+  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 .fandw-container * {
-  font-family: "Agdasima", sans-serif !important;
+  font-family: "Champagne Limousines", sans-serif !important;
 }
 
 .mobile-fandw-container {
@@ -98,10 +103,15 @@
     }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap');
+@font-face {
+  font-family: "Champagne Limousines";
+  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 .shop-container * {
-  font-family: "Agdasima", sans-serif !important;
+  font-family: "Champagne Limousines", sans-serif !important;
 }
 
 .mobile-shop-container {
@@ -177,7 +187,6 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: width 0.3s ease;
             cursor: pointer;
             
             &::before,
@@ -267,6 +276,7 @@
                 justify-content: center;
                 align-items: center;
                 pointer-events: none !important;
+                opacity: 0;
             }
 
             .watch-title {
@@ -308,7 +318,7 @@
 
             .close-watch {
                 position: absolute;
-                top: 0%;
+                top: 2%;
                 right: 2%;
                 font-size: 36px;
                 color: black;

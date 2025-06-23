@@ -19,6 +19,9 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.timezone import make_aware
 from django.conf import settings
 from django.db import IntegrityError
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.views.decorators.vary import vary_on_headers
 
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
@@ -29,7 +32,9 @@ from django.conf import settings
 import os
 
 
-
+@method_decorator(cache_page(3600), name='list')
+@method_decorator(cache_page(3600), name='retrieve')
+@method_decorator(vary_on_headers('User-Agent'), name='list')
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -58,7 +63,9 @@ class ProductViewSet(ModelViewSet):
 
 
 
-
+@method_decorator(cache_page(3600), name='list')
+@method_decorator(cache_page(3600), name='retrieve')
+@method_decorator(vary_on_headers('User-Agent'), name='list')
 class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(
         products_count=Count('product')
@@ -75,7 +82,8 @@ class CollectionViewSet(ModelViewSet):
             return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
 
-
+@method_decorator(cache_page(3600), name='list')
+@method_decorator(cache_page(3600), name='retrieve')
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminUser]
@@ -167,6 +175,7 @@ class SlotsWatchViewSet(ModelViewSet):
         return SlotsWatch.objects.filter(is_available=True).filter(date=selected_date)
 
 
+# Pas de cache pour BookingWatchViewSet car il contient des opérations POST/DELETE
 class BookingWatchViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
     queryset = BookingWatch.objects.all()
@@ -205,6 +214,9 @@ class BookingWatchViewSet(ModelViewSet):
             raise
             
 
+@method_decorator(cache_page(60 * 30), name='list')
+@method_decorator(cache_page(60 * 30), name='retrieve')
+@method_decorator(vary_on_headers('User-Agent'), name='list')
 class WatchViewSet(ModelViewSet):
     serializer_class = WatchSerializer
     permission_classes = [IsAdminUser]
