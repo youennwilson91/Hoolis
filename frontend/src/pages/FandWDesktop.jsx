@@ -152,7 +152,7 @@ export default function FandW() {
       if (isEntering) {
         // Au hover in, on anime la largeur
         timeline.to(watchRef, {
-          duration: 0.1,
+          duration: 0.5,
           ease: "power2.inOut",
           width: width,
         });
@@ -160,7 +160,7 @@ export default function FandW() {
         // Au hover out, on anime la largeur ET on scroll
         timeline
           .to(watchRef, {
-            duration: 0.1,
+            duration: 0.5,
             ease: "power2.inOut",
             width: width,
           })
@@ -177,12 +177,29 @@ export default function FandW() {
     if (!watchIsClicked) {
       setWatchIsClicked(true);
       setClickedWatchId(id);
-      gsap.to(watchRef, {
-        duration: 0.5,
-        ease: "power3.inOut",
-        width: "100%",
-        height: "100%"
-      });
+      const timeline = gsap.timeline();
+
+      timeline
+        .to(watchRef, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          width: "100%",
+          height: "100%"
+        })
+        .call(() => {
+          // Attendre que l'élément soit monté avant d'animer
+          const detailsElement = watchRef.querySelector('.watch-details');
+          if (detailsElement) {
+            gsap.fromTo(detailsElement, 
+              { opacity: 0 }, 
+              { 
+                opacity: 1, 
+                duration: 0.25, 
+                ease: "power3.inOut"
+              }
+            );
+          }
+        });
     }
   }
 
