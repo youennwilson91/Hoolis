@@ -46,29 +46,19 @@
     <link rel="manifest" href="/site.webmanifest">
     
     <!-- Fonts Optimization -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap" as="style">
-    <link rel="preload" href="https://fonts.gstatic.com/s/agdasima/v1/agdasima-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Preload fonts for better performance -->
+    <link rel="preload" href="/champagne-limousines-bold.ttf" as="font" type="font/truetype" crossorigin>
     
-    <!-- Font stylesheet with display swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
-    <!-- Fallback font -->
+    <!-- Font loading with fallback -->
     <style>
       @font-face {
-        font-family: 'Agdasima';
-        font-style: normal;
-        font-weight: 400;
+        font-family: 'Champagne Limousines';
         font-display: swap;
-        src: local('Agdasima Regular'), local('Agdasima-Regular'),
-             url('https://fonts.gstatic.com/s/agdasima/v1/agdasima-regular.woff2') format('woff2');
+        src: url('/champagne-limousines-bold.ttf') format('truetype');
       }
-      /* Fallback font stack */
       body {
-        font-family: 'Agdasima', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-family: 'Champagne Limousines', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
       }
     </style>
   </head>
