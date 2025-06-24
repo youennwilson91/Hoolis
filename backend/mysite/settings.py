@@ -10,10 +10,19 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h-30p5e_5(a@)%@bjo7rmqs4*e=x=sjsaz(4l=n_y*hi^%1s^z')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
+if DEBUG:
+    # Clé par défaut pour le développement seulement
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-only')
+else:
+    # En production, obligatoire via variable d'environnement
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+    if not SECRET_KEY:
+        raise ValueError("DJANGO_SECRET_KEY must be set in production!")
+        
 # Configuration pour Azure et Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -85,37 +94,37 @@ TEMPLATES = [
 
 
 # Base de données - SQL Server en local
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'mssql',
-#        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-#        'USER': os.environ.get('DB_USER', 'sa'),
-#        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-#        'HOST': os.environ.get('DB_HOST', 'localhost'),
-#        'PORT': os.environ.get('DB_PORT', '1433'),
-#        'OPTIONS': {
-#            'driver': 'ODBC Driver 17 for SQL Server',
-#            'extra_params': 'TrustServerCertificate=yes',
-#        },
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'mssql',
+        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+        'USER': os.environ.get('DB_USER', 'sa'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '1433'),
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes',
+        },
+    }
+}
 # Base de données PostgreSQL
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    }
-else:
-    # Fallback configuration PostgreSQL locale
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-            'USER': os.environ.get('DB_USER', 'hoolis_admin'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', '258528wY.'),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-        }
-    }
+#if 'DATABASE_URL' in os.environ:
+#    DATABASES = {
+#        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+#    }
+#else:
+#    # Fallback configuration PostgreSQL locale
+#    DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.db.backends.postgresql',
+#            'NAME': os.environ.get('DB_NAME'),
+#            'USER': os.environ.get('DB_USER'),
+#            'PASSWORD': os.environ.get('DB_PASSWORD'),
+#            'HOST': os.environ.get('DB_HOST', 'localhost'),
+#            'PORT': os.environ.get('DB_PORT', '5432'),
+#        }
+#    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -170,9 +179,13 @@ REST_FRAMEWORK = {
 
 
 if DEBUG:
+    # Configuration HTTP pour le développement  
     CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://localhost:5173", 
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
     ]
-    # Configuration HTTP pour le développement
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
@@ -191,8 +204,6 @@ else:
     SECURE_HSTS_PRELOAD = True
 
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 3600
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_HTTPONLY = True
 
 SECURE_BROWSER_XSS_FILTER = True
@@ -210,7 +221,13 @@ CACHES = {
 
 # Configuration CORS robuste
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
+
+if DEBUG:
+    # En développement, on peut être plus permissif
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # En production, seules les origines spécifiques sont autorisées
+    CORS_ALLOW_ALL_ORIGINS = False
 
 # Permettre toutes les méthodes HTTP
 CORS_ALLOWED_METHODS = [
