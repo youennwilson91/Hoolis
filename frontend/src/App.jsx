@@ -3,7 +3,7 @@ import router from './utils/Router'
 import "./index.css"
 import useStore from './utils/store'
 import { useEffect } from 'react'
-import WebFontLoader from './utils/fontLoader'
+import { loadFont } from './utils/fontLoader'
 import PasswordProtect from './components/PasswordProtect'
 
 // Simple touch events polyfill for better cross-platform support
@@ -30,7 +30,7 @@ function App() {
   
   useEffect(() => {
     // Load custom fonts
-    WebFontLoader.loadFonts();
+    loadFont();
     
     // Enable cross-platform touch support
     enableTouchSupport();

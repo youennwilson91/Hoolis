@@ -1,33 +1,16 @@
-@font-face {
-  font-family: "Champagne Limousines";
-  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
 html {
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }
 
 .hoolis-container {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-
+    transition: opacity 0.5s ease, background-color 0.75s ease;
+    overflow: hidden;
 } 
 .hoolis-images-container {
     width: 100%;
