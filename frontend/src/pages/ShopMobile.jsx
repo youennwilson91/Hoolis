@@ -176,7 +176,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
-      <div ref={articlesContainerRef} className="mobile-shop-articles" style={{ opacity: 0 }}>
+      <div ref={articlesContainerRef} className="mobile-shop-articles">
         {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
         
         {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
