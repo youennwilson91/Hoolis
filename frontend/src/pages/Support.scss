@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Champagne Limousines";
+  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .support-container {
     width: 100%;
     height: 100vh;
@@ -11,11 +18,13 @@
         position: absolute;
         width: fit-content;
         text-align: center;
-        font-family: "Agdasima", sans-serif;
+        font-family: "Champagne Limousines", sans-serif;
         font-weight: 700;
         font-style: normal;
         font-size: 330px;
         transition: color 0.8s ease;
+        -webkit-text-stroke: 2px white;
+        text-stroke: 2px white;
       }
 
 .support-form {
@@ -25,14 +34,14 @@
     width: 50%;
     
     input {
-        font-family: "Agdasima", sans-serif !important;
+        font-family: "Champagne Limousines", sans-serif !important;
         font-size: 24px;
         font-weight: 600;
         background-color: lightgray;
     }
 
     textarea {
-        font-family: "Agdasima", sans-serif !important;
+        font-family: "Champagne Limousines", sans-serif !important;
         font-size: 24px;
         font-weight: 600;
         height: 200px;
@@ -41,7 +50,7 @@
 
     button {
         width: 100%;
-        font-family: "Agdasima", sans-serif !important;
+        font-family: "Champagne Limousines", sans-serif !important;
         font-size: 24px;
         font-weight: 600;
         background-color: black;
