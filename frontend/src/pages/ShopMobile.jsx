@@ -7,6 +7,7 @@ import "./Shop.scss";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText } from "../utils/sanitizer";
 
 export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem }) {
   const mobileScreenRef = useRef(null);
@@ -29,6 +30,24 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     setIsBooking(false);
   }, []);
 
+  // Fonction de gestion d'erreur sécurisée
+  const handleError = (error) => {
+    let errorMessage = "Une erreur est survenue";
+    let statusCode = null;
+
+    if (error.response) {
+      statusCode = error.response.status;
+      // Utiliser notre fonction de sanitisation
+      errorMessage = sanitizeError(error.response.data?.error || error.message, statusCode);
+    } else if (error.request) {
+      errorMessage = "Service temporairement indisponible";
+    } else {
+      errorMessage = "Erreur de connexion";
+    }
+
+    setError(errorMessage);
+  };
+
   // Récupération des produits depuis l'API
   useEffect(() => {
     console.log("Tentative de connexion à l'API...");
@@ -43,8 +62,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
         let productsData = response.data.results;
         
         if (productsData && Array.isArray(productsData)) {
-          setProducts(productsData);
-          console.log("✅ Produits récupérés:", productsData.length);
+          // Sanitiser chaque produit avant de les stocker
+          const sanitizedProducts = productsData.map(product => sanitizeProduct(product));
+          setProducts(sanitizedProducts);
+          console.log("✅ Produits récupérés:", sanitizedProducts.length);
         } else {
           console.log("⚠️ Aucun produit trouvé");
           setProducts([]);
@@ -53,17 +74,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
       })
       .catch(error => {
         console.error('Erreur lors de la requête:', error.message);
-        if (error.response) {
-          console.error('Statut:', error.response.status);
-          console.error('Données:', error.response.data);
-          setError(`Erreur ${error.response.status}: ${error.message}`);
-        } else if (error.request) {
-          console.error('Pas de réponse reçue du serveur');
-          setError("Pas de réponse du serveur");
-        } else {
-          console.error('Erreur de configuration de la requête');
-          setError("Erreur de connexion");
-        }
+        handleError(error);
         setProducts([]);
         setLoading(false);
       });
@@ -86,7 +97,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               const img = new Image();
               img.onload = () => imgResolve();
               img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
-              img.src = imageObj.image;
+              img.src = sanitizeImageUrl(imageObj.image); // Sanitiser l'URL
             });
             imagePromises.push(promise);
           }
@@ -186,15 +197,15 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
             <div key={article.id} className="mobile-shop-article">
               <div className="mobile-shop-article-image-container">
                 <img 
-                  src={article.images?.[0]?.image || '/path/to/default/image.jpg'} 
-                  alt={`${article.title || 'Montre de luxe'} - Vue principale - Collection Hoolis`}
+                  src={sanitizeImageUrl(article.images?.[0]?.image)} 
+                  alt={sanitizeAltText(`${article.title || 'Produit'} - Vue principale - Collection Hoolis`)}
                   loading="lazy"
                   decoding="async"
                   style={{ backgroundColor: '#f0f0f0' }}
                 />
                 <img 
-                  src={article.images?.[1]?.image || '/path/to/default/image.jpg'} 
-                  alt={`${article.title || 'Montre de luxe'} - Vue détaillée - Collection Hoolis`}
+                  src={sanitizeImageUrl(article.images?.[1]?.image)} 
+                  alt={sanitizeAltText(`${article.title || 'Produit'} - Vue détaillée - Collection Hoolis`)}
                   loading="lazy"
                   decoding="async"
                   style={{ backgroundColor: '#f0f0f0' }}
