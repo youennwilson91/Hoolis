@@ -7,6 +7,7 @@ import "./FandW.scss";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
+import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
 
 export default function FandWMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
@@ -22,6 +23,23 @@ export default function FandWMobile({ labelRef }) {
   useEffect(() => {
     setIsBooking(false);
   }, []);
+
+  // Fonction de gestion d'erreur sécurisée
+  const handleError = (error) => {
+    let errorMessage = "Une erreur est survenue";
+    let statusCode = null;
+
+    if (error.response) {
+      statusCode = error.response.status;
+      errorMessage = sanitizeError(error.response.data?.error || error.message, statusCode);
+    } else if (error.request) {
+      errorMessage = "Service temporairement indisponible";
+    } else {
+      errorMessage = "Erreur de connexion";
+    }
+
+    setError(errorMessage);
+  };
 
   function preloadWatchImages() {
     if (!Array.isArray(medias) || medias.length === 0) {
@@ -39,7 +57,7 @@ export default function FandWMobile({ labelRef }) {
               const img = new Image();
               img.onload = () => imgResolve();
               img.onerror = () => imgResolve(); // Resolve even on error to avoid blocking
-              img.src = media.media;
+              img.src = sanitizeImageUrl(media.media); // Sanitiser l'URL
             });
             imagePromises.push(promise);
           }
@@ -76,8 +94,8 @@ export default function FandWMobile({ labelRef }) {
         if (watches && watches.length > 0) {
           const formattedWatches = watches.map(watch => ({
             id: watch.id,
-            name: watch.name,
-            description: watch.description,
+            name: sanitizeText(watch.name), // Sanitiser le nom
+            description: sanitizeText(watch.description), // Sanitiser la description
             small: watch.images.filter(img => img.size === 'small'),
           }));
           
@@ -91,17 +109,7 @@ export default function FandWMobile({ labelRef }) {
       })
       .catch(error => {
         console.error('Erreur lors de la requête:', error.message);
-        if (error.response) {
-          console.error('Statut:', error.response.status);
-          console.error('Données:', error.response.data);
-          setError(`Erreur ${error.response.status}: ${error.message}`);
-        } else if (error.request) {
-          console.error('Pas de réponse reçue du serveur');
-          setError("Pas de réponse du serveur");
-        } else {
-          console.error('Erreur de configuration de la requête');
-          setError("Erreur de connexion");
-        }
+        handleError(error);
         setMedias([]);
         setLoading(false);
       });
@@ -169,42 +177,39 @@ export default function FandWMobile({ labelRef }) {
         {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
         
         {!loading && medias && medias.length > 0 ? (
-          medias.map((media, index) => (
+          medias.map((media) => (
             <div 
-              key={media.id} 
-              className="mobile-fandw-watch"
+              key={media.id}
+              className="mobile-fandw-watch-container"
             >
-              <div className="mobile-fandw-watch-image-container">
-                {media.small && media.small.length > 0 ? media.small.map((m, imgIndex) => (
-                  m.type === 'image' ? (
-                    <img 
-                      key={m.id} 
-                      src={m.media} 
-                      alt={m.name}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <video 
-                      key={m.id} 
-                      src={m.media} 
-                      loop 
-                      muted
-                      preload="none"
-                      style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                    />
-                  )
-                )) : <div style={{color: 'white', padding: '10px'}}>Aucune image pour cette montre</div>}
-          
-                <div className="mobile-fandw-watch-details">
-                  <h1>{media.name}</h1>
-                  <p>{media.description}</p>
-                </div>
+              {media.small && media.small.length > 0 ? media.small.map((m, imgIndex) => (
+                <img 
+                  className="mobile-fandw-watch"
+                  key={m.id}
+                  src={sanitizeImageUrl(m.media)}
+                  alt={sanitizeAltText(m.name || `Montre ${media.name}`)}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )) : (
+                <img 
+                  key={m.id}
+                  src={sanitizeImageUrl(m.media)}
+                  className="mobile-fandw-watch"
+                  loading="lazy"
+                  decoding="async"
+                  alt={sanitizeAltText(media.name || 'Montre de luxe')}
+                />
+              )}
+
+              <div className="mobile-fandw-watch-details">
+                <h1>{media.name}</h1>
+                <p>{media.description}</p>
               </div>
             </div>
           ))
         ) : !loading && (
-          <div style={{color: 'white', padding: '20px'}}>Aucun produit trouvé</div>
+          <div style={{color: 'white', padding: '20px'}}>Aucune montre trouvée</div>
         )}
       </div>
       
@@ -221,7 +226,7 @@ export default function FandWMobile({ labelRef }) {
 
       {isBooking ? (
         <div ref={bookingContainerRef} className="booking-container">
-          <BookingCalendar type="watch" />
+          <BookingCalendar type="watches" />
           <button className="close-booking-button" onClick={closeBooking}>×</button>
         </div>
       ) : null}

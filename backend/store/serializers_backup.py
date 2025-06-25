@@ -33,6 +33,8 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_price(self, value):
         if value <= 0:
             raise serializers.ValidationError("Le prix doit être positif")
+        if value > 999999:
+            raise serializers.ValidationError("Le prix est trop élevé")
         return value
 
     class Meta:
@@ -90,6 +92,15 @@ class DeleteBookingProductSerializer(serializers.ModelSerializer):
         model = BookingProduct
         fields = ['name', 'phone', 'date', 'start_time', 'end_time']
 
+    def validate_name(self, value):
+        return sanitize_text_input(value, 100)
+    
+    def validate_phone(self, value):
+        sanitized = sanitize_phone_number(value)
+        if not sanitized:
+            raise serializers.ValidationError("Format de numéro de téléphone invalide")
+        return sanitized
+
     def update(self):
         instance = BookingProduct.objects.get(
             name=self.context['name'], 
@@ -145,6 +156,15 @@ class DeleteBookingWatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingWatch
         fields = ['name', 'phone', 'date', 'start_time', 'end_time']
+
+    def validate_name(self, value):
+        return sanitize_text_input(value, 100)
+    
+    def validate_phone(self, value):
+        sanitized = sanitize_phone_number(value)
+        if not sanitized:
+            raise serializers.ValidationError("Format de numéro de téléphone invalide")
+        return sanitized
 
     def update(self):
         instance = BookingWatch.objects.get(

@@ -5,6 +5,7 @@ import './Calendar.scss';
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import useStore from "../utils/store";
 import { useLocation } from 'react-router-dom';
+import { sanitizeError, sanitizeText } from '../utils/sanitizer';
 
 function BookingCalendar({ type }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -15,9 +16,10 @@ function BookingCalendar({ type }) {
   const [selectedWatch, setSelectedWatch] = useState("");
   const [availableWatches, setAvailableWatches] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [verificationStep, setVerificationStep] = useState('form'); // 'form', 'verify', 'success'
+  const [verificationStep, setVerificationStep] = useState('form');
   const [verificationCode, setVerificationCode] = useState("");
   const [requestId, setRequestId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   
   const { isBooking, setIsBooking, products, watches, medias } = useStore();
 
@@ -31,6 +33,14 @@ function BookingCalendar({ type }) {
     ? API_ENDPOINTS.bookings : API_ENDPOINTS.bookingsProducts;
 
   const isShopPage = location.pathname.includes('/shop') || location.pathname.includes('/hoolis');
+
+  // Fonction pour afficher les erreurs de manière sécurisée
+  const showError = (error, statusCode = null) => {
+    const sanitizedError = sanitizeError(error, statusCode);
+    setErrorMessage(sanitizedError);
+    // Effacer le message après 5 secondes
+    setTimeout(() => setErrorMessage(""), 5000);
+  };
 
   // Fonction utilitaire pour formater une date en YYYY-MM-DD
   function formatDate(date) {
@@ -80,25 +90,21 @@ function BookingCalendar({ type }) {
     } catch (error) {
       console.error('Erreur lors de la récupération des créneaux:', error);
       setSlots([]);
+      showError(error.response?.data?.error || "Erreur de chargement des créneaux", error.response?.status);
     }
   };
 
   // Étape 1 : Envoyer le code de vérification SMS
   function handleSendVerification(slot) {
-    if (!name) return alert("Entrez votre nom avant de réserver.");
-    if (!phone) return alert("Entrez votre téléphone avant de réserver.");
-    if (phone.length !== 10) return alert("Le numéro de téléphone doit contenir 10 chiffres.");
-    if (!selectedWatch) return alert("Veuillez sélectionner un article.");
-
+    if (!name || !phone || !selectedWatch) {
+      showError("Veuillez remplir tous les champs");
+      return;
+    }
+    
     // Formater le numéro au format international
     const internationalPhone = phone.startsWith('0') ? `+33${phone.substring(1)}` : phone;
-    
-    console.log('Données envoyées:', {
-      phone: internationalPhone,
-      originalPhone: phone
-    });
 
-    // Utiliser votre endpoint existant
+    // Envoyer le code de vérification
     apiClient.post(API_ENDPOINTS.sendConfirmationCode, {
       phone: internationalPhone,
       type: type
@@ -109,27 +115,23 @@ function BookingCalendar({ type }) {
       console.log('Request ID:', response.data.request_id);
       // Stocker le slot pour l'utiliser après vérification
       window.selectedSlot = slot;
+      setErrorMessage(""); // Effacer les erreurs précédentes
     }).catch(error => {
       console.error('Erreur lors de l\'envoi du code:', error);
       console.error('Réponse du serveur:', error.response?.data);
       
-      // Afficher un message d'erreur plus spécifique
-      if (error.response?.status === 400) {
-        const errorMessage = error.response.data?.error || 'Erreur de validation';
-        alert(`Erreur: ${errorMessage}`);
-      } else if (error.response?.status === 409) {
-        const errorMessage = error.response.data?.detail || error.response.data?.error || 'Ce numéro de téléphone est déjà utilisé.';
-        alert(errorMessage);
-      } else {
-        alert('Erreur lors de l\'envoi du code SMS. Réessayez.');
-      }
+      // Affichage d'erreur sécurisé
+      const statusCode = error.response?.status;
+      let errorText = error.response?.data?.error || error.response?.data?.detail || error.message;
+      showError(errorText, statusCode);
     });
   }
 
   // Étape 2 : Vérifier le code et faire la réservation
   function handleVerifyAndBook() {
-    if (!verificationCode || verificationCode.length !== 4) {
-      return alert("Entrez le code à 4 chiffres reçu par SMS.");
+    if (!verificationCode || verificationCode.length < 4) {
+      showError("Entrez le code à 4 chiffres reçu par SMS");
+      return;
     }
     
     // Formater le numéro au format international (même logique que dans handleSendVerification)
@@ -145,9 +147,9 @@ function BookingCalendar({ type }) {
       // Si le code est valide, procéder à la réservation
       const slot = window.selectedSlot;
       return apiClient.post(apiBookings, {
-        name: name,
+        name: sanitizeText(name), // Sanitiser le nom
         phone: internationalPhone,
-        watch: selectedWatch,
+        watch: sanitizeText(selectedWatch), // Sanitiser la sélection
         date: formattedDate,
         start_time: slot.start_time,
         end_time: slot.end_time
@@ -158,18 +160,13 @@ function BookingCalendar({ type }) {
       setVerificationStep('success');
       const slot = window.selectedSlot;
       setSlots(slots.filter(s => s.start_time !== slot.start_time));
+      setErrorMessage(""); // Effacer les erreurs
     })
     .catch(err => {
       console.error("Erreur lors de la vérification ou réservation:", err);
-      if (err.response?.status === 400) {
-        alert("Code de vérification incorrect. Réessayez.");
-      } else if (err.response?.status === 409) {
-        // Erreur de conflit - numéro de téléphone déjà utilisé
-        const errorMessage = err.response.data?.detail || err.response.data?.error || 'Ce numéro de téléphone est déjà utilisé.';
-        alert(errorMessage);
-      } else {
-        alert("Erreur lors de la réservation. Réessayez.");
-      }
+      const statusCode = err.response?.status;
+      let errorText = err.response?.data?.detail || err.response?.data?.error || err.message;
+      showError(errorText, statusCode);
     });
   }
 
@@ -181,6 +178,19 @@ function BookingCalendar({ type }) {
 
   return (
     <div className="booking-calendar">
+      {/* Affichage des erreurs sécurisé */}
+      {errorMessage && (
+        <div className="error-message" style={{
+          color: 'red', 
+          padding: '10px', 
+          marginBottom: '10px',
+          backgroundColor: 'rgba(255,0,0,0.1)',
+          borderRadius: '4px'
+        }}>
+          {errorMessage}
+        </div>
+      )}
+
       {/* Formulaire initial */}
       {verificationStep === 'form' && (
         <>
@@ -190,6 +200,7 @@ function BookingCalendar({ type }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="form-input"
+            maxLength="50" // Limiter la longueur
           />
           <input
             type="tel"
@@ -197,6 +208,7 @@ function BookingCalendar({ type }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             className="form-input"
+            maxLength="15" // Limiter la longueur
           />
           {isShopPage ? (
             <select
@@ -209,7 +221,9 @@ function BookingCalendar({ type }) {
                 <option value="" disabled>Chargement des produits...</option>
               ) : (
                 products.map((product) => (
-                  <option key={product.id} value={product.title}>{product.title}</option>
+                  <option key={product.id} value={sanitizeText(product.title)}>
+                    {sanitizeText(product.title)}
+                  </option>
                 ))
               )}
             </select>
@@ -221,7 +235,9 @@ function BookingCalendar({ type }) {
             >
               <option value="">Sélectionnez un article</option>
               {watches.map((watch) => (
-                <option key={watch.id} value={watch.name}>{watch.name}</option>
+                <option key={watch.id} value={sanitizeText(watch.name)}>
+                  {sanitizeText(watch.name)}
+                </option>
               ))}
             </select>
           )}
@@ -260,7 +276,7 @@ function BookingCalendar({ type }) {
       {verificationStep === 'verify' && (
         <div className="verification-step">
           <h3>Vérification SMS</h3>
-          <p>Nous avons envoyé un code à 4 chiffres au {phone}</p>
+          <p>Nous avons envoyé un code à 4 chiffres au {sanitizeText(phone)}</p>
           <input
             type="text"
             placeholder="Code de vérification"
@@ -283,6 +299,7 @@ function BookingCalendar({ type }) {
           </button>
         </div>
       )}
+      
       {/* Étape 3: Succès */}
       {verificationStep === 'success' && 
         <div className="success-message">
@@ -290,6 +307,7 @@ function BookingCalendar({ type }) {
           <p>Vous recevrez une confirmation par SMS.</p>
         </div>
       }
+      
       <button 
         onClick={() => setIsBooking(false)}
         className="close-booking-button"
