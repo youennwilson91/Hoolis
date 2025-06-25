@@ -3,10 +3,10 @@ import useStore from "../utils/store";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import "./Hoolis.scss";
+import "./Gallery.scss";
 import "../index.css";
 
-export default function Hoolis() {
+export default function Gallery() {
   const screenRef = useRef(null);
   const mobileScreenRef = useRef(null);
   const labelRef = useRef(null);
