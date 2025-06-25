@@ -37,6 +37,8 @@
         flex: 1;
         width: 100%;
         overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         display: flex;
         flex-direction: column;
         -webkit-overflow-scrolling: touch;
@@ -51,6 +53,8 @@
             display: flex;
             border: 3px solid white;
             overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;                    
             &::-webkit-scrollbar {
@@ -148,6 +152,8 @@
         gap: 5px;
         overflow-x: auto;
         overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         -webkit-overflow-scrolling: touch;
                 
         &::-webkit-scrollbar {
