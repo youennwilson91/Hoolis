@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import { apiClient, API_BASE_URL } from '../utils/axiosConfig';
 import './Auth.scss';
+import { sanitizeError } from '../utils/sanitizer';
 
 const Auth = ({ onAuthSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Fonction de gestion d'erreur sécurisée
+  const handleError = (error) => {
+    let statusCode = null;
+    if (error.response) {
+      statusCode = error.response.status;
+    }
+    const sanitizedError = sanitizeError(error.message || "Erreur d'authentification", statusCode);
+    setError(sanitizedError);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +43,7 @@ const Auth = ({ onAuthSuccess }) => {
       
     } catch (error) {
       console.error('❌ Erreur de connexion:', error);
-      setError('Nom d\'utilisateur ou mot de passe incorrect');
+      handleError(error);
     } finally {
       setLoading(false);
     }
@@ -66,8 +77,12 @@ const Auth = ({ onAuthSuccess }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
-
-          <button type="submit" disabled={loading}>
+          
+          <button 
+            type="submit" 
+            disabled={loading || !username || !password}
+            className="login-button"
+          >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
