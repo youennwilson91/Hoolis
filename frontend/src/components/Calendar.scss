@@ -152,6 +152,12 @@ $success-color: #2ecc71;
     margin: 20px 0;
     height: 25vh;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
     .slot-item {
       display: flex;
@@ -237,6 +243,8 @@ $success-color: #2ecc71;
 
   .time-slots-container {
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
     
     &::-webkit-scrollbar {
