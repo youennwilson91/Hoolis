@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
+import { sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
 
 export default function Watch({ 
   watch, 
@@ -17,6 +18,14 @@ export default function Watch({
   const { isBooking, setIsBooking } = useStore();
   const bookButtonRef = useRef(null);
 
+  // Sanitiser les données de la montre
+  const sanitizedWatch = {
+    id: watch.id,
+    name: sanitizeText(watch.name || ''),
+    description: sanitizeText(watch.description || ''),
+    wide: watch.wide || []
+  };
+
   return (
     <div 
       ref={el => {
@@ -24,35 +33,35 @@ export default function Watch({
           watchRefs.current[index] = el;
         }
       }}
-      key={watch.id} 
-      className={`watch ${watchIsClicked && clickedWatchId === watch.id ? 'watch-clicked' : ''}`}
+      key={sanitizedWatch.id} 
+      className={`watch ${watchIsClicked && clickedWatchId === sanitizedWatch.id ? 'watch-clicked' : ''}`}
       onMouseEnter={() => handleWatchHover({
         width: watchWidthHover, 
         watchRef: watchRefs.current?.[index], 
-        id: watch.id, 
+        id: sanitizedWatch.id, 
         isEntering: true
       })} 
       onMouseLeave={() => handleWatchHover({
         width: watchWidth, 
         watchRef: watchRefs.current?.[index], 
-        id: watch.id, 
+        id: sanitizedWatch.id, 
         isEntering: false
       })} 
-      onClick={() => handleWatchClick(watchRefs.current?.[index], watch.id)}
+      onClick={() => handleWatchClick(watchRefs.current?.[index], sanitizedWatch.id)}
     >
       <div className="article-image-container">
-        {watch.wide && watch.wide.map((media, mediaIndex) => (
+        {sanitizedWatch.wide && sanitizedWatch.wide.map((media, mediaIndex) => (
           media.type === 'image' ? (
             <img 
               key={media.id}
-              src={media.media} 
-              alt={`${watch.name} - Vue ${mediaIndex + 1} - Montre de luxe Hoolis`} 
+              src={sanitizeImageUrl(media.media)} 
+              alt={sanitizeAltText(`${sanitizedWatch.name} - Vue ${mediaIndex + 1} - Montre de luxe Hoolis`)} 
               loading="lazy"
             />
           ) : media.type === 'video' ? (
             <video
               key={media.id}
-              src={media.media}
+              src={sanitizeImageUrl(media.media)}
               autoPlay
               loop
               muted
@@ -62,19 +71,19 @@ export default function Watch({
         ))}
       </div>
       {!watchIsClicked && 
-      <div id={`description-${watch.id}`} className="watch-description" >
-        <h1>{watch.name}</h1>
+      <div id={`description-${sanitizedWatch.id}`} className="watch-description" >
+        <h1>{sanitizedWatch.name}</h1>
       </div>
       }
-      {watchIsClicked && clickedWatchId === watch.id && (
+      {watchIsClicked && clickedWatchId === sanitizedWatch.id && (
         <div className="watch-details">
-          <h1 className="watch-title">{watch.name}</h1>
+          <h1 className="watch-title">{sanitizedWatch.name}</h1>
           {!isBooking ? 
             <button ref={bookButtonRef} className="add-to-cart" onClick={() => setIsBooking(true)}>
               PRENDRE RENDEZ-VOUS
             </button> : null}
-          <p>{watch.description}</p>
-          <h2 className="close-watch" onClick={(e) => handleWatchClose(watchRefs.current?.[index], e, watch.id)}>
+          <p>{sanitizedWatch.description}</p>
+          <h2 className="close-watch" onClick={(e) => handleWatchClose(watchRefs.current?.[index], e, sanitizedWatch.id)}>
             CLOSE
           </h2>
         </div>
