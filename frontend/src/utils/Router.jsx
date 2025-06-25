@@ -15,7 +15,7 @@ const router = createBrowserRouter([
   {path: '/fw', element: <FandW />},
   {path: '/gallery', element: <Hoolis />},
   {path: '/support', element: <Support />},
-  {path: '/hoolis', element: <Shop />},
+  {path: '/hoolis', element: <Hoolis />},
 ]);
 
 export default router;
