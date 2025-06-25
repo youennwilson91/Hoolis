@@ -317,6 +317,7 @@
             flex-direction: column; 
             gap: 5px;
             overflow-y: auto;
+            scrollbar-width: none;
             -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
             
@@ -438,6 +439,8 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
             will-change: transform;
