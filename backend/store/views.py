@@ -26,11 +26,15 @@ from django.views.decorators.vary import vary_on_headers
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
 from .tasks import process_order
+from .utils import SafeErrorHandler, sanitize_phone_number, sanitize_text_input, log_security_event
 
 import vonage
 from django.conf import settings
 import os
+import logging
 
+# Configuration du logger
+logger = logging.getLogger(__name__)
 
 @method_decorator(cache_page(3600), name='list')
 @method_decorator(cache_page(3600), name='retrieve')
@@ -225,70 +229,165 @@ class WatchViewSet(ModelViewSet):
         return Watch.objects.prefetch_related('images')
 
 
-
-
 @api_view(['POST'])
 def send_confirmation_code(request):
-    phone = request.data.get('phone')
-    type = request.data.get('type')  
-    print(f"Numéro de téléphone reçu: {phone}")
-    print(f"Type de réservation: {type}")
-    
-    if not phone:
-        print("Erreur: Numéro manquant")
-        return Response({"error": "Numéro manquant"}, status=400)
-
-    # Vérifier si le numéro de téléphone existe déjà en base
-    phone_exists_product = BookingProduct.objects.filter(phone=phone, is_canceled=False).exists()
-    phone_exists_watch = BookingWatch.objects.filter(phone=phone, is_canceled=False).exists()
-    
-    if phone_exists_product or phone_exists_watch:
-        print(f"Numéro de téléphone {phone} déjà utilisé")
-        return Response({
-            "error": "Ce numéro de téléphone est déjà utilisé.",
-            "detail": "Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou contactez nous pour reprogrammer votre rendez-vous."
-        }, status=409)
     try:
-        print("Tentative d'envoi du code via Vonage...")
-        client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
-        verify = vonage.Verify(client)
-        response = verify.start_verification(number=phone, brand="Hoolis - F&W")
-
-        print(f"Réponse Vonage: {response}")
+        phone = request.data.get('phone')
+        type_reservation = request.data.get('type')
         
-        if response["status"] == "0":
-            print(f"Code envoyé avec succès, request_id: {response['request_id']}")
-            return Response({"message": "Code envoyé", "request_id": response["request_id"]})
+        # ✅ NÉCESSAIRE - Validation des données utilisateur
+        if not phone:
+            return SafeErrorHandler.get_safe_error_response(
+                'PHONE_MISSING', 
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # ✅ NÉCESSAIRE - Sanitiser le numéro de téléphone (données utilisateur)
+        sanitized_phone = sanitize_phone_number(phone)
+        if not sanitized_phone:
+            return SafeErrorHandler.get_safe_error_response(
+                'VALIDATION_ERROR',
+                f"Invalid phone format: {phone}",
+                status.HTTP_400_BAD_REQUEST
+            )
+        
+        # ✅ NÉCESSAIRE - Sanitiser le type (données utilisateur)
+        sanitized_type = sanitize_text_input(type_reservation, 50)
+        
+        # Logger l'activité (sans données sensibles)
+        logger.info(f"SMS verification requested for type: {sanitized_type}")
+        
+        # Vérifier si le numéro de téléphone existe déjà en base
+        phone_exists_product = BookingProduct.objects.filter(phone=sanitized_phone, is_canceled=False).exists()
+        phone_exists_watch = BookingWatch.objects.filter(phone=sanitized_phone, is_canceled=False).exists()
+        
+        if phone_exists_product or phone_exists_watch:
+            log_security_event("DUPLICATE_PHONE_ATTEMPT", f"Phone already in use", request)
+            return SafeErrorHandler.get_safe_error_response(
+                'PHONE_EXISTS',
+                status_code=status.HTTP_409_CONFLICT
+            )
+        
+        # Utiliser les variables d'environnement pour Vonage
+        vonage_key = os.environ.get('VONAGE_API_KEY')
+        vonage_secret = os.environ.get('VONAGE_API_SECRET')
+        
+        if not vonage_key or not vonage_secret:
+            logger.error("Missing Vonage credentials in environment variables")
+            return SafeErrorHandler.get_safe_error_response(
+                'API_ERROR',
+                "Missing API credentials",
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        # Initialiser le client Vonage de manière sécurisée
+        client = vonage.Client(key=vonage_key, secret=vonage_secret)
+        verify = vonage.Verify(client)
+        response = verify.start_verification(number=sanitized_phone, brand="Hoolis - F&W")
+        
+        logger.info(f"Vonage response status: {response.get('status')}")
+        
+        if response.get("status") == "0":
+            return Response({
+                "message": "Code envoyé", 
+                "request_id": response.get("request_id")  # ❌ PAS de sanitisation - données internes Vonage
+            })
         else:
-            print(f"Erreur Vonage: {response.get('error_text', 'Erreur inconnue')}")
-            return Response({"error": response.get("error_text", "Erreur lors de l'envoi du code")}, status=400)
+            logger.warning(f"Vonage error: {response.get('error_text')}")
+            return SafeErrorHandler.get_safe_error_response(
+                'VONAGE_ERROR',
+                f"Vonage error: {response.get('error_text')}",  # ✅ Loggé mais pas exposé
+                status.HTTP_400_BAD_REQUEST
+            )
     
     except Exception as e:
-        print(f"Exception lors de l'envoi du code: {str(e)}")
-        return Response({"error": str(e)}, status=500)
+        return SafeErrorHandler.handle_exception(e, "send_confirmation_code")
 
 
 @api_view(['POST'])
 def verify_confirmation_code(request):
-    client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
-    verify = client.verify
-    response = verify.check(request_id=request.data.get('request_id'), code=request.data.get('code'))
+    try:
+        request_id = request.data.get('request_id')
+        code = request.data.get('code')
+        
+        # ✅ NÉCESSAIRE - Validation des données utilisateur
+        if not request_id or not code:
+            return SafeErrorHandler.get_safe_error_response(
+                'MISSING_FIELDS',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # ✅ NÉCESSAIRE - Sanitiser les entrées utilisateur
+        sanitized_request_id = sanitize_text_input(request_id, 100)  # Données utilisateur
+        sanitized_code = sanitize_text_input(code, 10)  # Données utilisateur
+        
+        # Utiliser les variables d'environnement
+        vonage_key = os.environ.get('VONAGE_API_KEY')
+        vonage_secret = os.environ.get('VONAGE_API_SECRET')
+        
+        if not vonage_key or not vonage_secret:
+            logger.error("Missing Vonage credentials in environment variables")
+            return SafeErrorHandler.get_safe_error_response(
+                'API_ERROR',
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        client = vonage.Client(key=vonage_key, secret=vonage_secret)
+        verify = client.verify
+        response = verify.check(request_id=sanitized_request_id, code=sanitized_code)
 
-    if response["status"] == "0":
-        return Response({"message": "Code de vérification valide", "event_id": response["event_id"]})
-    else:
-        return Response({"error": response["error_text"]}, status=400)
-
+        if response.get("status") == "0":
+            logger.info("SMS verification successful")
+            return Response({
+                "message": "Code de vérification valide", 
+                "event_id": response.get("event_id")  # ❌ PAS de sanitisation - données internes Vonage
+            })
+        else:
+            log_security_event("INVALID_VERIFICATION_CODE", f"Failed verification attempt", request)
+            return SafeErrorHandler.get_safe_error_response(
+                'INVALID_CODE',
+                f"Verification failed: {response.get('error_text')}",  # ✅ Loggé mais pas exposé
+                status.HTTP_400_BAD_REQUEST
+            )
+    
+    except Exception as e:
+        return SafeErrorHandler.handle_exception(e, "verify_confirmation_code")
 
 
 @api_view(['POST'])
 def cancel_verification(request):
-    client = vonage.Client(key='6276d2bf', secret='R4NpzwZD9Y3Fu88l')
-    verify = client.verify
-    response = verify.cancel(REQUEST_ID=request.data.get('request_id'))
-
-
-
+    try:
+        request_id = request.data.get('request_id')
+        
+        if not request_id:
+            return SafeErrorHandler.get_safe_error_response(
+                'MISSING_FIELDS',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # ✅ NÉCESSAIRE - Sanitiser les données utilisateur
+        sanitized_request_id = sanitize_text_input(request_id, 100)
+        
+        # Utiliser les variables d'environnement
+        vonage_key = os.environ.get('VONAGE_API_KEY')
+        vonage_secret = os.environ.get('VONAGE_API_SECRET')
+        
+        if not vonage_key or not vonage_secret:
+            logger.error("Missing Vonage credentials in environment variables")
+            return SafeErrorHandler.get_safe_error_response(
+                'API_ERROR',
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        client = vonage.Client(key=vonage_key, secret=vonage_secret)
+        verify = client.verify
+        response = verify.cancel(REQUEST_ID=sanitized_request_id)
+        
+        logger.info("SMS verification cancelled")
+        return Response({"message": "Vérification annulée"})
+    
+    except Exception as e:
+        return SafeErrorHandler.handle_exception(e, "cancel_verification")
 
 
 # class CartViewSet(ModelViewSet):
