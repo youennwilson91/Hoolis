@@ -12,6 +12,20 @@
   font-family: "Champagne Limousines", sans-serif !important;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-text-size-adjust: 100%;
+  /* Masquer toutes les scrollbars */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Masquer les scrollbars WebKit (Chrome, Safari) */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Masquer les scrollbars sur tous les éléments avec défilement */
+*[style*="overflow"] {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 html, body, #root, .app-container, h1, h2, h3, p, div, span, button, input, textarea {
