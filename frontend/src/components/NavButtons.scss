@@ -13,18 +13,24 @@
   } 
 }
 
+@font-face {
+  font-family: "Champagne Limousines";
+  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .title-label {
   width: fit-content;
   text-align: center;
   font-family: "Champagne Limousines", sans-serif;
   font-weight: 700;
-  font-style: normal;
-  font-size: 330px;
+  font-style: normal; 
   line-height: 0.9;
   transition: color 0.8s ease;
   z-index: 999;
   -webkit-text-stroke: 2px white;
-  text-stroke: 2px white;
+  text-stroke: 3px white;
 }
 
 .buttons-container {
@@ -47,14 +53,22 @@
   height: 8px;
   border-radius: 50%;
   border: none;
-  background-color: white;
-  color: white;
   font-size: 0;
   padding: 0;
   cursor: pointer;
   position: absolute;
   z-index: 1;
   opacity: 0;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+
+  h1 {
+    position: absolute;
+    font-size: 20px;
+    color: white;
+    
+  }
 }
 
 .pulse-button::after {
