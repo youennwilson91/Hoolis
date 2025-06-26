@@ -36,8 +36,8 @@ import logging
 # Configuration du logger
 logger = logging.getLogger(__name__)
 
-@method_decorator(cache_page(3600), name='list')
-@method_decorator(cache_page(3600), name='retrieve')
+@method_decorator(cache_page(60 * 10), name='list')
+@method_decorator(cache_page(60 * 10), name='retrieve')
 @method_decorator(vary_on_headers('User-Agent'), name='list')
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
@@ -67,8 +67,8 @@ class ProductViewSet(ModelViewSet):
 
 
 
-@method_decorator(cache_page(3600), name='list')
-@method_decorator(cache_page(3600), name='retrieve')
+@method_decorator(cache_page(60 * 10), name='list')
+@method_decorator(cache_page(60 * 10), name='retrieve')
 @method_decorator(vary_on_headers('User-Agent'), name='list')
 class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(
@@ -86,8 +86,8 @@ class CollectionViewSet(ModelViewSet):
             return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
 
-@method_decorator(cache_page(3600), name='list')
-@method_decorator(cache_page(3600), name='retrieve')
+@method_decorator(cache_page(60 * 10), name='list')
+@method_decorator(cache_page(60 * 10), name='retrieve')
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminUser]
@@ -218,8 +218,8 @@ class BookingWatchViewSet(ModelViewSet):
             raise
             
 
-@method_decorator(cache_page(60 * 30), name='list')
-@method_decorator(cache_page(60 * 30), name='retrieve')
+@method_decorator(cache_page(60 * 10), name='list')
+@method_decorator(cache_page(60 * 10), name='retrieve')
 @method_decorator(vary_on_headers('User-Agent'), name='list')
 class WatchViewSet(ModelViewSet):
     serializer_class = WatchSerializer
