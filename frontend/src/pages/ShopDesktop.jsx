@@ -87,7 +87,7 @@ export default function Shop() {
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
-      duration: 1,
+      duration: 0.35,
       ease: "power3.inOut",
       opacity: 1
     });
@@ -246,6 +246,33 @@ export default function Shop() {
               }
             );
           }
+        });
+    }
+    else if (clickedArticleId !== id) {null}
+    else if (clickedArticleId === id) {
+      setArticleIsClicked(false);
+      setClickedArticleId(null);
+      const timeline = gsap.timeline();
+
+      timeline
+        .call(() => {
+          const detailsElement = articleRef.querySelector('.article-details');
+          if (detailsElement) {
+            gsap.fromTo(detailsElement, 
+              { opacity: 1 }, 
+              { 
+                opacity: 0, 
+                duration: 0.25, 
+                ease: "power3.inOut"
+              }
+            );
+          }
+        })
+        .to(articleRef, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          width: "7%",
+          height: "100%"
         });
     }
   }

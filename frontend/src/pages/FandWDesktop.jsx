@@ -19,28 +19,20 @@ export default function FandW() {
     labelColor, setLabelColor, 
     setIsClicked, 
     mobileButtonsVisible, setMobileButtonsVisible,
-    isMouseActive, setIsMouseActive,
     isBooking, setIsBooking,
-    setIsMobile,
     watches, setWatches
   } = useStore();
 
   const [medias, setMedias] = useState([]);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [watchIndex, setWatchIndex] = useState(0);
-  const [hoveredDiv, setHoveredDiv] = useState(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [watchIsClicked, setWatchIsClicked] = useState(false);
   const [clickedWatchId, setClickedWatchId] = useState(null);
-  const [displayedCollection, setDisplayedCollection] = useState("");
   const [watchIsHovered, setWatchIsHovered] = useState(false);
   const [selectedWatchId, setSelectedWatchId] = useState(null);
 
   const screenRef = useRef(null);
   const labelRef = useRef(null);
-  const watchesContainerRef = useRef(null);
   const collectionRef = useRef(null);
   const watchRefs = useRef([]);
 
@@ -49,9 +41,6 @@ export default function FandW() {
     timestamp: null,
     expiryTime: 5 * 60 * 1000 // 5 minutes en millisecondes
   });
-
-  let watchWidth = 100 / medias.length;
-  let watchWidthHover = 80 / medias.length;
 
   useEffect(() => {
     setIsClicked(false);
@@ -107,7 +96,7 @@ export default function FandW() {
 
   useGSAP(() => {
     gsap.from(screenRef.current, {
-      duration: 1,
+      duration: 0.35,
       ease: "power2.out",
       opacity: 0,
     });
@@ -174,7 +163,7 @@ export default function FandW() {
   }
 
   function handleWatchClick(watchRef, id) {
-    if (!watchIsClicked) {
+    if (!watchIsClicked && clickedWatchId !== id) {
       setWatchIsClicked(true);
       setClickedWatchId(id);
       const timeline = gsap.timeline();
@@ -199,6 +188,36 @@ export default function FandW() {
               }
             );
           }
+        });
+    }
+    else if (clickedWatchId !== id) {null}
+    else if (clickedWatchId === id) {
+      setClickedWatchId(null);
+      setWatchIsClicked(false);
+      setWatchIsHovered(false);
+      setSelectedWatchId(null);
+
+      const timeline = gsap.timeline();
+    
+      timeline
+        .call(() => {
+          const detailsElement = watchRef.querySelector('.watch-details');
+          if (detailsElement) {
+            gsap.fromTo(detailsElement, 
+              { opacity: 1 }, 
+              { 
+                opacity: 0, 
+                duration: 0.25, 
+                ease: "power3.inOut"
+              }
+            );
+          }
+        })
+        .to(watchRef, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          width: `${100 / medias.length}%`,
+          height: "100%"
         });
     }
   }
