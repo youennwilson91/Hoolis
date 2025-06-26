@@ -182,20 +182,31 @@ export default function FandWMobile({ labelRef }) {
               key={media.id}
               className="mobile-fandw-watch-container"
             >
-              {media.small && media.small.length > 0 && media.small.map((m, imgIndex) => (
-                <img 
-                  className="mobile-fandw-watch"
-                  key={m.id}
-                  src={sanitizeImageUrl(m.media)}
-                  alt={sanitizeAltText(m.name || `Montre ${media.name}`)}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ))}
+              <div className="mobile-fandw-watch-image-container">
+                {media.small && media.small.length > 0 ? media.small.map((m, imgIndex) => (
+                  <img 
+                    className="mobile-fandw-watch"
+                    key={m.id}
+                    src={sanitizeImageUrl(m.media)}
+                    alt={sanitizeAltText(m.name || `Montre ${media.name}`)}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )) : (
+                  <img 
+                    key={media.id}
+                    src={sanitizeImageUrl(media.small?.[0]?.media)}
+                    className="mobile-fandw-watch"
+                    loading="lazy"
+                    decoding="async"
+                    alt={sanitizeAltText(media.name || 'Montre de luxe')}
+                  />
+                )}
 
-              <div className="mobile-fandw-watch-details">
-                <h1>{media.name}</h1>
-                <p>{media.description}</p>
+                <div className="mobile-fandw-watch-details">
+                  <h1>{media.name}</h1>
+                  <p>{media.description}</p>
+                </div>
               </div>
             </div>
           ))
