@@ -7,11 +7,11 @@ import {useRef, useState, useEffect} from "react";
 import "../index.css";
 
 export const buttons = [
-  /* {id: 1, landingPosition: {transform: 'translate(245px, 360px)'}, menuPosition: {transform: 'translate(250px, -0vh)'}, label: "ABOUT", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 2, navigate: "/about"}, */
-  {id: 2, landingPosition: {transform: 'translate(235px, 310px)'}, menuPosition: {transform: 'translate(125px, -0vh)'}, label: "FRANK &WATCH", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.3, navigate: "/fw"},
-  {id: 3, landingPosition: {transform: 'translate(50px, 210px)'}, menuPosition: {transform: 'translate(0px, -0vh)'}, label: "HOOLIS", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.5, navigate: "/hoolis"},
-  {id: 4, landingPosition: {transform: 'translate(-160px, 300px)'}, menuPosition: {transform: 'translate(-125px, -0vh)'}, label: "GALLERIE", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.3, navigate: "/gallery"},
-  /* {id: 5, landingPosition: {transform: 'translate(-230px, 380px)'}, menuPosition: {transform: 'translate(-250px, -0vh)'}, label: "SUPPORT", bgColor: "#000000", labelColor: "#EFEC8F", upscale: 1.5, navigate: "/support"}, */
+  /* {id: 1, landingPosition: {transform: 'translate(245px, 360px)'}, menuPosition: {transform: 'translate(250px, -0vh)'}, label: "ABOUT", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/about"}, */
+  {id: 2, landingPosition: {transform: 'translate(200px, 250px)'}, menuPosition: {transform: 'translate(120px, -0vh)'}, label: "Frank & Watch", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/fw"},
+  {id: 3, landingPosition: {transform: 'translate(-150px, 250px)'}, menuPosition: {transform: 'translate(-130px, -0vh)'}, label: "Maison Hoolis", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/hoolis"},
+  /*{id: 4, landingPosition: {transform: 'translate(-160px, 300px)'}, menuPosition: {transform: 'translate(-125px, -0vh)'}, label: "GALLERIE", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/gallery"},*/
+  /* {id: 5, landingPosition: {transform: 'translate(-230px, 380px)'}, menuPosition: {transform: 'translate(-250px, -0vh)'}, label: "SUPPORT", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/support"}, */
 ]
 
 
@@ -75,33 +75,21 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
       }
     }
     
-    function handleClick({upscale, navigate}) {
+    function handleClick({navigate}) {
       if (location.pathname !== navigate) {
       setIsClicked(true);
       setButtonsVisible(false);
-      const timeline = gsap.timeline();
-
-      if (labelRef && labelRef.current) {
-        timeline.to(labelRef.current, {
-          scale: upscale,
-          duration: 0.5,
-          ease: "power1.inOut",
-          color: "white"
-        })
-      }
-      
       if (screenRef && screenRef.current) {
-        timeline.to(screenRef.current, {
+        gsap.to(screenRef.current, {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.35,
           ease: "power3.inOut",
-          delay: 0.5
         })
       }
       
       setTimeout(() => {
           navigation(navigate);
-        }, 1500);
+        }, 400);
       }
     }
 
@@ -146,7 +134,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
               }
               buttonRefs.current[index] = el;
             }}
-            className={`pulse-button ${location.pathname === button.navigate ? "button-show" : ""}`} 
+            className={`pulse-button button-show`} 
             style={(() => {
               switch(buttonsPosition) {
                 case "landing":
@@ -158,9 +146,9 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
             key={button.id}
             onMouseEnter={() => location.pathname !== button.navigate ? handleHover({bgColor: button.bgColor, label: button.label, labelColor: button.labelColor, crownVisible: false}) : null}
             onMouseLeave={() => location.pathname !== button.navigate ? handleHover({bgColor: "#000000", label: "", labelColor: "#000000", crownVisible: true}) : null}
-            onClick={() => handleClick({upscale: button.upscale, navigate: button.navigate, ref: buttonRefs.current[index]})}
+            onClick={() => handleClick({ navigate: button.navigate, ref: buttonRefs.current[index]})}
           >
-            {button.label}
+            <h1>{button.label}</h1>
           </button>
         ))}
       </div>

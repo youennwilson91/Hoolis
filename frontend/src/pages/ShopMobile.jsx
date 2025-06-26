@@ -127,8 +127,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   useGSAP(() => {
     gsap.to(mobileScreenRef.current, {
-      backgroundColor: "#000000",
-      duration: 0.75,
+      duration: 0.35,
       ease: "power3.inOut",
       opacity: 1
     });
