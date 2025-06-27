@@ -1,6 +1,8 @@
 import { useRef, useEffect } from "react";
 import Button from "../components/NavButtons";
 import useStore from "../utils/store";
+import SEOHead from "../components/SEOHead";
+import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../components/StructuredData";
 import "./Landing.scss";
 import { buttons } from "../components/NavButtons";
 
@@ -21,6 +23,15 @@ export default function Landing() {
   
     return (  
         <>
+            <SEOHead
+                title="Hoolis - Boutique de Luxe | Vêtements, Maroquinerie & Montres"
+                description="Découvrez l'univers Hoolis : collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses. Expertise française et savoir-faire d'exception."
+                keywords="hoolis, luxe, vêtements de luxe, maroquinerie, montres de luxe, horlogerie, boutique luxe, mode haut de gamme, paris"
+                url="https://hoolis.com/"
+            />
+            <StructuredData data={createWebsiteSchema()} />
+            <StructuredData data={createOrganizationSchema()} />
+            
             <div ref={screenRef} className="desktop-view">
                 <div className="crown-container" style={{backgroundColor: bgColor}}>
                     <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
