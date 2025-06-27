@@ -3,6 +3,8 @@ import useStore from "../utils/store";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import SEOHead from "../components/SEOHead";
+import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
 import "./Gallery.scss";
 import "../index.css";
 
@@ -37,6 +39,13 @@ export default function Gallery() {
 
   return (
     <>
+      <SEOHead
+        title="Galerie Hoolis - Collections & Créations de Luxe"
+        description="Découvrez la galerie exclusive Hoolis : aperçu de nos créations, collections de vêtements haut de gamme et pièces d'exception. Inspiration mode luxe."
+        keywords="galerie hoolis, créations luxe, collections mode, vêtements haut de gamme, inspiration mode, luxe français"
+        url="https://hoolis.com/gallery"
+      />
+      <StructuredData data={createOrganizationSchema()} />
     
     <div ref={screenRef} className="hoolis-container" style={{backgroundColor: bgColor}}>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>

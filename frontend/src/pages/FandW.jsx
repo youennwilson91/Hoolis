@@ -3,6 +3,8 @@ import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import useStore from "../utils/store";
+import SEOHead from "../components/SEOHead";
+import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
 import "./FandW.scss";
 import FandWMobile from "./FandWMobile";
 import FandWDesktop from "./FandWDesktop";
@@ -50,6 +52,14 @@ export default function FandW() {
 
   return (
     <>
+      <SEOHead
+        title="Frank & Watch - Montres de Luxe & Horlogerie | Hoolis"
+        description="Collection exclusive de montres de prestige Frank & Watch. Horlogerie suisse et française, pièces d'exception, service de réparation et entretien professionnel."
+        keywords="frank and watch, montres de luxe, horlogerie, montres suisses, montres françaises, réparation montres, entretien montres, hoolis"
+        url="https://hoolis.com/fw"
+      />
+      <StructuredData data={createOrganizationSchema()} />
+      
       {isMobile ? (
         <FandWMobile labelRef={labelRef} />
       ) : (

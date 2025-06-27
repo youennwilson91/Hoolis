@@ -30,7 +30,8 @@ export default defineConfig({
   server: {
     https: false, // Désactive HTTPS pour le développement
     host: true,   // Permet l'accès depuis le réseau local
-    port: 5173    // Port par défaut
+    port: 5173,   // Port par défaut
+    historyApiFallback: true // Redirige toutes les routes vers index.html pour le SPA routing
   },
   // Configuration pour la production
   preview: {
