@@ -1,4 +1,3 @@
-import Button from "../components/NavButtons";
 import useStore from "../utils/store";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
@@ -28,7 +27,7 @@ export default function Shop() {
     
     // Vérifier la taille de l'écran au chargement
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 900);
+      setIsMobile(window.innerWidth <= 1300);
     };
     
     checkScreenSize();

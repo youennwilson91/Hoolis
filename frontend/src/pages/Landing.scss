@@ -29,22 +29,46 @@
   margin: 0;
   padding: 0;
   transition: background-color 0.75s ease;
+
+  .landing-menus {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .landing-menu-item {
+      width: 100%;
+      height: 100%;
+
+      img {
+        top: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .title-label {
+    width: fit-content;
+    text-align: center;
+            font-family: "Champagne Limousines", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 330px;
+    transition: color 0.8s ease;
+    -webkit-text-stroke: 2px white;
+    text-stroke: 2px white;
+  }
 }
 
-.crown-container .title-label {
-  width: fit-content;
-  text-align: center;
-          font-family: "Champagne Limousines", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-  font-size: 330px;
-  transition: color 0.8s ease;
-  -webkit-text-stroke: 2px white;
-  text-stroke: 2px white;
-}
 
 .crown-svg {
   position: absolute;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
   z-index: 1;
   transition: fill 0.8s ease;
@@ -55,7 +79,7 @@
 
 
 
-@media (max-width: 900px) {
+@media (max-width: 1300px) {
     .mobile-view {
         display: flex;
         justify-content: center;

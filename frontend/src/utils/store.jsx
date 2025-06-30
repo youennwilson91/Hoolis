@@ -13,6 +13,8 @@ const useStore = create(
   crownVisible: true,
   buttonsVisible: true,
   isClicked: false,
+  mainButtonHover: false,
+  menuOpen: false,
   
   setBgColor: (color) => set({ bgColor: color }),
   setLabel: (text) => set({ label: text }),
@@ -20,7 +22,8 @@ const useStore = create(
   setCrownVisible: (visible) => set({ crownVisible: visible }),
   setButtonsVisible: (visible) => set({ buttonsVisible: visible }),
   setIsClicked: (visible) => set({ isClicked: visible }),
-
+  setMainButtonHover: (visible) => set({ mainButtonHover: visible }),
+  setMenuOpen: (visible) => set({ menuOpen: visible }),
   // Shop Page
   galleryVisible: false,
   collectionChosen: null,
@@ -76,6 +79,7 @@ const useStore = create(
     galleryVisible: false,
     cartVisible: false,
     addToCart: [],
+    mainButtonHover: false,
 
     // Mobile Landing Page
     mobileButtonsVisible: true,
