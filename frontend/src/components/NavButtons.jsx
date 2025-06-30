@@ -11,7 +11,6 @@ export const buttons = [
   {id: 2, landingPosition: {transform: 'translate(200px, 250px)'}, menuPosition: {transform: 'translate(120px, -0vh)'}, label: "Frank & Watch", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/fw"},
   {id: 3, landingPosition: {transform: 'translate(-150px, 250px)'}, menuPosition: {transform: 'translate(-130px, -0vh)'}, label: "Maison Hoolis", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/hoolis"},
   /*{id: 4, landingPosition: {transform: 'translate(-160px, 300px)'}, menuPosition: {transform: 'translate(-125px, -0vh)'}, label: "GALLERIE", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/gallery"},*/
-  /* {id: 5, landingPosition: {transform: 'translate(-230px, 380px)'}, menuPosition: {transform: 'translate(-250px, -0vh)'}, label: "SUPPORT", bgColor: "#000000", labelColor: "#EFEC8F", navigate: "/support"}, */
 ]
 
 

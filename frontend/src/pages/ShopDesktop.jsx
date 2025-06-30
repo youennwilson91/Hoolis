@@ -11,6 +11,7 @@ import ShopMobile from "./ShopMobile.jsx";
 import BookingCalendar from "../components/Calendar.jsx";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { BarLoader } from "react-spinners";
+import SupportButton from "../components/SupportButton";
 
 export default function Shop() {
 
@@ -425,7 +426,7 @@ export default function Shop() {
       </div>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
     </div>
-
+    <SupportButton />
   </>
   );
 }

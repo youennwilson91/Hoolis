@@ -9,6 +9,7 @@ import BookingCalendar from "../components/Calendar";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { BarLoader } from "react-spinners";
 import Watch from "../components/Watch";
+import SupportButton from "../components/SupportButton";
 
 
 export default function FandW() {
@@ -271,6 +272,7 @@ export default function FandW() {
         <Button screenRef={screenRef} labelRef={labelRef}/>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
       </div>
+      <SupportButton />
     </>
   );
 }
