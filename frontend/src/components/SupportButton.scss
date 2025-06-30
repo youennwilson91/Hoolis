@@ -1,0 +1,157 @@
+.support-floating-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #226D68, #1a5550);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(34, 109, 104, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 9999;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(34, 109, 104, 0.6);
+    width: 80px;
+    border-radius: 40px;
+    
+    .support-button-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    svg {
+      transform: translateY(-2px);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(1.02);
+  }
+  
+  svg {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .support-button-text {
+    font-family: "Champagne Limousines", sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 2px;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  // Animation d'apparition
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  70% {
+    transform: translateY(3px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Pulse animation pour attirer l'attention
+.support-floating-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(34, 109, 104, 0.3);
+  animation: pulse 2s infinite;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .support-floating-button {
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    
+    &:hover {
+      width: 75px;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .support-button-text {
+      font-size: 9px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .support-floating-button {
+    width: 50px;
+    height: 50px;
+    
+    &:hover {
+      width: 70px;
+    }
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Hide on very small screens to avoid obstruction
+@media (max-width: 320px) {
+  .support-floating-button {
+    width: 45px;
+    height: 45px;
+    
+    &:hover {
+      width: 65px;
+    }
+  }
+} 
