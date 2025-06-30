@@ -107,7 +107,7 @@ TEMPLATES = [
 #        },
 #    }
 #}
-# Base de données PostgreSQL
+#Base de données PostgreSQL
 DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     } 

@@ -4,6 +4,7 @@ import datetime
 from django.db import migrations, models
 import django.db.models.deletion
 import store.validators
+import django_cryptography.fields
 
 
 class Migration(migrations.Migration):
@@ -89,6 +90,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
+                ('phone', django_cryptography.fields.encrypt(models.CharField(default='0000000000', max_length=100))),
                 ('watch', models.CharField(default='watch', max_length=100)),
                 ('date', models.DateField(default=datetime.datetime.now)),
                 ('start_time', models.TimeField()),
@@ -98,7 +100,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['start_time'],
-                'unique_together': {('date', 'watch', 'start_time', 'end_time')},
+                'unique_together': {('date', 'start_time', 'end_time')},
             },
         ),
         migrations.CreateModel(
@@ -106,6 +108,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
+                ('phone', django_cryptography.fields.encrypt(models.CharField(default='0000000000', max_length=100))),
                 ('product', models.CharField(default='product', max_length=100)),
                 ('date', models.DateField(default=datetime.datetime.now)),
                 ('start_time', models.TimeField()),
@@ -115,7 +118,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['start_time'],
-                'unique_together': {('date', 'product', 'start_time', 'end_time')},
+                'unique_together': {('date', 'start_time', 'end_time')},
             },
         ),
     ]
