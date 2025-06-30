@@ -1,14 +1,18 @@
 import { useRef, useEffect } from "react";
-import Button from "../components/NavButtons";
+import Button from "../components/Buttons/Menu.jsx";
 import useStore from "../utils/store";
+import SEOHead from "../components/SEOHead";
+import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../components/StructuredData";
 import "./Landing.scss";
-import { buttons } from "../components/NavButtons";
+import MenuButtons from "../components/Buttons/Menu.jsx";
 
 export default function Landing() {
     const { bgColor, label, labelColor, crownVisible, buttonsVisible, setBgColor, setCrownVisible, setIsClicked, setButtonsVisible, setLabel, setMobileButtonsVisible } = useStore();
     const screenRef = useRef(null);
     const labelRef = useRef(null);
     const screenMobileRef = useRef(null);
+    const menuRef1 = useRef(null);
+    const menuRef2 = useRef(null);
 
     useEffect(() => {
         setBgColor("#000000");
@@ -18,15 +22,51 @@ export default function Landing() {
         setButtonsVisible(true);
         setMobileButtonsVisible(true);
     }, []);
+
+    //function handleMenuHover({targetRef, otherRef, isEntering}) {
+    //    const timeline = gsap.timeline();
+//
+    //    if (isEntering) {
+    //        // Au hover in, l'élément survolé prend 70% et l'autre 30%
+    //        timeline
+    //            .to(targetRef.current, {
+    //                duration: 0.5,
+    //                ease: "power3.inOut",
+    //                width: "85%",
+    //            })
+    //            .to(otherRef.current, {
+    //                duration: 0.5,
+    //                ease: "power3.inOut",
+    //                width: "15%",
+    //            }, 0); // 0 pour synchroniser les animations
+    //    } else {
+    //        // Au hover out, retour à 50% chacun
+    //        timeline
+    //            .to([targetRef.current, otherRef.current], {
+    //                duration: 0.5,
+    //                ease: "power3.inOut",
+    //                width: "50%",
+    //            });
+    //    }
+    //}
   
     return (  
         <>
+            <SEOHead
+                title="Hoolis - Boutique de Luxe | Vêtements, Maroquinerie & Montres"
+                description="Découvrez l'univers Hoolis : collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses. Expertise française et savoir-faire d'exception."
+                keywords="hoolis, luxe, vêtements de luxe, maroquinerie, montres de luxe, horlogerie, boutique luxe, mode haut de gamme, paris"
+                url="https://hoolis.com/"
+            />
+            <StructuredData data={createWebsiteSchema()} />
+            <StructuredData data={createOrganizationSchema()} />
+            
             <div ref={screenRef} className="desktop-view">
                 <div className="crown-container" style={{backgroundColor: bgColor}}>
                     <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
                     {crownVisible && (
                         <svg version="1.0" className="crown-svg"
-                            width="450px" height="auto" viewBox="0 0 300 241.000000"
+                            viewBox="0 0 300 241.000000"
                             preserveAspectRatio="xMidYMid meet"
                             >
                             <g transform="translate(0.000000,241.000000) scale(0.100000,-0.100000)" fill="#efec8f" stroke="none">
@@ -49,8 +89,27 @@ export default function Landing() {
                                 317 -214 548 -214 564 0 23 35 -11 223 -214 112 -123 230 -247 261 -277 l57
                                 -53 24 22 c27 25 74 103 155 255 97 181 326 582 397 694 40 62 53 58 71 -19z"/>
                             </g>
-                        </svg> 
+                        </svg>
                     )}
+                    <div className="landing-menus">
+                        <div 
+                            className="landing-menu-item" 
+                            ref={menuRef1}
+                            //onMouseEnter={() => handleMenuHover({
+                            //    targetRef: menuRef1, 
+                            //    otherRef: menuRef2, 
+                            //    isEntering: true
+                            //})} 
+                            //onMouseLeave={() => handleMenuHover({
+                            //    targetRef: menuRef1, 
+                            //    otherRef: menuRef2, 
+                            //    isEntering: false
+                            //})}
+                        >
+                            <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" />
+                            <h2>Maison Hoolis</h2>
+                        </div>
+                    </div>
                     {buttonsVisible && <Button screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
                 </div>
             </div>

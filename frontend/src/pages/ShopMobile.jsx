@@ -1,4 +1,4 @@
-import Button from "../components/NavButtons";
+import MenuButtons from "../components/Buttons/MenuMobile.jsx";
 import useStore from "../utils/store";
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
@@ -154,7 +154,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     }
   }, [isBooking]);
 
-  /* function handleOpenMobileCart() {
+  function handleOpenMobileCart() {
     setCartVisible(true);
     requestAnimationFrame(() => {
       if (mobileCartRef.current) {
@@ -182,7 +182,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
         }
       });
     }
-  } */
+  }
 
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
@@ -221,7 +221,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
           <div style={{color: 'white', padding: '20px'}}>Aucun produit trouvé</div>
         )}
 
-        {/*<div className="cart-icon" onClick={handleOpenMobileCart}>
+        <div className="cart-icon" onClick={handleOpenMobileCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
@@ -231,13 +231,12 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
             </g>
           </svg>
-        </div>*/}
+        </div>
 
-        {/*cartVisible && 
+        {cartVisible && 
         <div className="cart-container" ref={mobileCartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <button className="close-cart" onClick={handleCloseMobileCart}>CLOSE</button>
-          {/* <hr className="cart-hr-top"/> 
           <div className="cart-items">
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
@@ -255,29 +254,28 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               </div>
             ))}
           </div>
-          {/* <hr className="cart-hr-bottom"/> 
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
             const price = parseInt(item.price);
             const quantity = item.quantity || 1;
             return total + (price * quantity);
           }, 0)}€</h1>
         </div>
-        */}
+        }
       </div>
 
-      {!isBooking ? 
+      {/*{!isBooking ? 
         <button ref={bookButtonRef} className="button-book" onClick={() => setIsBooking(true)}>
           PRENDRE RENDEZ-VOUS
-        </button> : null}
+        </button> : null}*/}
 
-      {isBooking ? (
+      {/*{isBooking ? (
         <div ref={bookingContainerRef} className="booking-container">
           <BookingCalendar type="product" />
           <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
         </div>
-      ) : null}
+      ) : null}*/}
       
-      <Button screenRef={mobileScreenRef} labelRef={labelRef} />
+      <MenuButtons screenRef={mobileScreenRef} />
     </div>
   );
 } 

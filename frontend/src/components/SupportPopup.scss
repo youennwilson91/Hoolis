@@ -1,0 +1,152 @@
+.support-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(5px);
+}
+
+.support-popup-content {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: popupSlideIn 0.3s ease-out;
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.support-popup-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #000;
+  }
+}
+
+.support-popup-header {
+  margin-bottom: 25px;
+  text-align: center;
+  
+  h2 {
+    font-family: "Champagne Limousines", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #226D68;
+    margin: 0 0 10px 0;
+  }
+  
+  p {
+    font-family: "Champagne Limousines", sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.support-popup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  
+  input, textarea {
+    font-family: "Champagne Limousines", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    transition: all 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: #226D68;
+      background-color: white;
+    }
+    
+    &::placeholder {
+      color: #999;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  button {
+    font-family: "Champagne Limousines", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px;
+    background-color: #226D68;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    
+    &:hover {
+      background-color: #1a5550;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(34, 109, 104, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1300px) {
+  .support-popup-content {
+    padding: 20px;
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+  
+  .support-popup-header h2 {
+    font-size: 24px;
+  }
+  
+  .support-popup-form {
+    input, textarea {
+      font-size: 14px;
+    }
+    
+    button {
+      font-size: 16px;
+    }
+  }
+} 

@@ -1,8 +1,9 @@
-import Button from "../components/NavButtons";
 import useStore from "../utils/store";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import SEOHead from "../components/SEOHead";
+import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
 import "./Shop.scss";
 import ShopMobile from "./ShopMobile";
 import ShopDesktop from "./ShopDesktop";
@@ -26,7 +27,7 @@ export default function Shop() {
     
     // Vérifier la taille de l'écran au chargement
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 900);
+      setIsMobile(window.innerWidth <= 1300);
     };
     
     checkScreenSize();
@@ -51,6 +52,14 @@ export default function Shop() {
 
   return (
     <>
+      <SEOHead
+        title="Collection Hoolis - Vêtements de Luxe & Maroquinerie"
+        description="Découvrez la collection exclusive Hoolis : vêtements haut de gamme, maroquinerie de luxe et accessoires de prestige. Mode française d'exception."
+        keywords="hoolis collection, vêtements de luxe, maroquinerie haut de gamme, mode française, luxe parisien, accessoires de prestige"
+        url="https://hoolis.com/hoolis"
+      />
+      <StructuredData data={createOrganizationSchema()} />
+      
       {isMobile ? (
         <ShopMobile labelRef={labelRef} />
       ) : (
