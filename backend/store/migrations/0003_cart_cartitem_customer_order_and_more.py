@@ -66,16 +66,6 @@ class Migration(migrations.Migration):
             name='bookingwatch',
             unique_together={('date', 'start_time', 'end_time')},
         ),
-        migrations.AddField(
-            model_name='bookingproduct',
-            name='phone',
-            field=django_cryptography.fields.encrypt(models.CharField(default='0000000000', max_length=100)),
-        ),
-        migrations.AddField(
-            model_name='bookingwatch',
-            name='phone',
-            field=django_cryptography.fields.encrypt(models.CharField(default='0000000000', max_length=100)),
-        ),
         migrations.CreateModel(
             name='OrderItem',
             fields=[
