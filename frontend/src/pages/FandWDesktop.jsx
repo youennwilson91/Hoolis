@@ -1,16 +1,17 @@
-import Button from "../components/NavButtons";
+import MenuButtons from "../components/Buttons/Menu.jsx";
+import "../components/Buttons/GalleryButtons.scss";
+import SupportButton from "../components/Buttons/SupportButton.jsx";
+import VintedButton from "../components/Buttons/VintedButton.jsx";
+import InstagramButton from "../components/Buttons/InstagramButton.jsx";
 import useStore from "../utils/store";
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./FandW.scss";
-import "../components/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { BarLoader } from "react-spinners";
 import Watch from "../components/Watch";
-import SupportButton from "../components/SupportButton";
-
 
 export default function FandW() {
 
@@ -269,10 +270,12 @@ export default function FandW() {
             <BookingCalendar type="watch" />
           </div>
         )}
-        <Button screenRef={screenRef} labelRef={labelRef}/>
+        <MenuButtons screenRef={screenRef} />
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
       </div>
+      <VintedButton />
       <SupportButton />
+      <InstagramButton />
     </>
   );
 }

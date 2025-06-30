@@ -1,9 +1,9 @@
 import "./GalleryButtons.scss";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import useStore from "../utils/store";
+import useStore from "../../utils/store";
 import {useRef, useState} from "react";
-import "../index.css";
+import "../../index.css";
 
 export default function Button({ screenRef, labelRef, buttonsPosition }) {
 

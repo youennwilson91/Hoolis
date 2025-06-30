@@ -1,0 +1,121 @@
+@keyframes pulse-nav {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.0;
+  } 
+}
+
+@font-face {
+  font-family: "Champagne Limousines";
+  src: url("../../../public/Champagne & Limousines Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.title-label {
+  width: fit-content;
+  text-align: center;
+  font-family: "Champagne Limousines", sans-serif;
+  font-weight: 700;
+  font-style: normal; 
+  line-height: 0.9;
+  transition: color 0.8s ease;
+  z-index: 19999;
+  -webkit-text-stroke: 2px white;
+  text-stroke: 3px white;
+  pointer-events: none;
+}
+
+.main-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: black;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Champagne Limousines", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 20px;
+  z-index: 20000;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -5px; 
+    left: -5px; 
+    right: -5px; 
+    bottom: -5px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    z-index: 19999;
+    animation: pulse-nav 4s infinite;
+    pointer-events: none;
+  }
+
+  svg {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    fill: white;
+    z-index: 20000;
+  }
+}
+
+.buttons-div {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  top: 0px;  /* Positionné sous le main button (20px + 70px + 10px) */
+  left: 16px;  /* Aligné avec le main button */
+  width: 80px;
+  padding-left: 10px;
+  height: 300px;
+  gap: 15px;   /* Espacement entre les boutons */
+  z-index: 19998;
+}
+/*------------------------------------------- MOBILE -------------------------------------------*/
+
+@media screen and (max-width: 1300px) {
+  
+  .exit-button {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 60px;          /* Augmenté de 40px à 60px */
+    height: 60px;         /* Augmenté de 40px à 60px */
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    font-size: 30px;      /* Augmenté de 20px à 30px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20001;
+  }
+}
+
+.nav-button {
+    position: fixed;
+    padding: 15px 25px;
+    margin: 10px;
+}

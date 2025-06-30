@@ -1,17 +1,15 @@
-import Button from "../components/NavButtons.jsx";
+import MenuButtons from "../components/Buttons/Menu.jsx";
 import useStore from "../utils/store.jsx";
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import ShopButtons from "../components/GalleryButtons.jsx";
+import ShopButtons from "../components/Buttons/GalleryButtons.jsx";
 import Article from "../components/Article.jsx";
 import "./Shop.scss";
-import "../components/GalleryButtons.scss";
-import ShopMobile from "./ShopMobile.jsx";
+import "../components/Buttons/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar.jsx";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { BarLoader } from "react-spinners";
-import SupportButton from "../components/SupportButton";
 
 export default function Shop() {
 
@@ -88,7 +86,7 @@ export default function Shop() {
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
-      duration: 0.35,
+      duration: 0.45,
       ease: "power3.inOut",
       opacity: 1
     });
@@ -290,47 +288,49 @@ export default function Shop() {
     });
   }
 
- //function handleAddToCart(article) {
- //  setAddToCart(prevCart => {
- //    return [...prevCart, {...article, cartid: prevCart.length + 1}]
- //  });
- //}
+  function handleAddToCart(article, e) {
+    e.stopPropagation();
+    setAddToCart(prevCart => {
+      return [...prevCart, {...article, cartid: prevCart.length + 1}]
+    });
+    alert("Article ajouté au panier");
+  }
 
-  //function handleRemoveItem(item) {
-  //  setAddToCart(prevCart => prevCart.filter(
-  //    cartItem => cartItem.cartid !== item.cartid
-  //  ));
-  //}
-  //
-  //function handleOpenCart() {
-  //  setCartVisible(true);
-  //  requestAnimationFrame(() => {
-  //    if (cartRef.current) {
-  //      gsap.to(cartRef.current, {
-  //        duration: 0.5,
-  //        ease: "power3.inOut",
-  //        opacity: 1,
-  //        immediateRender: false
-  //      });
-  //    }
-  //  });
-  //}
-//
-  //function handleCloseCart() {
-  //  if (cartRef.current) {
-  //    gsap.to(cartRef.current, {
-  //      duration: 0.5,
-  //      ease: "power3.inOut",
-  //      opacity: 0,
-  //      onComplete: () => {
-  //        setCartVisible(false);
-  //        if (cartRef.current) {
-  //          cartRef.current.style.opacity = 0;
-  //        }
-  //      }
-  //    });
-  //  }
-  //}
+  function handleRemoveItem(item) {
+    setAddToCart(prevCart => prevCart.filter(
+      cartItem => cartItem.cartid !== item.cartid
+    ));
+  }
+  
+  function handleOpenCart() {
+    setCartVisible(true);
+    requestAnimationFrame(() => {
+      if (cartRef.current) {
+        gsap.to(cartRef.current, {
+          duration: 0.5,
+          ease: "power3.inOut",
+          opacity: 1,
+          immediateRender: false
+        });
+      }
+    });
+  }
+  
+  function handleCloseCart() {
+    if (cartRef.current) {
+      gsap.to(cartRef.current, {
+        duration: 0.5,
+        ease: "power3.inOut",
+        opacity: 0,
+        onComplete: () => {
+          setCartVisible(false);
+          if (cartRef.current) {
+            cartRef.current.style.opacity = 0;
+          }
+        }
+      });
+    }
+  }
 
   return (
   <>
@@ -363,7 +363,7 @@ export default function Shop() {
                     handleArticleHover={handleArticleHover}
                     handleArticleClick={handleArticleClick}
                     handleArticleClose={handleArticleClose}
-                    //handleAddToCart={handleAddToCart}
+                    handleAddToCart={handleAddToCart}
                     articleRefs={articleRef}
                   />
                 ));
@@ -372,7 +372,7 @@ export default function Shop() {
           </div>
         </div>
           
-        {/*<div className="cart-icon" onClick={handleOpenCart}>
+        /*<div className="cart-icon" onClick={handleOpenCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
@@ -382,9 +382,9 @@ export default function Shop() {
               <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
             </g>
           </svg>
-        </div>*/}
+        </div>
 
-        {/*cartVisible && 
+        {cartVisible && 
         <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
           <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
@@ -412,7 +412,7 @@ export default function Shop() {
             ))}
           </div>
         </div>
-        */}
+        }
 
         
         {isBooking ? (
@@ -422,11 +422,10 @@ export default function Shop() {
           </div>
         ) : null}
 
-        <Button screenRef={screenRef} labelRef={labelRef}/>
+        <MenuButtons screenRef={screenRef} />
       </div>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
     </div>
-    <SupportButton />
   </>
   );
 }
