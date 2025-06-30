@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator
 from django.conf import settings
 from .validators import validate_file_size
 from datetime import datetime
+from django_cryptography.fields import encrypt
+
 # Create your models here.
 
 class Product(models.Model):
@@ -35,7 +37,7 @@ class Collection(models.Model):
 
 class BookingProduct(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100, default='0000000000', unique=True)
+    phone = encrypt(models.CharField(max_length=100, default='0000000000'))
     product = models.CharField(max_length=100, default='product')
     date = models.DateField(default=datetime.now)
     start_time = models.TimeField()
@@ -80,7 +82,7 @@ class WatchMedia(models.Model):
 
 class BookingWatch(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100, default='0000000000', unique=True)
+    phone = encrypt(models.CharField(max_length=100, default='0000000000'))
     watch = models.CharField(max_length=100, default='watch')
     date = models.DateField(default=datetime.now)
     start_time = models.TimeField()
@@ -117,7 +119,7 @@ class SlotsWatch(models.Model):
 class Customer(models.Model):
     name = models.CharField(max_length=200, null=False, blank=False)
     email = models.EmailField(max_length=200, null=False, blank=False)
-    phone = models.CharField(max_length=200, null=False, blank=False)
+    phone = encrypt(models.CharField(max_length=200, null=False, blank=False))
     address = models.CharField(max_length=200, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
