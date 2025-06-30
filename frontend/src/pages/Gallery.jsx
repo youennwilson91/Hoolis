@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import SEOHead from "../components/SEOHead";
 import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
+import SupportButton from "../components/SupportButton";
 import "./Gallery.scss";
 import "../index.css";
 
@@ -56,7 +57,7 @@ export default function Gallery() {
         <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="T-shirt Coquillage" />
       </div>
     </div>
-    
+    <SupportButton />
     </>
 
   );
