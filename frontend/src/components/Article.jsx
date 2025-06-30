@@ -15,8 +15,8 @@ export default function Article({
   articleRefs
 }) {
 
-  const { isBooking, setIsBooking } = useStore();
-  const bookButtonRef = useRef(null);
+  //const { isBooking, setIsBooking } = useStore();
+  //const bookButtonRef = useRef(null);
   
 
   return (
@@ -59,12 +59,12 @@ export default function Article({
         <div className="article-details">
           <h1 className="article-title">{article.title}</h1>
           <h1 className="article-price">{article.price}€</h1>
-          {/*<h1 className="add-to-cart" onClick={() => handleAddToCart(article)}>SHOP</h1>*/}
+          <h1 className="add-to-cart" onClick={(e) => handleAddToCart(article, e)}>SHOP</h1>
 
-          {!isBooking ? 
+          {/*{!isBooking ? 
             <button ref={bookButtonRef} className="add-to-cart" onClick={() => setIsBooking(true)}>
               PRENDRE RENDEZ-VOUS
-            </button> : null}
+            </button> : null}*/}
           <p>{article.description}</p>
           <h2 className="close-article" onClick={(e) => handleArticleClose(articleRefs.current[index], e, article.id)}>
             CLOSE

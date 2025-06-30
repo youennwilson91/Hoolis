@@ -1,11 +1,11 @@
-import Button from "../components/NavButtons";
+import MenuButtons from "../components/Buttons/Menu.jsx";
+import SupportButton from "../components/Buttons/SupportButton.jsx";
 import useStore from "../utils/store";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import SEOHead from "../components/SEOHead";
 import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
-import SupportButton from "../components/SupportButton";
 import "./Gallery.scss";
 import "../index.css";
 
@@ -50,7 +50,7 @@ export default function Gallery() {
     
     <div ref={screenRef} className="hoolis-container" style={{backgroundColor: bgColor}}>
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
-      <Button screenRef={screenRef} labelRef={labelRef} />
+      <MenuButtons screenRef={screenRef} />
       <div className="hoolis-images-container">
         <img src="/hoolis-img/mouth-tee-thomas.jpg" alt="T-shirt Mouth Tee" />
         <img src="/hoolis-img/mouth-tee-back.jpg" alt="Vue arrière du T-shirt Mouth Tee" />
