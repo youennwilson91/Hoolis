@@ -10,13 +10,11 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
 if DEBUG:
-    # Clé par défaut pour le développement seulement
-    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-only')
+    # Clé fixe pour le développement pour éviter les problèmes de chiffrement
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-only-stable-for-crypto-fields')
 else:
     # En production, obligatoire via variable d'environnement
     SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
@@ -52,6 +50,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'django_extensions',
+    'django_cryptography'
 ]
 
 if DEBUG:
@@ -94,37 +93,25 @@ TEMPLATES = [
 
 
 # Base de données - SQL Server en local
-DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-        'USER': os.environ.get('DB_USER', 'sa'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '1433'),
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'extra_params': 'TrustServerCertificate=yes',
-        },
-    }
-}
-# Base de données PostgreSQL
-#if 'DATABASE_URL' in os.environ:
-#    DATABASES = {
-#        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-#    } 
-#else:
-#    # Fallback configuration PostgreSQL locale
-#    DATABASES = {
-#        'default': {
-#            'ENGINE': 'django.db.backends.postgresql',
-#            'NAME': os.environ.get('DB_NAME'),
-#            'USER': os.environ.get('DB_USER'),
-#            'PASSWORD': os.environ.get('DB_PASSWORD'),
-#            'HOST': os.environ.get('DB_HOST', 'localhost'),
-#            'PORT': os.environ.get('DB_PORT', '5432'),
-#        }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'mssql',
+#        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+#        'USER': os.environ.get('DB_USER', 'sa'),
+#        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
+#        'HOST': os.environ.get('DB_HOST', 'localhost'),
+#        'PORT': os.environ.get('DB_PORT', '1433'),
+#        'OPTIONS': {
+#            'driver': 'ODBC Driver 17 for SQL Server',
+#            'extra_params': 'TrustServerCertificate=yes',
+#        },
 #    }
+#}
+# Base de données PostgreSQL
+DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    } 
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
