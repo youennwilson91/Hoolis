@@ -1,4 +1,4 @@
-import Button from "../components/NavButtons";
+import MenuButtons from "../components/Buttons/MenuMobile.jsx";
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -233,7 +233,7 @@ export default function FandWMobile({ labelRef }) {
         </div>
       ) : null}
 
-      <Button screenRef={mobileScreenRef} labelRef={labelRef} />
+      <MenuButtons screenRef={mobileScreenRef} />
 
     </div>
   );
