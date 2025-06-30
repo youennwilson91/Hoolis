@@ -70,6 +70,13 @@ class CreateBookingProductSerializer(serializers.ModelSerializer):
         sanitized = sanitize_phone_number(value)
         if not sanitized:
             raise serializers.ValidationError("Format de numéro de téléphone invalide")
+        
+        # Vérifier l'unicité en déchiffrant tous les numéros existants
+        existing_bookings = BookingProduct.objects.all()
+        for booking in existing_bookings:
+            if booking.phone == sanitized:  # django-cryptography déchiffre automatiquement
+                raise serializers.ValidationError("Ce numéro de téléphone est déjà utilisé pour une réservation produit")
+        
         return sanitized
     
     def validate_product(self, value):
@@ -91,12 +98,22 @@ class DeleteBookingProductSerializer(serializers.ModelSerializer):
         fields = ['name', 'phone', 'date', 'start_time', 'end_time']
 
     def update(self):
-        instance = BookingProduct.objects.get(
-            name=self.context['name'], 
-            phone=self.context['phone'],
-            start_time=self.context['start_time'], 
+        # Chercher le booking en déchiffrant tous les numéros de téléphone
+        bookings_candidates = BookingProduct.objects.filter(
+            name=self.context['name'],
+            start_time=self.context['start_time'],
             end_time=self.context['end_time']
-            )
+        )
+        
+        instance = None
+        for booking in bookings_candidates:
+            if booking.phone == self.context['phone']:  # django-cryptography déchiffre automatiquement
+                instance = booking
+                break
+        
+        if not instance:
+            raise serializers.ValidationError("Aucune réservation trouvée avec ces informations")
+        
         instance.is_canceled = True
         instance.save()
         return instance
@@ -126,6 +143,13 @@ class CreateBookingWatchSerializer(serializers.ModelSerializer):
         sanitized = sanitize_phone_number(value)
         if not sanitized:
             raise serializers.ValidationError("Format de numéro de téléphone invalide")
+        
+        # Vérifier l'unicité en déchiffrant tous les numéros existants
+        existing_bookings = BookingWatch.objects.all()
+        for booking in existing_bookings:
+            if booking.phone == sanitized:  # django-cryptography déchiffre automatiquement
+                raise serializers.ValidationError("Ce numéro de téléphone est déjà utilisé pour une réservation montre")
+        
         return sanitized
     
     def validate_watch(self, value):
@@ -147,12 +171,22 @@ class DeleteBookingWatchSerializer(serializers.ModelSerializer):
         fields = ['name', 'phone', 'date', 'start_time', 'end_time']
 
     def update(self):
-        instance = BookingWatch.objects.get(
-            name=self.context['name'], 
-            phone=self.context['phone'],
-            start_time=self.context['start_time'], 
+        # Chercher le booking en déchiffrant tous les numéros de téléphone
+        bookings_candidates = BookingWatch.objects.filter(
+            name=self.context['name'],
+            start_time=self.context['start_time'],
             end_time=self.context['end_time']
-            )
+        )
+        
+        instance = None
+        for booking in bookings_candidates:
+            if booking.phone == self.context['phone']:  # django-cryptography déchiffre automatiquement
+                instance = booking
+                break
+        
+        if not instance:
+            raise serializers.ValidationError("Aucune réservation trouvée avec ces informations")
+        
         instance.is_canceled = True
         instance.save()
         return instance

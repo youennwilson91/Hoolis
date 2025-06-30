@@ -1,6 +1,7 @@
 from django.db import models
 import uuid 
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from .validators import validate_file_size
 from datetime import datetime
@@ -49,6 +50,15 @@ class BookingProduct(models.Model):
         unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, et les mêmes heures
         ordering = ['start_time']
 
+    def clean(self):
+        super().clean()
+        if self.phone:
+            # Vérifier l'unicité des numéros de téléphone pour l'admin Django
+            existing_bookings = BookingProduct.objects.exclude(pk=self.pk) if self.pk else BookingProduct.objects.all()
+            for booking in existing_bookings:
+                if booking.phone == self.phone:  # django-cryptography déchiffre automatiquement
+                    raise ValidationError({'phone': 'Ce numéro de téléphone est déjà utilisé pour une réservation produit'})
+
     def __str__(self):
         return f"{self.name} ({self.start_time} → {self.end_time})"
 
@@ -93,6 +103,15 @@ class BookingWatch(models.Model):
     class Meta:
         unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, montre et les mêmes heures
         ordering = ['start_time']
+
+    def clean(self):
+        super().clean()
+        if self.phone:
+            # Vérifier l'unicité des numéros de téléphone pour l'admin Django
+            existing_bookings = BookingWatch.objects.exclude(pk=self.pk) if self.pk else BookingWatch.objects.all()
+            for booking in existing_bookings:
+                if booking.phone == self.phone:  # django-cryptography déchiffre automatiquement
+                    raise ValidationError({'phone': 'Ce numéro de téléphone est déjà utilisé pour une réservation montre'})
 
     def __str__(self):
         return f"{self.name} ({self.start_time} → {self.end_time})"
