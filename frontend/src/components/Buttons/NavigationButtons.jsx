@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 
-export default function NavigationButtons(screenRef) {
+export default function NavigationButtons({ screenRef, homeTo, image, label }) {
   const location = useLocation();
   const navigation = useNavigate();
   const {isClicked, setBgColor, setLabelColor, setLabel, setIsClicked } = useStore();
@@ -13,17 +13,9 @@ export default function NavigationButtons(screenRef) {
   const [buttonLabel, setButtonLabel] = useState("MaisonHoolis");
   
   useEffect(() => {
-    if (location.pathname === "/hoolis" || location.pathname === "/hoolis/") {
-      setButtonLabel("Franck & Watch");
-      setDestination("/fw"); // Aller vers F&W depuis Hoolis
-    } else if (location.pathname === "/fw" || location.pathname === "/fw/") {
-      setButtonLabel("Maison Hoolis");
-      setDestination("/hoolis"); // Aller vers Hoolis depuis F&W
-    } else {
       // Page par défaut (landing)
-      setButtonLabel("Maison Hoolis");
-      setDestination("/hoolis");
-    }
+      setButtonLabel(label);
+      setDestination(homeTo);
   }, [location.pathname]);
 
   function handleHover() {
@@ -44,7 +36,7 @@ export default function NavigationButtons(screenRef) {
   
   function handleClick() {
     if (location.pathname !== destination) {
-      setIsClicked(true);  // ✅ Bloque les interactions pendant la transition
+      setIsClicked(true);  // Bloque les interactions pendant la transition
       
       gsap.to(screenRef.current, {
         opacity: 0,
@@ -52,9 +44,8 @@ export default function NavigationButtons(screenRef) {
         ease: "power2.inOut"
       });
       
-      setTimeout(() => {
-        navigation(destination);
-      });
+      navigation(destination);
+      
     }
   }
 
@@ -65,7 +56,8 @@ export default function NavigationButtons(screenRef) {
       onMouseEnter={handleHover}
       onMouseLeave={handleHoverOut}
     >
-      <span className="hoolis-fw-button-text">{buttonLabel}</span>
+      {/* <span className="hoolis-fw-button-text">{buttonLabel}</span> */}
+      <img src={image} alt="logo" />
     </button>
   );
 } 

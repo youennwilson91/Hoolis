@@ -71,15 +71,42 @@ export default function MenuButtons({ screenRef}) {
     return (
     <>
       <div className="buttons-container">
-        <MainButton screenRef={screenRef} />
-        {mainButtonHover && (
+        {location.pathname === "/" ? (
+          // Page d'accueil - afficher les deux options de navigation
           <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
-            <NavigationButtons />
+            <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+            <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
             <VintedButton />
             <InstagramButton />
             <SupportButton />
           </div>
-        )}
+        ) : location.pathname.includes("/hoolis") ? (
+          // Page Hoolis - afficher le menu spécifique Hoolis
+          <>
+          <MainButton />
+          {mainButtonHover && (
+              <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
+                <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+          )}
+          </>
+        ) : location.pathname.includes("/fw") ? (
+          // Page Franck & Watch - afficher le menu spécifique FW
+          <>
+          <MainButton />
+          {mainButtonHover && (
+              <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
+                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+          )}
+          </>
+        ) : null}
       </div>
     </>
     )

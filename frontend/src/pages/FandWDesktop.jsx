@@ -71,6 +71,7 @@ export default function FandW() {
               id: watch.id,
               name: watch.name,
               description: watch.description,
+              price: watch.price,
               wide: watch.images.filter(img => img.size === 'wide')
             }));
             

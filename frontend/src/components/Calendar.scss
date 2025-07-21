@@ -25,18 +25,25 @@ $success-color: #2ecc71;
   .close-booking-button {
     position: absolute;
     top: -50px;
-    width: 40px;
-    height: 40px;
+    width: auto;
+    height: 50px;
     border: none;
     background-color: white;
-    font-size: 30px;
+    font-size: 18px;
     color: #000;
-    border-radius: 50%;
+    border-radius: 8px;
     border: 2px solid #000;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
+    font-family: "Champagne Limousines", sans-serif;
+    font-weight: 600;
+    
+    &:hover {
+        background-color: #f0f0f0;
+    }
     
     &:active {
         transform: scale(0.95);
@@ -266,10 +273,13 @@ $success-color: #2ecc71;
     padding-top: 10vh;
 
     .close-booking-button {
-      width: 36px;
-      height: 36px;
+      width: auto;
+      height: 44px;
       right: 10px;
       top: 10px;
+      font-size: 16px;
+      padding: 0 16px;
+      min-width: 70px;
     }
 
     
