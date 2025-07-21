@@ -95,19 +95,8 @@ export default function Landing() {
                         <div 
                             className="landing-menu-item" 
                             ref={menuRef1}
-                            //onMouseEnter={() => handleMenuHover({
-                            //    targetRef: menuRef1, 
-                            //    otherRef: menuRef2, 
-                            //    isEntering: true
-                            //})} 
-                            //onMouseLeave={() => handleMenuHover({
-                            //    targetRef: menuRef1, 
-                            //    otherRef: menuRef2, 
-                            //    isEntering: false
-                            //})}
                         >
                             <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" />
-                            <h2>Maison Hoolis</h2>
                         </div>
                     </div>
                     {buttonsVisible && <Button screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
