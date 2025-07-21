@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
 import { useGSAP } from "@gsap/react";
@@ -15,8 +15,9 @@ export default function Article({
   articleRefs
 }) {
 
-  //const { isBooking, setIsBooking } = useStore();
-  //const bookButtonRef = useRef(null);
+  const { isBooking, setIsBooking } = useStore();
+  const bookButtonRef = useRef(null);
+  const [showDescription, setShowDescription] = useState(false);
   
 
   return (
@@ -59,15 +60,39 @@ export default function Article({
         <div className="article-details">
           <h1 className="article-title">{article.title}</h1>
           <h1 className="article-price">{article.price}€</h1>
-          <h1 className="add-to-cart" onClick={(e) => handleAddToCart(article, e)}>SHOP</h1>
+          <div className="article-buttons-container">
+            <h1 className="add-to-cart" onClick={(e) => handleAddToCart(article, e)}>AJOUTER AU PANIER</h1>
+            {!isBooking ? 
+              <button ref={bookButtonRef} className="add-to-cart" onClick={(e) => {
+                e.stopPropagation();
+                setIsBooking(true);
+              }}>
+                PRENDRE RENDEZ-VOUS
+              </button> : null}
+            <button className="add-to-cart" onClick={(e) => {
+              e.stopPropagation();
+              setShowDescription(true);
+            }}>
+              DESCRIPTION
+            </button>
+          </div>
 
-          {/*{!isBooking ? 
-            <button ref={bookButtonRef} className="add-to-cart" onClick={() => setIsBooking(true)}>
-              PRENDRE RENDEZ-VOUS
-            </button> : null}*/}
-          <p>{article.description}</p>
+          {/* Popup de description */}
+          {showDescription && (
+            <div className="description-popup-overlay" onClick={() => setShowDescription(false)}>
+              <div className="description-popup" onClick={(e) => e.stopPropagation()}>
+                <h3>Description</h3>
+                <p>{article.description}</p>
+                <button className="close-popup-btn" onClick={() => setShowDescription(false)}>
+                  Fermer
+                </button>
+              </div>
+            </div>
+          )}
+
+
           <h2 className="close-article" onClick={(e) => handleArticleClose(articleRefs.current[index], e, article.id)}>
-            CLOSE
+            FERMER
           </h2>
         </div>
       )}
