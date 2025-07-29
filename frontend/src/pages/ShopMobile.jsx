@@ -334,6 +334,13 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
         </svg>
       </div>
 
+      {/* Calendrier de booking */}
+      {isBooking && (
+        <div ref={bookingContainerRef} className="booking-container" style={{ opacity: 0 }}>
+          <BookingCalendar type="product" />
+        </div>
+      )}
+
       <MenuButtons screenRef={mobileScreenRef} />
       
       {/* Popup de description pour mobile */}
