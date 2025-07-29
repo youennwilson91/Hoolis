@@ -7,6 +7,7 @@ $dark-gray: #777;
 $border-radius: 4px;
 $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 $success-color: #2ecc71;
+$error-color: #e74c3c;
 
 /* Styles généraux */
 .booking-calendar {
@@ -16,27 +17,123 @@ $success-color: #2ecc71;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 300px;
+  max-width: 500px;
+  min-width: 400px;
   background-color: white;
   border-radius: $border-radius;
   box-shadow: $shadow;
   z-index: 1000;
+  padding: 20px;
+
+  /* Message d'erreur */
+  .error-message {
+    color: $error-color;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    background-color: rgba($error-color, 0.1);
+    border: 1px solid rgba($error-color, 0.3);
+    border-left: 4px solid $error-color;
+    border-radius: $border-radius;
+    width: 90%;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba($error-color, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  /* Étape de vérification */
+  .verification-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    text-align: center;
+    
+    h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+      font-weight: 600;
+    }
+    
+    p {
+      color: $dark-gray;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      font-size: 0.95em;
+    }
+    
+    .form-input {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+    
+    .booking-button {
+      margin-bottom: 10px;
+      width: 60%;
+      min-width: 120px;
+    }
+  }
+
+  /* Bouton retour */
+  .back-button {
+    background-color: transparent;
+    color: $dark-gray;
+    border: 2px solid $medium-gray;
+    border-radius: $border-radius;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin: 5px;
+    min-width: 100px;
+    font-size: 14px;
+
+    &:hover {
+      background-color: $light-gray;
+      border-color: $dark-gray;
+      color: #333;
+      transform: translateY(-1px);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($dark-gray, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
 
   .close-booking-button {
     position: absolute;
-    top: -50px;
-    width: 40px;
-    height: 40px;
+    top: 15px;
+    right: 15px;
+    width: auto;
+    height: 45px;
     border: none;
     background-color: white;
-    font-size: 30px;
+    font-size: 16px;
     color: #000;
-    border-radius: 50%;
+    border-radius: 8px;
     border: 2px solid #000;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
+    font-family: "Champagne Limousines", sans-serif;
+    font-weight: 600;
+    z-index: 10;
+    
+    &:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-1px);
+    }
     
     &:active {
         transform: scale(0.95);
@@ -45,11 +142,12 @@ $success-color: #2ecc71;
 
 /* Style pour le DatePicker en mode dropdown */
   .dropdown-datepicker {
-    padding: 12px 30px;
+    padding: 12px 15px;
     border: 1px solid $medium-gray;
     border-radius: $border-radius;
-    width: 100%;
-    height: 40px;
+    width: 85%;
+    max-width: 450px;
+    height: 45px;
     cursor: pointer;
     background-color: white;
     font-size: 16px;
@@ -129,13 +227,13 @@ $success-color: #2ecc71;
   /* Style pour l'input du nom */
   .form-input {
     margin-top: 10px;
-    padding: 12px 10px;
+    padding: 12px 15px;
     border: 1px solid $medium-gray;
     border-radius: $border-radius;
-    width: 60%;
-    max-width: 300px;
+    width: 85%;
+    max-width: 450px;
     font-size: 16px;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
     color: black;
     &:focus {
       outline: none;
@@ -148,31 +246,61 @@ $success-color: #2ecc71;
   .slots-list {
     list-style: none;
     padding: 0;
-    width: 60%;
+    width: 85%;
     margin: 20px 0;
-    height: 25vh;
+    height: 30vh;
+    max-height: 350px;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: $primary-color rgba(0, 0, 0, 0.1);
     
     &::-webkit-scrollbar {
-        display: none;
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        margin: 5px 0;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, $primary-color, lighten($primary-color, 10%));
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        
+        &:hover {
+            background: linear-gradient(135deg, darken($primary-color, 5%), $primary-color);
+        }
+    }
+    
+    &::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(135deg, darken($primary-color, 10%), darken($primary-color, 5%));
     }
 
     .slot-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
       background-color: $light-gray;
       border-radius: $border-radius;
       border-left: 4px solid $primary-color;
       transition: all 0.2s ease;
+      min-height: 50px;
 
       &:hover {
         transform: translateY(-2px);
         box-shadow: $shadow;
+      }
+      
+      .slot-time {
+        font-weight: 600;
+        font-size: 16px;
+        color: #333;
+        flex: 1;
+        text-align: left;
       }
     }
   }
@@ -182,19 +310,26 @@ $success-color: #2ecc71;
     color: white;
     border: none;
     border-radius: $border-radius;
-    padding: 8px 8px;
+    padding: 10px 16px;
     cursor: pointer;
     font-weight: 600;
     transition: background-color 0.2s;
-    margin: 10px;
+    margin: 8px;
+    min-width: 100px;
+    font-size: 14px;
 
     &:hover {
       background-color: $primary-dark;
+      transform: translateY(-1px);
     }
 
     &:focus {
       outline: none;
       box-shadow: 0 0 0 2px rgba($primary-color, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
     }
   }
 
@@ -202,9 +337,9 @@ $success-color: #2ecc71;
     background-color: rgba($success-color, 0.1);
     border-left: 4px solid $success-color;
     color: darken($success-color, 20%);
-    padding: 10px;
+    padding: 15px;
     border-radius: $border-radius;
-    width: 80%;
+    width: 90%;
     text-align: center;
     margin: 20px 0;
     box-shadow: $shadow;
@@ -256,31 +391,41 @@ $success-color: #2ecc71;
 /* Responsive styles for mobile devices */
 @media screen and (max-width: 768px) {
   .booking-calendar {
-    width: 90vw;
-    height: 70vh;
-    padding: 15px 10px;
+    width: 95vw;
+    max-width: none;
+    min-width: auto;
+    height: 75vh;
+    padding: 20px 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 10vh;
+    padding-top: 8vh;
 
     .close-booking-button {
-      width: 36px;
-      height: 36px;
+      width: auto;
+      height: 44px;
       right: 10px;
       top: 10px;
+      font-size: 14px;
+      padding: 0 16px;
+      min-width: 80px;
     }
 
     
     .form-input {
-      width: 90%;
-      padding: 10px 8px;
+      width: 95%;
+      padding: 12px 10px;
+    }
+    
+    .dropdown-datepicker {
+      width: 95%;
     }
     
     .slots-list {
-      width: 90%;
-      height: 40vh;
+      width: 95%;
+      height: 35vh;
+      max-height: 300px;
       -webkit-overflow-scrolling: touch;
     }
     
@@ -308,11 +453,24 @@ $success-color: #2ecc71;
 /* Specific styles for small devices */
 @media screen and (max-width: 480px) {
   .booking-calendar {
-    max-width: 95%;
+    width: 98vw;
+    max-width: none;
+    min-width: auto;
     min-height: 70vh;
+    padding: 15px 12px;
+    
     .dropdown-datepicker,
     .date-dropdown {
       font-size: 14px;
+      width: 98%;
+    }
+    
+    .form-input {
+      width: 98%;
+    }
+    
+    .slots-list {
+      width: 98%;
     }
   }
   
