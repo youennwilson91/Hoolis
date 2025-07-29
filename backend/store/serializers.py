@@ -201,7 +201,7 @@ class WatchSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Watch
-        fields = ['id', 'name', 'description', 'images']
+        fields = ['id', 'name', 'description', 'price', 'images']
 
 class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
