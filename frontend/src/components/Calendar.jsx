@@ -20,6 +20,7 @@ function BookingCalendar({ type }) {
   const [verificationCode, setVerificationCode] = useState("");
   const [requestId, setRequestId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedSlot, setSelectedSlot] = useState(null);
   
   const { isBooking, setIsBooking, products, watches, medias } = useStore();
 
@@ -51,6 +52,8 @@ function BookingCalendar({ type }) {
     return `${year}-${month}-${day}`;
   };
 
+
+
   // Initialise la valeur par défaut selon la page
 
   // Formater la date initiale au chargement du composant
@@ -64,8 +67,36 @@ function BookingCalendar({ type }) {
     if (isSuccess) {
       setName("");
       setPhone("");
+      setSelectedWatch("");
+      setVerificationCode("");
     }
   }, [isSuccess]);
+
+  // Fonction pour envoyer l'email de notification
+  const sendEmailNotification = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('phone', phone);
+      formData.append('watch', selectedWatch);
+      formData.append('date', formattedDate.split('-').reverse().join('/'));
+      formData.append('start_time', selectedSlot?.start_time || '');
+      formData.append('end_time', selectedSlot?.end_time || '');
+      formData.append('_subject', `Nouvelle réservation - ${selectedWatch}`);
+      formData.append('_captcha', 'false');
+      formData.append('_template', 'table');
+
+      console.log('Envoi de l\'email de notification...');
+      await fetch('https://formsubmit.co/youson91@hotmail.fr', {
+        method: 'POST',
+        body: formData
+      });
+      console.log('Email de notification envoyé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+      // L'erreur d'email ne doit pas affecter l'expérience utilisateur
+    }
+  };
 
   // Quand la date est modifiée, on formate et on stocke
   const handleDateChange = (date) => {
@@ -114,7 +145,7 @@ function BookingCalendar({ type }) {
       setRequestId(response.data.request_id);
       console.log('Request ID:', response.data.request_id);
       // Stocker le slot pour l'utiliser après vérification
-      window.selectedSlot = slot;
+      setSelectedSlot(slot);
       setErrorMessage(""); // Effacer les erreurs précédentes
     }).catch(error => {
       console.error('Erreur lors de l\'envoi du code:', error);
@@ -145,22 +176,23 @@ function BookingCalendar({ type }) {
       console.log(response.data);
       
       // Si le code est valide, procéder à la réservation
-      const slot = window.selectedSlot;
       return apiClient.post(apiBookings, {
         name: sanitizeText(name), // Sanitiser le nom
         phone: internationalPhone,
         watch: sanitizeText(selectedWatch), // Sanitiser la sélection
         date: formattedDate,
-        start_time: slot.start_time,
-        end_time: slot.end_time
+        start_time: selectedSlot.start_time,
+        end_time: selectedSlot.end_time
       });
     })
     .then(() => {
       setIsSuccess(true);
       setVerificationStep('success');
-      const slot = window.selectedSlot;
-      setSlots(slots.filter(s => s.start_time !== slot.start_time));
+      setSlots(slots.filter(s => s.start_time !== selectedSlot.start_time));
       setErrorMessage(""); // Effacer les erreurs
+      
+      // Envoyer l'email de notification
+      sendEmailNotification();
     })
     .catch(err => {
       console.error("Erreur lors de la vérification ou réservation:", err);
@@ -176,17 +208,13 @@ function BookingCalendar({ type }) {
     });
   }
 
+
+
   return (
     <div className="booking-calendar">
       {/* Affichage des erreurs sécurisé */}
       {errorMessage && (
-        <div className="error-message" style={{
-          color: 'red', 
-          padding: '10px', 
-          marginBottom: '10px',
-          backgroundColor: 'rgba(255,0,0,0.1)',
-          borderRadius: '4px'
-        }}>
+        <div className="error-message">
           {errorMessage}
         </div>
       )}
@@ -259,7 +287,9 @@ function BookingCalendar({ type }) {
           <ul className="slots-list">
             {slots.map((slot, index) => (
               <li key={index} className="slot-item">
-                {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
+                <span className="slot-time">
+                  {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
+                </span>
                 <button 
                   onClick={() => handleSendVerification(slot)}
                   className="booking-button"
