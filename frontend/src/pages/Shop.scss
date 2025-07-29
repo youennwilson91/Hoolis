@@ -841,10 +841,11 @@
     
         .cart-container {
             position: fixed;
-            top: 15vh;
-            left: 4vw;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 90vw;
-            height: 70%;
+            height: 70vh;
             display: flex;
             justify-content: center;
             align-items: center;
