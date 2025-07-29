@@ -22,6 +22,7 @@
         align-items: center;
         z-index: 1500;
         opacity: 0;
+        padding: 20px;
     }
 
     .loader {
@@ -97,9 +98,12 @@
                 z-index: 10;
 
                 h1 {
+                    position: relative;
+                    top: -30%;
                     margin: 0px;
-                    font-size: 28px;
+                    font-size: 36px;
                     text-align: center;
+                    color: rgb(255, 255, 255);
                 }
                 
                 .mobile-article-action-buttons {
@@ -199,29 +203,7 @@
         align-items: center;
         z-index: 2000;
         animation: fadeIn 0.3s ease-in-out;
-        
-        .close-booking-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            
-            &:hover {
-                background: rgba(255, 255, 255, 0.3);
-                transform: scale(1.1);
-            }
-        }
+        padding: 20px;
     }
 
     @keyframes fadeIn {

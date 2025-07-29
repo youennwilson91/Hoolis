@@ -301,7 +301,6 @@ export default function FandWMobile({ labelRef }) {
       {isBooking && (
         <div ref={bookingContainerRef} className="booking-container" style={{ opacity: 0 }}>
           <BookingCalendar type="watches" />
-          <button className="close-booking-button" onClick={() => setIsBooking(false)}>×</button>
         </div>
       )}
 
