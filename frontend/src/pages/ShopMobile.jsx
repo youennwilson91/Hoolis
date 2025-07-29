@@ -158,6 +158,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
 
   function handleOpenMobileCart() {
     setCartVisible(true);
+    // Désactiver le scroll de la galerie
+    if (articlesContainerRef.current) {
+      articlesContainerRef.current.style.overflow = 'hidden';
+    }
     requestAnimationFrame(() => {
       if (mobileCartRef.current) {
         gsap.to(mobileCartRef.current, {
@@ -178,6 +182,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
         opacity: 0,
         onComplete: () => {
           setCartVisible(false);
+          // Réactiver le scroll de la galerie
+          if (articlesContainerRef.current) {
+            articlesContainerRef.current.style.overflow = 'auto';
+          }
           if (mobileCartRef.current) {
             mobileCartRef.current.style.opacity = 0;
           }
