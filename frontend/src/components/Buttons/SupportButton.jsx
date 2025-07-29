@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SupportPopup from "../SupportPopup.jsx";
 import "./SupportButton.scss";
-
 export default function SupportButton() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -16,7 +15,21 @@ export default function SupportButton() {
         onClick={togglePopup}
         aria-label="Ouvrir le support"
       >
-      Contact      
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+        >
+          <path fill="currentColor" stroke="currentColor" stroke-width="1.8" d="M138.832,137.698h-77c-5.2,0-9.5-4.3-9.5-9.5v-57c0-5.2,4.3-9.5,9.5-9.5h77c5.2,0,9.5,4.3,9.5,9.5v57
+          	C148.332,133.398,144.032,137.698,138.832,137.698z M61.832,65.698c-3,0-5.5,2.5-5.5,5.5v57c0,3,2.5,5.5,5.5,5.5h77
+          	c3,0,5.5-2.5,5.5-5.5v-57c0-3-2.5-5.5-5.5-5.5H61.832z"/>
+          <path fill="currentColor" stroke="currentColor" stroke-width="1.8" d="M100.332,112.098c-0.5,0-1-0.2-1.4-0.6l-31.6-31.6c-0.8-0.8-0.8-2,0-2.8c0.8-0.8,2-0.8,2.8,0l30.2,30.1
+          	l30.8-30.8c0.8-0.8,2-0.8,2.8,0c0.8,0.8,0.8,2,0,2.8l-32.2,32.3C101.332,111.898,100.832,112.098,100.332,112.098z"/>
+          <path fill="currentColor" stroke="currentColor" stroke-width="1.8" d="M69.032,122.198c-0.5,0-1-0.2-1.4-0.6c-0.8-0.8-0.8-2,0-2.8l20.7-20.7c0.8-0.8,2-0.8,2.8,0
+          	c0.8,0.8,0.8,2,0,2.8l-20.6,20.7C70.132,121.998,69.532,122.198,69.032,122.198z"/>
+          <path fill="currentColor" stroke="currentColor" stroke-width="1.8" d="M132.632,122.198c-0.5,0-1-0.2-1.4-0.6l-20.7-20.7c-0.8-0.8-0.8-2,0-2.8c0.8-0.8,2-0.8,2.8,0l20.7,20.7
+          	c0.8,0.8,0.8,2,0,2.8C133.632,121.998,133.132,122.198,132.632,122.198z"/>
+        </svg>
       </button>
       
       <SupportPopup 

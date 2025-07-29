@@ -47,7 +47,7 @@ function MainButton() {
   )
 }
 
-export default function MenuButtons() {
+export default function MenuButtons({ screenRef }) {
 
     const {
       setMobileButtonsVisible,
@@ -68,15 +68,47 @@ export default function MenuButtons() {
     return (
     <>
       <div className="buttons-container">
-        <MainButton />
-        {menuOpen && (
-          <div className="buttons-div">
-            <NavigationButtons />
-            <VintedButton />
-            <InstagramButton />
-            <SupportButton />
-          </div>
-        )}
+        {location.pathname === "/" ? (
+          // Page d'accueil - afficher les deux options de navigation
+          <>
+            <MainButton />
+            {menuOpen && (
+              <div className="buttons-div">
+                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+                <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+            )}
+          </>
+        ) : location.pathname.includes("/hoolis") ? (
+          // Page Hoolis - afficher le menu spécifique Hoolis
+          <>
+            <MainButton />
+            {menuOpen && (
+              <div className="buttons-div">
+                <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+            )}
+          </>
+        ) : location.pathname.includes("/fw") ? (
+          // Page Franck & Watch - afficher le menu spécifique FW
+          <>
+            <MainButton />
+            {menuOpen && (
+              <div className="buttons-div">
+                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+            )}
+          </>
+        ) : null}
       </div>
     </>
     )

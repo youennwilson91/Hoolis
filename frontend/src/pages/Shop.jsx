@@ -17,7 +17,9 @@ export default function Shop() {
     labelColor, setLabelColor, 
     setIsClicked,
     isMobile,
-    setIsMobile
+    setIsMobile,
+    addToCart,
+    setAddToCart
   } = useStore();
 
   useEffect(() => {
@@ -37,6 +39,25 @@ export default function Shop() {
       window.removeEventListener('resize', checkScreenSize);
     };
   }, []);
+
+  // Fonctions pour gérer le panier
+  function handleAddToCart(article, e) {
+    e.stopPropagation();
+    console.log("Adding to cart:", article);
+    setAddToCart(prevCart => {
+      const newCart = [...prevCart, {...article, cartid: Date.now() + Math.random()}];
+      console.log("Cart updated:", newCart);
+      return newCart;
+    });
+    alert("Article ajouté au panier");
+  }
+
+  function handleRemoveItem(item) {
+    console.log("Removing from cart:", item);
+    setAddToCart(prevCart => prevCart.filter(
+      cartItem => cartItem.cartid !== item.cartid
+    ));
+  }
 
   useGSAP(() => {
     // Only animate screenRef if we're not in mobile mode and screenRef exists
@@ -61,7 +82,11 @@ export default function Shop() {
       <StructuredData data={createOrganizationSchema()} />
       
       {isMobile ? (
-        <ShopMobile labelRef={labelRef} />
+        <ShopMobile 
+          labelRef={labelRef} 
+          handleAddToCart={handleAddToCart}
+          handleRemoveItem={handleRemoveItem}
+        />
       ) : (
         <ShopDesktop screenRef={screenRef} labelRef={labelRef} />
       )}

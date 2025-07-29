@@ -22,6 +22,7 @@
         align-items: center;
         z-index: 1500;
         opacity: 0;
+        padding: 20px;
     }
 
     .loader {
@@ -97,16 +98,54 @@
                 z-index: 10;
 
                 h1 {
+                    position: relative;
+                    top: -30%;
                     margin: 0px;
-                    font-size: 28px;
+                    font-size: 36px;
                     text-align: center;
+                    color: rgb(255, 255, 255);
                 }
                 
-                p {
-                    margin: 10px 0;
-                    font-size: 16px;
-                    text-align: center;
-                    padding: 0 20px;
+                .mobile-article-action-buttons {
+                    position: absolute;
+                    bottom: 15px;
+                    right: 15px;
+                    display: flex;
+                    gap: 12px;
+                    pointer-events: all !important;
+                    z-index: 1001;
+                    
+                    .action-button {
+                        width: 60px;
+                        height: 60px;
+                        background: linear-gradient(135deg, #226D68, #1a5550);
+                        border: none;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        box-shadow: 0 8px 25px rgba(34, 109, 104, 0.4);
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        overflow: hidden;
+                        
+                        &:hover {
+                            transform: translateY(-3px) scale(1.05);
+                            box-shadow: 0 12px 35px rgba(9, 177, 160);
+                        }
+                        
+                        &:active {
+                            transform: translateY(-1px) scale(1.02);
+                        }
+                        
+                        .action-icon {
+                            width: 28px;
+                            height: 28px;
+                            fill: white;
+                            transition: all 0.3s ease;
+                        }
+                    }
                 }
             }
         }
@@ -164,6 +203,7 @@
         align-items: center;
         z-index: 2000;
         animation: fadeIn 0.3s ease-in-out;
+        padding: 20px;
     }
 
     @keyframes fadeIn {
@@ -331,7 +371,15 @@
 
             .watch-title {
                 position: absolute;
-                top: 2%;
+                top: 0%;
+                left: 2%;
+                font-size: 36px;
+                color: white;
+            }
+
+            .article-price {
+                position: absolute;
+                top: 6%;
                 left: 2%;
                 font-size: 36px;
                 color: white;
@@ -366,6 +414,107 @@
                 font-size: 26px;
             }
 
+            .article-buttons-container {
+                position: absolute;
+                bottom: 5%;
+                left: 2%;
+                width: 96%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+                align-items: center;
+                pointer-events: all !important;
+                
+                .add-to-cart {
+                    position: relative;
+                    top: auto;
+                    left: auto;
+                    margin: 0;
+                    border: 3px solid #888888;
+                    padding: 10px;
+                    border-radius: 10px;
+                    font-size: 22px;
+                    color: #333333;
+                    cursor: pointer;
+                    pointer-events: all !important;
+                    background-color: #d3d3d3;
+                    
+                    &:hover {
+                        cursor: pointer;
+                        color: #222222;
+                        border: 3px solid #666666;
+                        background-color: #e6e6e6;
+                    }
+                }
+                
+                button.add-to-cart {
+                    font-family: "Champagne Limousines", sans-serif !important;
+                }
+            }
+
+            .description-popup-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+                pointer-events: all !important;
+            }
+
+            .description-popup {
+                background: #f5f5f5;
+                padding: 30px;
+                border-radius: 10px;
+                max-width: 500px;
+                max-height: 70vh;
+                overflow-y: auto;
+                border: 3px solid #888888;
+                
+                h3 {
+                    margin-top: 0;
+                    font-size: 28px;
+                    color: #333333;
+                    text-align: center;
+                    font-family: "Champagne Limousines", sans-serif !important;
+                }
+                
+                p {
+                    position: relative !important;
+                    font-size: 18px !important;
+                    line-height: 1.5 !important;
+                    color: #333333 !important;
+                    margin: 15px 0 !important;
+                    font-family: "Champagne Limousines", sans-serif !important;
+                    pointer-events: all !important;
+                    left: auto !important;
+                    bottom: auto !important;
+                    text-align: left;
+                }
+                
+                .close-popup-btn {
+                    background-color: #d3d3d3;
+                    border: 3px solid #888888;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    color: #333333;
+                    cursor: pointer;
+                    display: block;
+                    margin: 20px auto 0;
+                    font-family: "Champagne Limousines", sans-serif !important;
+
+                    &:hover {
+                        background-color: #e6e6e6;
+                        border-color: #666666;
+                    }
+                }
+            }
+
             .close-watch {
                 position: absolute;
                 top: 2%;
@@ -380,6 +529,74 @@
                     color: white;
                 }
             }
+        }
+    }
+}
+
+/* Styles pour la popup de description mobile */
+.mobile-description-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    pointer-events: all !important;
+}
+
+.mobile-description-popup {
+    background: #f5f5f5;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 3px solid #888888;
+    margin: 0 15px;
+    
+    h3 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333333;
+        text-align: center;
+        font-family: "Champagne Limousines", sans-serif !important;
+    }
+    
+    p {
+        position: relative !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        color: #333333 !important;
+        margin: 15px 0 !important;
+        font-family: "Champagne Limousines", sans-serif !important;
+        pointer-events: all !important;
+        left: auto !important;
+        bottom: auto !important;
+        text-align: left;
+    }
+    
+    .mobile-close-popup-btn {
+        background-color: #d3d3d3;
+        border: 3px solid #888888;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333333;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto 0;
+        font-family: "Champagne Limousines", sans-serif !important;
+        min-height: 48px;
+        min-width: 48px;
+        
+        &:hover {
+            background-color: #e6e6e6;
+            color: #222222;
+            border: 3px solid #666666;
         }
     }
 }

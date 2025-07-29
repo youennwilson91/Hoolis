@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
 import { sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
@@ -15,14 +15,33 @@ export default function Watch({
   handleWatchClose, 
   watchRefs
 }) {
-  const { isBooking, setIsBooking } = useStore();
+  const { isBooking, setIsBooking, setAddToCart } = useStore();
   const bookButtonRef = useRef(null);
+  const [showDescription, setShowDescription] = useState(false);
+
+  // Fonction pour ajouter une montre au panier
+  const handleAddToCart = (watch, e) => {
+    e.stopPropagation();
+    const cartItem = {
+      id: `watch_${watch.id}`,
+      cartid: `watch_${Date.now()}_${watch.id}`,
+      title: watch.name,
+      price: watch.price || 0,
+      images: watch.wide?.length > 0 ? [{ image: watch.wide[0].media }] : [],
+      type: 'watch',
+      quantity: 1
+    };
+    
+    setAddToCart((currentCart) => [...currentCart, cartItem]);
+    console.log("Montre ajoutée au panier:", cartItem);
+  };
 
   // Sanitiser les données de la montre
   const sanitizedWatch = {
     id: watch.id,
     name: sanitizeText(watch.name || ''),
     description: sanitizeText(watch.description || ''),
+    price: watch.price || 0,
     wide: watch.wide || []
   };
 
@@ -78,13 +97,39 @@ export default function Watch({
       {watchIsClicked && clickedWatchId === sanitizedWatch.id && (
         <div className="watch-details">
           <h1 className="watch-title">{sanitizedWatch.name}</h1>
-          {!isBooking ? 
-            <button ref={bookButtonRef} className="add-to-cart" onClick={() => setIsBooking(true)}>
-              PRENDRE RENDEZ-VOUS
-            </button> : null}
-          <p>{sanitizedWatch.description}</p>
+          <h1 className="article-price">{sanitizedWatch.price}€</h1>
+          <div className="article-buttons-container">
+            <h1 className="add-to-cart" onClick={(e) => handleAddToCart(sanitizedWatch, e)}>AJOUTER AU PANIER</h1>
+            {!isBooking ? 
+              <button ref={bookButtonRef} className="add-to-cart" onClick={(e) => {
+                e.stopPropagation();
+                setIsBooking(true);
+              }}>
+                PRENDRE RENDEZ-VOUS
+              </button> : null}
+            <button className="add-to-cart" onClick={(e) => {
+              e.stopPropagation();
+              setShowDescription(true);
+            }}>
+              DESCRIPTION
+            </button>
+          </div>
+
+          {/* Popup de description */}
+          {showDescription && (
+            <div className="description-popup-overlay" onClick={() => setShowDescription(false)}>
+              <div className="description-popup" onClick={(e) => e.stopPropagation()}>
+                <h3>Description</h3>
+                <p>{sanitizedWatch.description}</p>
+                <button className="close-popup-btn" onClick={() => setShowDescription(false)}>
+                  Fermer
+                </button>
+              </div>
+            </div>
+          )}
+
           <h2 className="close-watch" onClick={(e) => handleWatchClose(watchRefs.current?.[index], e, sanitizedWatch.id)}>
-            CLOSE
+            FERMER
           </h2>
         </div>
       )}
