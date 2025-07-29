@@ -9,7 +9,7 @@ export default defineConfig({
     // mkcert() // Désactivé pour utiliser HTTP en développement
   ],
   // Configuration pour le déploiement
-  base: './',
+  base: '/',
   build: {
     rollupOptions: {
       output: {
@@ -36,6 +36,7 @@ export default defineConfig({
   // Configuration pour la production
   preview: {
     port: 4173,
-    host: true
+    host: true,
+    historyApiFallback: true
   }
 })
