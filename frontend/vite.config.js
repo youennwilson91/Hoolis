@@ -38,5 +38,9 @@ export default defineConfig({
     port: 4173,
     host: true,
     historyApiFallback: true
+  },
+  // Assure que les routes SPA fonctionnent en production
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
   }
 })
