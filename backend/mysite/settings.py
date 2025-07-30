@@ -177,9 +177,10 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
-    # Production - utiliser la variable d'environnement
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://hoolis-front.onrender.com')
-    CORS_ALLOWED_ORIGINS = [frontend_url]
+    # Production 
+    CORS_ALLOWED_ORIGINS = [
+        "https://hoolis-front.onrender.com",
+    ]
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
