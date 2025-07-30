@@ -34,7 +34,15 @@ services:
         headers:
           - key: "Cache-Control"
             value: "no-cache"
+      - source: "/static/*"
+        headers:
+          - key: "Cache-Control"
+            value: "public, max-age=31536000"
     routes:
+      - type: redirect
+        source: "/api/*"
+        destination: "https://hoolis-backend.onrender.com/api/:splat"
+        status: 200
       - type: rewrite
         source: "/*"
         destination: "/index.html" 

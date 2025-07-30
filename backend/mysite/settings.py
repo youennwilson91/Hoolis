@@ -93,24 +93,24 @@ TEMPLATES = [
 
 
 # Base de données - SQL Server en local
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'mssql',
-#        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-#        'USER': os.environ.get('DB_USER', 'sa'),
-#        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-#        'HOST': os.environ.get('DB_HOST', 'localhost'),
-#        'PORT': os.environ.get('DB_PORT', '1433'),
-#        'OPTIONS': {
-#            'driver': 'ODBC Driver 17 for SQL Server',
-#            'extra_params': 'TrustServerCertificate=yes',
-#        },
-#    }
-#}
-#Base de données PostgreSQL
 DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    } 
+    'default': {
+        'ENGINE': 'mssql',
+        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
+        'USER': os.environ.get('DB_USER', 'sa'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '1433'),
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes',
+        },
+    }
+}
+#Base de données PostgreSQL
+#DATABASES = {
+#        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+#    } 
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -177,9 +177,10 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
-    # Production - utiliser la variable d'environnement
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://hoolis-front.onrender.com')
-    CORS_ALLOWED_ORIGINS = [frontend_url]
+    # Production 
+    CORS_ALLOWED_ORIGINS = [
+        "https://hoolis-front.onrender.com",
+    ]
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
