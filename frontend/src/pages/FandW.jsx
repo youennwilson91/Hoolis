@@ -7,6 +7,7 @@ import StructuredData, { createOrganizationSchema } from "../components/Structur
 import "./FandW.scss";
 import FandWMobile from "./FandWMobile";
 import FandWDesktop from "./FandWDesktop";
+import PaymentReturn from "../components/PaymentReturn";
 
 export default function FandW() {
   const screenRef = useRef(null);
@@ -64,6 +65,9 @@ export default function FandW() {
       ) : (
         <FandWDesktop screenRef={screenRef} labelRef={labelRef} />
       )}
+      
+      {/* Composant pour gérer le retour de paiement Stripe */}
+      <PaymentReturn />
     </>
   );
 }

@@ -8,6 +8,7 @@ import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
+import OrderForm from "../components/OrderForm";
 
 export default function FandWMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
@@ -15,12 +16,14 @@ export default function FandWMobile({ labelRef }) {
   const bookingContainerRef = useRef(null);
   const watchesContainerRef = useRef(null);
   
-  const { isBooking, setIsBooking, addToCart, setCartVisible, setAddToCart } = useStore();
+  const { isBooking, setIsBooking } = useStore();
   const [medias, setMedias] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [selectedWatch, setSelectedWatch] = useState(null);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [selectedWatchForOrder, setSelectedWatchForOrder] = useState(null);
   
   useEffect(() => {
     setIsBooking(false);
@@ -172,22 +175,19 @@ export default function FandWMobile({ labelRef }) {
     setIsBooking(false);
   }
 
-  // Fonction pour ajouter une montre au panier
+  // Fonction pour ouvrir le formulaire de commande
   const handleAddToCart = (watch) => {
-    // Créer un objet similaire aux produits pour le panier
-    const cartItem = {
-      id: `watch_${watch.id}`,
-      cartid: `watch_${Date.now()}_${watch.id}`,
-      title: watch.name,
-      price: watch.price || 0, // Utiliser le prix réel de la montre
-      images: watch.small?.length > 0 ? [{ image: watch.small[0].media }] : [],
-      type: 'watch',
-      quantity: 1
+    const sanitizedWatch = {
+      id: watch.id,
+      name: sanitizeText(watch.name || ''),
+      description: sanitizeText(watch.description || ''),
+      price: watch.price || 0,
+      wide: watch.wide || []
     };
     
-    // Utiliser le store pour ajouter au panier
-    setAddToCart((currentCart) => [...currentCart, cartItem]);
-    console.log("Montre ajoutée au panier:", cartItem);
+    setSelectedWatchForOrder(sanitizedWatch);
+    setShowOrderForm(true);
+    console.log("Ouverture du formulaire de commande pour:", sanitizedWatch.name);
   };
 
   return (
@@ -236,7 +236,7 @@ export default function FandWMobile({ labelRef }) {
                         e.stopPropagation();
                         handleAddToCart(media);
                       }}
-                      aria-label="Ajouter au panier"
+                      aria-label="Commander cette montre"
                     >
                       <svg viewBox="0 0 453.73 453.73" className="action-icon">
                         <path d="M447.664,129.262c-5.005-6.031-12.435-9.521-20.271-9.521h-20.86l4.734-4.733c1.641-1.642,2.562-3.867,2.562-6.188
@@ -315,6 +315,18 @@ export default function FandWMobile({ labelRef }) {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Composant OrderForm pour les commandes de montres */}
+      {selectedWatchForOrder && (
+        <OrderForm 
+          watch={selectedWatchForOrder}
+          isOpen={showOrderForm}
+          onClose={() => {
+            setShowOrderForm(false);
+            setSelectedWatchForOrder(null);
+          }}
+        />
       )}
 
       <MenuButtons screenRef={mobileScreenRef} />

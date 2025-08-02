@@ -7,6 +7,7 @@ import StructuredData, { createOrganizationSchema } from "../components/Structur
 import "./Shop.scss";
 import ShopMobile from "./ShopMobile";
 import ShopDesktop from "./ShopDesktop";
+import PaymentReturn from "../components/PaymentReturn";
 
 export default function Shop() {
   const screenRef = useRef(null);
@@ -90,6 +91,9 @@ export default function Shop() {
       ) : (
         <ShopDesktop screenRef={screenRef} labelRef={labelRef} />
       )}
+      
+      {/* Composant pour gérer le retour de paiement Stripe */}
+      <PaymentReturn />
     </>
   );
 }
