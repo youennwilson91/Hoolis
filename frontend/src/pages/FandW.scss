@@ -253,6 +253,10 @@
             align-items: center;
             overflow: hidden;
             cursor: pointer;
+
+            &.watch-unavailable {
+                opacity: 0.7;
+            }
             
             //&::before,
             //&::after {

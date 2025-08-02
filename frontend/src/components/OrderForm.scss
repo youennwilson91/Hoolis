@@ -1,0 +1,362 @@
+.order-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .order-popup {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    animation: orderPopupSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: white;
+  }
+  
+  @keyframes orderPopupSlideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translate(0, 30px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translate(0, 0);
+    }
+  }
+  
+  .order-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem 1rem 2rem;
+    border-bottom: 1px solid #333;
+    
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: #ffffff;
+      margin: 0;
+    }
+    
+    .close-popup-btn {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      
+      &:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(90deg);
+      }
+    }
+  }
+  
+  .order-popup-content {
+    padding: 2rem;
+  }
+  
+  // Récapitulatif de la montre
+  .order-summary {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #333;
+  }
+  
+  .order-watch-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .order-watch-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #444;
+  }
+  
+  .order-watch-details {
+    flex: 1;
+    
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+    }
+    
+    .order-watch-price {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #EFEC8F;
+      margin: 0;
+    }
+  }
+  
+  // Formulaire
+  .order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .form-section {
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin: 0 0 1.5rem 0;
+      color: #fff;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #333;
+    }
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    
+    label {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+    
+    input, select {
+      padding: 1rem;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: #EFEC8F;
+        box-shadow: 0 0 0 2px rgba(239, 236, 143, 0.2);
+        background: #333;
+      }
+      
+      &::placeholder {
+        color: #666;
+      }
+      
+      &:invalid {
+        border-color: #ff6b6b;
+      }
+    }
+    
+    select {
+      cursor: pointer;
+      
+      option {
+        background: #2a2a2a;
+        color: white;
+      }
+    }
+  }
+  
+  // Boutons d'action
+  .order-form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
+  }
+  
+  .cancel-btn, .validate-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    
+    @media (max-width: 480px) {
+      width: 100%;
+    }
+  }
+  
+  .cancel-btn {
+    background: transparent;
+    color: #ccc;
+    border: 1px solid #444;
+    
+    &:hover {
+      background: #2a2a2a;
+      color: #fff;
+      border-color: #666;
+    }
+  }
+  
+  .validate-btn {
+    background: linear-gradient(135deg, #EFEC8F, #d4d16a);
+    color: #1a1a1a;
+    font-weight: 600;
+    
+    &:hover {
+      background: linear-gradient(135deg, #f5f2a3, #e0dd7a);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(239, 236, 143, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Responsive pour mobile
+  @media (max-width: 768px) {
+    .order-popup {
+      margin: 10px;
+      max-height: 95vh;
+    }
+    
+    .order-popup-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    .order-popup-content {
+      padding: 1.5rem;
+    }
+    
+    .order-watch-info {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+    }
+    
+    .order-watch-image {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .order-popup-overlay {
+      padding: 10px;
+    }
+    
+    .order-popup {
+      border-radius: 12px;
+    }
+    
+    .order-summary {
+      padding: 1rem;
+    }
+    
+    .form-field {
+      input, select {
+        padding: 0.8rem;
+      }
+    }
+  }
+  
+  // Animation de fermeture
+  .order-popup.closing {
+    animation: orderPopupSlideOut 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes orderPopupSlideOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.8) translate(0, 30px);
+    }
+  }
+  
+  // Styles pour les champs requis
+  input:required {
+    position: relative;
+  }
+  
+  // États d'erreur
+  .form-field.error {
+    input, select {
+      border-color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+    }
+    
+    label {
+      color: #ff6b6b;
+    }
+  }
+  
+  // Loading state pour le bouton
+  .validate-btn.loading {
+    position: relative;
+    color: transparent;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid #1a1a1a;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  @keyframes spin {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
