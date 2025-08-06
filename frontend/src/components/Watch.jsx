@@ -129,7 +129,7 @@ export default function Watch({
 
       {/* Composant OrderForm séparé */}
       <OrderForm 
-        watch={sanitizedWatch}
+        item={sanitizedWatch}
         isOpen={showOrderForm}
         onClose={() => setShowOrderForm(false)}
       />

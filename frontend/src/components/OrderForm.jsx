@@ -4,7 +4,7 @@ import "./OrderForm.scss";
 import { apiClient } from "../utils/axiosConfig";
 
 export default function OrderForm({ 
-  watch, 
+  item, 
   isOpen, 
   onClose
 }) {
@@ -51,29 +51,52 @@ export default function OrderForm({
       console.log('Création de la session Stripe...');
       
       // Debug: vérifier les données avant envoi
-      console.log('Données watch:', watch);
+      console.log('Données item:', item);
       console.log('Données customer:', formData);
       
       // Validation côté frontend
-      if (!watch || !watch.name || watch.name.trim() === '') {
-        console.error('Nom de la montre manquant:', watch);
-        alert('Erreur: Nom de la montre manquant');
+      if (!item || !item.name || item.name.trim() === '') {
+        console.error('Nom de l\'article manquant:', item);
+        alert('Erreur: Nom de l\'article manquant');
         onClose();
         return;
       }
       
-      if (watch.price === undefined || watch.price === null) {
-        console.error('Prix de la montre manquant:', watch);
-        alert('Erreur: Prix de la montre manquant');
+      if (item.price === undefined || item.price === null) {
+        console.error('Prix de l\'article manquant:', item);
+        alert('Erreur: Prix de l\'article manquant');
         onClose();
         return;
       }
       
       // Créer la session Stripe (l'email sera envoyé après paiement confirmé)
-      const stripeResponse = await apiClient.post('/store/create-stripe-session/', {
-        watch_id: watch.id,
-        customer: formData
-      });
+      let stripeResponse;
+      
+      if (item.isCart || item.cartItems) {
+        // Pour un panier : créer d'abord le panier API puis la session Stripe
+        const cartResponse = await apiClient.post('/store/carts/', {});
+        const cartId = cartResponse.data.id;
+
+        // Ajouter les articles au panier
+        for (const cartItem of item.cartItems) {
+          await apiClient.post(`/store/carts/${cartId}/items/`, {
+            product_id: cartItem.id,
+            quantity: cartItem.quantity || 1
+          });
+        }
+
+        // Créer la session Stripe avec le cart_id
+        stripeResponse = await apiClient.post('/store/create-stripe-session/', {
+          cart_id: cartId,
+          customer: formData
+        });
+      } else {
+        // Pour une montre : utiliser l'ancien système
+        stripeResponse = await apiClient.post('/store/create-stripe-session/', {
+          watch_id: item.id,
+          customer: formData
+        });
+      }
       
       console.log('Session Stripe créée:', stripeResponse.data);
       
@@ -106,7 +129,7 @@ export default function OrderForm({
     }
   }
 
-  if (!isOpen) return null;
+  if (!isOpen || !item) return null;
 
   return (
     <div className="order-popup-overlay" onClick={handleClose}>
@@ -119,16 +142,10 @@ export default function OrderForm({
         <div className="order-popup-content">
           {/* Récapitulatif de la montre */}
           <div className="order-summary">
-            <div className="order-watch-info">
-              {watch.wide && watch.wide[0] && (
-                <img 
-                  src={sanitizeImageUrl(watch.wide[0].media)} 
-                  alt={sanitizeAltText(watch.name)}
-                  className="order-watch-image"
-                />
-              )}
-              <div className="order-watch-details">
-                <h3>{watch.name}</h3>
+                      <div className="order-item-info">
+
+            <div className="order-item-details">
+              <h3>{item?.name || 'Article'}</h3>
               </div>
             </div>
           </div>
@@ -241,7 +258,7 @@ export default function OrderForm({
                 ANNULER
               </button>
               <button type="submit" className="validate-btn">
-                PASSER AU PAIEMENT - {watch.price}€
+                PASSER AU PAIEMENT{item?.price ? ` - ${item.price}€` : ''}
               </button>
             </div>
           </form>

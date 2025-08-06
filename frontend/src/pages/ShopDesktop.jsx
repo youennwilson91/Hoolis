@@ -10,6 +10,7 @@ import "../components/Buttons/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar.jsx";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { BarLoader } from "react-spinners";
+import OrderForm from "../components/OrderForm.jsx";
 
 export default function Shop() {
 
@@ -28,6 +29,7 @@ export default function Shop() {
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
   const [loading, setLoading] = useState(false);
+  const [orderFormVisible, setOrderFormVisible] = useState(false);
   
   const { 
     label, setLabel, 
@@ -332,6 +334,28 @@ export default function Shop() {
     }
   }
 
+  function handleCheckout() {
+    if (addToCart.length === 0) {
+      alert("Votre panier est vide");
+      return;
+    }
+    setOrderFormVisible(true);
+  }
+
+  // Créer un objet "item" pour le panier qui contient toutes les infos nécessaires
+  const cartAsItem = {
+    id: 'cart',
+    name: `Commande (${addToCart.length} article${addToCart.length > 1 ? 's' : ''})`,
+    price: addToCart.reduce((total, item) => {
+      const price = parseInt(item.price);
+      const quantity = item.quantity || 1;
+      return total + (price * quantity);
+    }, 0),
+    wide: addToCart.length > 0 ? [{ media: addToCart[0].images[0].image }] : [],
+    isCart: true, // Flag pour identifier que c'est un panier
+    cartItems: addToCart // Passer les articles du panier
+  };
+
   return (
   <>
 
@@ -372,7 +396,7 @@ export default function Shop() {
           </div>
         </div>
           
-        /*<div className="cart-icon" onClick={handleOpenCart}>
+        <div className="cart-icon" onClick={handleOpenCart}>
           <h1 className="cart-quantity">{addToCart.length}</h1>
           <svg viewBox="0 0 32 32">
             <title/>
@@ -392,7 +416,7 @@ export default function Shop() {
             const quantity = item.quantity || 1;
             return total + (price * quantity);
           }, 0)}€</h1>
-          <h1 className="close-cart" onClick={handleCloseCart}>CLOSE</h1>
+          <h1 className="close-cart" onClick={handleCloseCart}>FERMER</h1>
           <hr />
           <div className="cart-items">
             {addToCart.map((item) => (
@@ -411,6 +435,15 @@ export default function Shop() {
               </div>
             ))}
           </div>
+          {addToCart.length > 0 && (
+            <button className="checkout-button" onClick={handleCheckout}>
+              COMMANDER - {addToCart.reduce((total, item) => {
+                const price = parseInt(item.price);
+                const quantity = item.quantity || 1;
+                return total + (price * quantity);
+              }, 0)}€
+            </button>
+          )}
         </div>
         }
 
@@ -421,6 +454,12 @@ export default function Shop() {
             <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
           </div>
         ) : null}
+
+        <OrderForm 
+          item={cartAsItem}
+          isOpen={orderFormVisible}
+          onClose={() => setOrderFormVisible(false)}
+        />
 
         <MenuButtons screenRef={screenRef} />
       </div>
