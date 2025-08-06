@@ -92,22 +92,8 @@ TEMPLATES = [
 ]
 
 
-# Base de données - SQL Server en local
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'mssql',
-#        'NAME': os.environ.get('DB_NAME', 'hoolis_db'),
-#        'USER': os.environ.get('DB_USER', 'sa'),
-#        'PASSWORD': os.environ.get('DB_PASSWORD', '123321!'),
-#        'HOST': os.environ.get('DB_HOST', 'localhost'),
-#        'PORT': os.environ.get('DB_PORT', '1433'),
-#        'OPTIONS': {
-#            'driver': 'ODBC Driver 17 for SQL Server',
-#            'extra_params': 'TrustServerCertificate=yes',
-#        },
-#    }
-#}
-#Base de données PostgreSQL
+
+
 DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     } 
@@ -267,3 +253,8 @@ DJOSER = {
         'current_user': 'core.serializers.UserSerializer',
     },
 }
+
+# Configuration Stripe
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')

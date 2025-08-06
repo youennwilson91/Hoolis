@@ -37,7 +37,7 @@ const useStore = create(
 
 
   setGalleryVisible: (visible) => set({ galleryVisible: visible }),
-    setCollectionChosen: (collection) => set({ collectionChosen: collection }),
+  setCollectionChosen: (collection) => set({ collectionChosen: collection }),
   setArticleIsClicked: (isClicked) => set({ articleIsClicked: isClicked }),
   setArticleIsHovered: (isHovered) => set({ articleIsHovered: isHovered }),
   setSelectedArticleId: (id) => set({ selectedArticleId: id }),

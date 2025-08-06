@@ -72,6 +72,7 @@ export default function FandW() {
               name: watch.name,
               description: watch.description,
               price: watch.price,
+              is_available: watch.is_available,
               wide: watch.images.filter(img => img.size === 'wide')
             }));
             
@@ -262,6 +263,7 @@ export default function FandW() {
                 handleWatchClick={handleWatchClick}
                 handleWatchClose={handleWatchClose}
                 watchRefs={watchRefs}
+                is_available={watch.is_available}
               />
             ))
           }
