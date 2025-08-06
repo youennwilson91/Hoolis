@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
   jwtCreate: '/auth/jwt/create/',
   jwtRefresh: '/auth/jwt/refresh/',
   jwtVerify: '/auth/jwt/verify/',
+  // Endpoints pour la commande
   sendConfirmationCode: '/store/send-confirmation-code/',
   verifyConfirmationCode: '/store/verify-confirmation-code/',
   cancelVerification: '/store/cancel-verification/',
