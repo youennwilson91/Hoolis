@@ -543,7 +543,7 @@ def create_stripe_session(request):
                 'quantity': 1,
             }]
             
-            if settings.DEBUG:
+            if settings.DJ:
                 success_url = "http://localhost:5173/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
                 cancel_url = "http://localhost:5173/fw?payment=cancelled"
             else:
@@ -607,8 +607,8 @@ def create_stripe_session(request):
                 success_url = "http://localhost:5173/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
                 cancel_url = "http://localhost:5173/hoolis?payment=cancelled"
             else:
-                success_url = "https://votre-domaine.com/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "https://votre-domaine.com/hoolis?payment=cancelled"
+                success_url = "https://hoolis-frontend.onrender.com/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "https://hoolis-frontend.onrender.com/hoolis?payment=cancelled"
             
             metadata = {
                 'type': 'cart_purchase',
