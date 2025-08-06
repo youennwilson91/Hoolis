@@ -12,14 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-if DEBUG:
-    # Clé fixe pour le développement pour éviter les problèmes de chiffrement
-    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-only-stable-for-crypto-fields')
-else:
-    # En production, obligatoire via variable d'environnement
-    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-    if not SECRET_KEY:
-        raise ValueError("DJANGO_SECRET_KEY must be set in production!")
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY must be set in production!")
         
 # Configuration pour Azure et Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -165,7 +160,7 @@ if DEBUG:
 else:
     # Production 
     CORS_ALLOWED_ORIGINS = [
-        "https://hoolis-front.onrender.com",
+        os.getenv('FRONTEND_URL'),
     ]
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
