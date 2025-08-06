@@ -429,7 +429,7 @@ export default function Shop() {
                     className="remove-item" 
                     onClick={() => handleRemoveItem(item)}
                   >
-                    REMOVE
+                    SUPPRIMER
                   </h2>
                 </div>
               </div>
