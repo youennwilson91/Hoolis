@@ -1,10 +1,9 @@
 import { useRef, useEffect } from "react";
-import Button from "../components/Buttons/Menu.jsx";
+import MenuButtons from "../components/Buttons/Menu.jsx";
 import useStore from "../utils/store";
 import SEOHead from "../components/SEOHead";
 import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../components/StructuredData";
 import "./Landing.scss";
-import MenuButtons from "../components/Buttons/Menu.jsx";
 
 export default function Landing() {
     const { bgColor, label, labelColor, buttonsVisible, setBgColor, setIsClicked, setButtonsVisible, setLabel, setMobileButtonsVisible } = useStore();
@@ -96,7 +95,7 @@ export default function Landing() {
                             <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" />
                         </div>
                     </div>
-                    {buttonsVisible && <Button screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
+                    {buttonsVisible && <MenuButtons screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
                 </div>
             </div>
 
@@ -128,7 +127,7 @@ export default function Landing() {
                                 -53 24 22 c27 25 74 103 155 255 97 181 326 582 397 694 40 62 53 58 71 -19z"/>
                             </g>
                     </svg>
-                    <Button 
+                    <MenuButtons 
                         screenRef={screenMobileRef} 
                         labelRef={labelRef} 
                         buttonsPosition="landing"
