@@ -543,7 +543,7 @@ def create_stripe_session(request):
                 'quantity': 1,
             }]
             
-            if settings.DJ:
+            if settings.DEBUG:
                 success_url = "http://localhost:5173/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
                 cancel_url = "http://localhost:5173/fw?payment=cancelled"
             else:
