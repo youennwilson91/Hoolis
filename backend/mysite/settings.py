@@ -160,7 +160,7 @@ if DEBUG:
 else:
     # Production 
     CORS_ALLOWED_ORIGINS = [
-        "https://hoolis-frontend.onrender.com",
+        os.getenv('FRONTEND_URL'),
     ]
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
