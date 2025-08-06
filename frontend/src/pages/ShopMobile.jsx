@@ -8,6 +8,7 @@ import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
 import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText } from "../utils/sanitizer";
+import OrderForm from "../components/OrderForm.jsx";
 
 export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem }) {
   const mobileScreenRef = useRef(null);
@@ -27,6 +28,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
   const [error, setError] = useState(null);
   const [showDescription, setShowDescription] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [orderFormVisible, setOrderFormVisible] = useState(false);
 
   useEffect(() => {
     setIsBooking(false);
@@ -194,6 +196,28 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
     }
   }
 
+  function handleCheckout() {
+    if (addToCart.length === 0) {
+      alert("Votre panier est vide");
+      return;
+    }
+    setOrderFormVisible(true);
+  }
+
+  // Créer un objet "item" pour le panier qui contient toutes les infos nécessaires
+  const cartAsItem = {
+    id: 'cart',
+    name: `Commande (${addToCart.length} article${addToCart.length > 1 ? 's' : ''})`,
+    price: addToCart.reduce((total, item) => {
+      const price = parseInt(item.price);
+      const quantity = item.quantity || 1;
+      return total + (price * quantity);
+    }, 0),
+    wide: addToCart.length > 0 ? [{ media: addToCart[0].images[0].image }] : [],
+    isCart: true, // Flag pour identifier que c'est un panier
+    cartItems: addToCart // Passer les articles du panier
+  };
+
   return (
     <div ref={mobileScreenRef} className="mobile-shop-container">
       <div ref={articlesContainerRef} className="mobile-shop-articles">
@@ -234,16 +258,9 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
                       }}
                       aria-label="Ajouter au panier"
                     >
-                      <svg viewBox="0 0 453.73 453.73" className="action-icon">
-                        <path d="M447.664,129.262c-5.005-6.031-12.435-9.521-20.271-9.521h-20.86l4.734-4.733c1.641-1.642,2.562-3.867,2.562-6.188
-                          c0-2.321-0.922-4.547-2.562-6.188l-48.674-48.673c-3.415-3.417-8.956-3.416-12.375,0.001l-56.886,56.887v-50.7
-                          c0-4.832-3.918-8.75-8.75-8.75H174.265c-4.832,0-8.75,3.918-8.75,8.75v59.511c0,0.028,0.004,0.056,0.004,0.083h-34.664
-                          l-2.876-14.948c-1.838-9.543-8.78-17.301-18.063-20.18L34.149,61.111C20.257,56.802,5.5,64.571,1.189,78.465
-                          c-4.31,13.894,3.461,28.65,17.354,32.96l60.689,18.824l46.254,202.948c1.612,8.584,7.281,15.535,14.797,19.027
-                          c-0.223,1.806-0.352,3.639-0.352,5.501c0,24.599,20.013,44.609,44.61,44.609c24.597,0,44.61-20.012,44.61-44.609
-                          c0-1.026-0.047-2.042-0.117-3.052h70.424c-0.067,1.01-0.115,2.024-0.115,3.052c0,24.599,20.012,44.609,44.608,44.609
-                          c24.599,0,44.609-20.012,44.609-44.609c0-1.101-0.054-2.187-0.132-3.267c11.271-1.366,20.564-9.866,22.704-21.263l42.145-182.255
-                          C454.726,143.239,452.667,135.293,447.664,129.262z"/>
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width: '50px', height: '50px'}}>
+                        <circle cx="12" cy="12" r="10" stroke="#FFFFFF" stroke-width="1.8"/>
+                        <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
                       </svg>
                     </button>
                     
@@ -255,14 +272,10 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
                       }}
                       aria-label="Prendre rendez-vous"
                     >
-                      <svg viewBox="0 0 612 612" className="action-icon">
-                        <path d="M612,463.781c0-70.342-49.018-129.199-114.75-144.379c-10.763-2.482-21.951-3.84-33.469-3.84
-                          c-3.218,0-6.397,0.139-9.562,0.34c-71.829,4.58-129.725,60.291-137.69,131.145c-0.617,5.494-0.966,11.073-0.966,16.734
-                          c0,10.662,1.152,21.052,3.289,31.078C333.139,561.792,392.584,612,463.781,612C545.641,612,612,545.641,612,463.781z
-                          M463.781,561.797c-54.133,0-98.016-43.883-98.016-98.016s43.883-98.016,98.016-98.016s98.016,43.883,98.016,98.016
-                          S517.914,561.797,463.781,561.797z"/>
-                        <polygon points="482.906,396.844 449.438,396.844 449.438,449.438 396.844,449.438 396.844,482.906 482.906,482.906 
-                          482.906,449.438 482.906,449.438"/>
+                      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{width: '45px', height: '45px'}}>
+                        <path d="M23,18H20V15a1,1,0,0,0-2,0v3H15a1,1,0,0,0,0,2h3v3a1,1,0,0,0,2,0V20h3a1,1,0,0,0,0-2Z
+                        M11,7v4.586L8.293,14.293a1,1,0,1,0,1.414,1.414l3-3A1,1,0,0,0,13,12V7a1,1,0,0,0-2,0Z
+                        M14.728,21.624a9.985,9.985,0,1,1,6.9-6.895,1,1,0,1,0,1.924.542,11.989,11.989, 0,1,0-8.276,8.277,1,1,0,1,0-.544-1.924Z"/>
                       </svg>
                     </button>
                     
@@ -292,17 +305,34 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
           <div style={{color: 'white', padding: '20px'}}>Aucun produit trouvé</div>
         )}
 
-        {cartVisible && 
+
+      </div>
+
+      {/* Icône du panier fixe - en dehors du conteneur scrollable */}
+      <div className="cart-icon" onClick={handleOpenMobileCart}>
+        <h1 className="cart-quantity">{addToCart.length}</h1>
+        <svg viewBox="0 0 32 32">
+          <title/>
+          <g data-name="Layer 2" id="Layer_2">
+            <path d="M23.52,29h-15a5.48,5.48,0,0,1-5.31-6.83L6.25,9.76a1,1,0,0,1,1-.76H24a1,1,0,0,1,1,.7l3.78,12.16a5.49,5.49,0,0,1-.83,
+            4.91A5.41,5.41,0,0,1,23.52,29ZM8,11,5.11,22.65A3.5,3.5,0,0,0,8.48,27h15a3.44,3.44,0,0,0,2.79-1.42,3.5,3.5,0,0,0,.53-3.13L23.28,11Z"/>
+            <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
+          </g>
+        </svg>
+      </div>
+
+      {/* Cart modal - en dehors du conteneur scrollable pour un positionnement correct */}
+      {cartVisible && 
         <div className="cart-container" ref={mobileCartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
-          <button className="close-cart" onClick={handleCloseMobileCart}>CLOSE</button>
+          <button className="close-cart" onClick={handleCloseMobileCart}>FERMER</button>
           <div className="cart-items">
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
                 <img src={item.images[0].image} alt={item.title} />
                 <h2 className="cart-item-title">{item.title}</h2>
                 <div className="cart-item-details">
-                  <p>{item.price}</p>
+                  <p>{item.price} €</p>
                   <button 
                     className="remove-item-btn" 
                     onClick={() => handleRemoveItem(item)}
@@ -320,27 +350,17 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
               </div>
             ))}
           </div>
-          <h1 className="cart-title">TOTAL : {addToCart.reduce((total, item) => {
-            const price = parseInt(item.price);
-            const quantity = item.quantity || 1;
-            return total + (price * quantity);
-          }, 0)}€</h1>
+          {addToCart.length > 0 && (
+            <button className="checkout-button" onClick={handleCheckout}>
+              COMMANDER - {addToCart.reduce((total, item) => {
+                const price = parseInt(item.price);
+                const quantity = item.quantity || 1;
+                return total + (price * quantity);
+              }, 0)}€
+            </button>
+          )}
         </div>
-                }
-      </div>
-
-      {/* Icône du panier fixe - en dehors du conteneur scrollable */}
-      <div className="cart-icon" onClick={handleOpenMobileCart}>
-        <h1 className="cart-quantity">{addToCart.length}</h1>
-        <svg viewBox="0 0 32 32">
-          <title/>
-          <g data-name="Layer 2" id="Layer_2">
-            <path d="M23.52,29h-15a5.48,5.48,0,0,1-5.31-6.83L6.25,9.76a1,1,0,0,1,1-.76H24a1,1,0,0,1,1,.7l3.78,12.16a5.49,5.49,0,0,1-.83,
-            4.91A5.41,5.41,0,0,1,23.52,29ZM8,11,5.11,22.65A3.5,3.5,0,0,0,8.48,27h15a3.44,3.44,0,0,0,2.79-1.42,3.5,3.5,0,0,0,.53-3.13L23.28,11Z"/>
-            <path d="M20,17a1,1,0,0,1-1-1V8a3,3,0,0,0-6,0v8a1,1,0,0,1-2,0V8A5,5,0,0,1,21,8v8A1,1,0,0,1,20,17Z"/>
-          </g>
-        </svg>
-      </div>
+      }
 
       {/* Calendrier de booking */}
       {isBooking && (
@@ -348,6 +368,12 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
           <BookingCalendar type="product" />
         </div>
       )}
+
+      <OrderForm 
+        item={cartAsItem}
+        isOpen={orderFormVisible}
+        onClose={() => setOrderFormVisible(false)}
+      />
 
       <MenuButtons screenRef={mobileScreenRef} />
       

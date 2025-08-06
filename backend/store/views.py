@@ -32,6 +32,7 @@ import vonage
 from django.conf import settings
 import os
 import logging
+import stripe
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
@@ -489,4 +490,355 @@ def cancel_verification(request):
     
     except Exception as e:
         return SafeErrorHandler.handle_exception(e, "cancel_verification")
+
+
+@api_view(['POST'])
+def create_stripe_session(request):
+    """
+    Créer session Stripe pour watch_id ou cart_id
+    """
+    try:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        
+        if not stripe.api_key:
+            return Response(
+                {"error": "Configuration Stripe manquante"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        data = request.data
+        customer_data = data.get('customer', {})
+        watch_id = data.get('watch_id')
+        cart_id = data.get('cart_id')
+        
+        if not customer_data.get('email'):
+            return Response(
+                {"error": "Email client requis"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if watch_id:
+            try:
+                watch = Watch.objects.get(id=watch_id)
+            except Watch.DoesNotExist:
+                return Response(
+                    {"error": "Montre non trouvée"}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            if watch.price <= 0:
+                return Response(
+                    {"error": "Prix invalide"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            line_items = [{
+                'price_data': {
+                    'currency': 'eur',
+                    'product_data': {
+                        'name': sanitize_text_input(watch.name),
+                        'description': sanitize_text_input(watch.description[:100]),
+                    },
+                    'unit_amount': int(watch.price * 100),
+                },
+                'quantity': 1,
+            }]
+            
+            if settings.DEBUG:
+                success_url = "http://localhost:5173/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "http://localhost:5173/fw?payment=cancelled"
+            else:
+                success_url = "https://votre-domaine.com/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "https://votre-domaine.com/fw?payment=cancelled"
+            
+            metadata = {
+                'type': 'watch_purchase',
+                'watch_id': str(watch_id),
+                'watch_name': sanitize_text_input(watch.name),
+                'customer_first_name': sanitize_text_input(customer_data.get('firstName', '')),
+                'customer_last_name': sanitize_text_input(customer_data.get('lastName', '')),
+                'customer_phone': sanitize_text_input(customer_data.get('phone', '')),
+                'customer_address': sanitize_text_input(customer_data.get('address', '')),
+                'customer_city': sanitize_text_input(customer_data.get('city', '')),
+                'customer_postal_code': sanitize_text_input(customer_data.get('postalCode', '')),
+                'customer_country': sanitize_text_input(customer_data.get('country', '')),
+            }
+            
+        elif cart_id:
+            try:
+                cart = Cart.objects.prefetch_related('items__product').get(id=cart_id)
+            except Cart.DoesNotExist:
+                return Response(
+                    {"error": "Panier non trouvé"}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            if not cart.items.exists():
+                return Response(
+                    {"error": "Panier vide"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            line_items = []
+            total_amount = 0
+            
+            for cart_item in cart.items.all():
+                item_total = int(cart_item.product.price * cart_item.quantity * 100)
+                total_amount += item_total
+                
+                line_items.append({
+                    'price_data': {
+                        'currency': 'eur',
+                        'product_data': {
+                            'name': sanitize_text_input(cart_item.product.title),
+                            'description': sanitize_text_input(cart_item.product.description[:100]),
+                        },
+                        'unit_amount': int(cart_item.product.price * 100),
+                    },
+                    'quantity': cart_item.quantity,
+                })
+            
+            if total_amount <= 0:
+                return Response(
+                    {"error": "Montant invalide"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            if settings.DEBUG:
+                success_url = "http://localhost:5173/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "http://localhost:5173/hoolis?payment=cancelled"
+            else:
+                success_url = "https://votre-domaine.com/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "https://votre-domaine.com/hoolis?payment=cancelled"
+            
+            metadata = {
+                'type': 'cart_purchase',
+                'cart_id': str(cart_id),
+                'customer_first_name': sanitize_text_input(customer_data.get('firstName', '')),
+                'customer_last_name': sanitize_text_input(customer_data.get('lastName', '')),
+                'customer_phone': sanitize_text_input(customer_data.get('phone', '')),
+                'customer_address': sanitize_text_input(customer_data.get('address', '')),
+                'customer_city': sanitize_text_input(customer_data.get('city', '')),
+                'customer_postal_code': sanitize_text_input(customer_data.get('postalCode', '')),
+                'customer_country': sanitize_text_input(customer_data.get('country', '')),
+                'total_items': str(cart.items.count()),
+            }
+            
+        else:
+            return Response(
+                {"error": "watch_id ou cart_id requis"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            customer_email=customer_data.get('email', '').strip(),
+            billing_address_collection='required',
+            shipping_address_collection={
+                'allowed_countries': ['FR', 'BE', 'CH', 'LU'],
+            },
+            phone_number_collection={
+                'enabled': True,
+            },
+            metadata=metadata
+        )
+        
+        logger.info(f"Session Stripe créée: {session.id}")
+        
+        return Response({
+            'checkout_url': session.url,
+            'session_id': session.id
+        })
+        
+    except stripe.error.StripeError as e:
+        logger.error(f"Erreur Stripe: {str(e)}")
+        return Response(
+            {"error": "Erreur création session"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+    except Exception as e:
+        return SafeErrorHandler.handle_exception(e, "create_stripe_session")
+
+
+@api_view(['POST'])
+def verify_payment(request):
+    """
+    Vérifier le paiement Stripe et créer une commande
+    """
+    try:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        
+        if not stripe.api_key:
+            return Response(
+                {"error": "Configuration Stripe manquante"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        session_id = request.data.get('session_id')
+        if not session_id:
+            return Response(
+                {"error": "Session ID manquant"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        logger.info(f"Vérification paiement: {session_id}")
+        
+        session = stripe.checkout.Session.retrieve(session_id)
+        
+        if session.payment_status == 'paid':
+            metadata = session.metadata
+            payment_type = metadata.get('type')
+            
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            
+            customer_email = session.customer_email
+            customer_name = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
+            
+            user, created = User.objects.get_or_create(
+                email=customer_email,
+                defaults={
+                    'username': customer_email,
+                    'first_name': metadata.get('customer_first_name', ''),
+                    'last_name': metadata.get('customer_last_name', ''),
+                }
+            )
+            
+            customer, created = Customer.objects.get_or_create(
+                user=user,
+                defaults={
+                    'name': customer_name,
+                    'email': customer_email,
+                    'phone': metadata.get('customer_phone', ''),
+                    'address': f"{metadata.get('customer_address', '')}, {metadata.get('customer_city', '')} {metadata.get('customer_postal_code', '')}, {metadata.get('customer_country', '')}".strip(),
+                }
+            )
+            
+            if payment_type == 'watch_purchase':
+                watch_id = metadata.get('watch_id')
+                watch = Watch.objects.get(id=watch_id)
+
+                
+                order = Order.objects.create(
+                    customer=customer,
+                    quantity=1,
+                    total_price=session.amount_total / 100,
+                    payment_status=Order.PAYMENT_COMPLETED
+                )
+                
+                # Créer ou récupérer un produit générique pour la montre
+                product, created = Product.objects.get_or_create(
+                    title=watch.name,
+                    defaults={
+                        'price': watch.price,
+                        'description': watch.description,
+                        'collection': Collection.objects.first(),  # Collection par défaut
+                        'is_available': True
+                    }
+                )
+                
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=1
+                )
+
+                watch.is_available = False
+                watch.save()
+                
+                email_subject = f'Commande confirmée #{order.id} - F&W'
+                products_details = [f"1x {watch.name} - {watch.price}€"]
+                
+            elif payment_type == 'cart_purchase':
+                cart_id = metadata.get('cart_id')
+                
+                serializer = CreateOrderSerializer(
+                    data={'cart_id': cart_id}, 
+                    context={'user_id': user.id}
+                )
+                
+                if not serializer.is_valid():
+                    return Response({
+                        'status': 'error',
+                        'message': 'Erreur création commande'
+                    })
+                
+                order = serializer.save()
+                order.payment_status = Order.PAYMENT_COMPLETED
+                order.total_price = session.amount_total / 100
+                order.save()
+                
+                email_subject = f'Commande confirmée #{order.id} - Hoolis'
+                products_details = []
+                for item in order.order_items.all():
+                    products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
+            
+            try:
+                import requests
+                
+                form_data = {
+                    'firstName': metadata.get('customer_first_name', ''),
+                    'lastName': metadata.get('customer_last_name', ''),
+                    'email': customer_email,
+                    'phone': metadata.get('customer_phone', ''),
+                    'address': metadata.get('customer_address', ''),
+                    'city': metadata.get('customer_city', ''),
+                    'postalCode': metadata.get('customer_postal_code', ''),
+                    'country': metadata.get('customer_country', ''),
+                    'orderId': str(order.id),
+                    'products': ' | '.join(products_details),
+                    'totalPrice': f"{order.total_price}€",
+                    'paymentId': session.payment_intent,
+                    '_subject': email_subject,
+                    '_captcha': 'false',
+                    '_template': 'table'
+                }
+                
+                response = requests.post(
+                    'https://formsubmit.co/youson91@hotmail.fr',
+                    data=form_data,
+                    timeout=30
+                )
+                
+                if response.status_code == 200:
+                    logger.info("Email envoyé")
+                
+            except Exception as email_error:
+                logger.error(f"Erreur email: {str(email_error)}")
+            
+            return Response({
+                'status': 'success',
+                'payment_status': session.payment_status,
+                'order_id': order.id,
+                'message': 'Commande créée'
+            })
+        
+        elif session.payment_status == 'unpaid':
+            return Response({
+                'status': 'pending',
+                'payment_status': session.payment_status,
+                'message': 'Paiement en attente'
+            })
+            
+        else:
+            return Response({
+                'status': 'failed',
+                'payment_status': session.payment_status,
+                'message': 'Paiement échoué'
+            })
+    
+    except stripe.error.StripeError as e:
+        logger.error(f"Erreur Stripe: {str(e)}")
+        return Response(
+            {"error": "Erreur vérification paiement"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+    except Exception as e:
+        return SafeErrorHandler.handle_exception(e, "verify_payment")
 
