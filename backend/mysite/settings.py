@@ -13,8 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-    if not SECRET_KEY:
-        raise ValueError("DJANGO_SECRET_KEY must be set in production!")
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY must be set in production!")
         
 # Configuration pour Azure et Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
