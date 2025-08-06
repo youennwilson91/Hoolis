@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
 import { sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
+import OrderForm from "./OrderForm";
 
 export default function Watch({ 
   watch, 
@@ -13,28 +14,13 @@ export default function Watch({
   handleWatchHover, 
   handleWatchClick, 
   handleWatchClose, 
-  watchRefs
+  watchRefs,
+  is_available
 }) {
   const { isBooking, setIsBooking, setAddToCart } = useStore();
   const bookButtonRef = useRef(null);
   const [showDescription, setShowDescription] = useState(false);
-
-  // Fonction pour ajouter une montre au panier
-  const handleAddToCart = (watch, e) => {
-    e.stopPropagation();
-    const cartItem = {
-      id: `watch_${watch.id}`,
-      cartid: `watch_${Date.now()}_${watch.id}`,
-      title: watch.name,
-      price: watch.price || 0,
-      images: watch.wide?.length > 0 ? [{ image: watch.wide[0].media }] : [],
-      type: 'watch',
-      quantity: 1
-    };
-    
-    setAddToCart((currentCart) => [...currentCart, cartItem]);
-    console.log("Montre ajoutée au panier:", cartItem);
-  };
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   // Sanitiser les données de la montre
   const sanitizedWatch = {
@@ -42,7 +28,8 @@ export default function Watch({
     name: sanitizeText(watch.name || ''),
     description: sanitizeText(watch.description || ''),
     price: watch.price || 0,
-    wide: watch.wide || []
+    wide: watch.wide || [],
+    is_available: watch.is_available || true
   };
 
   return (
@@ -53,7 +40,7 @@ export default function Watch({
         }
       }}
       key={sanitizedWatch.id} 
-      className={`watch ${watchIsClicked && clickedWatchId === sanitizedWatch.id ? 'watch-clicked' : ''}`}
+      className={`watch ${watchIsClicked && clickedWatchId === sanitizedWatch.id ? 'watch-clicked' : ''} ${!is_available ? 'watch-unavailable' : ''}`}
       onMouseEnter={() => handleWatchHover({
         width: watchWidthHover, 
         watchRef: watchRefs.current?.[index], 
@@ -98,15 +85,21 @@ export default function Watch({
         <div className="watch-details">
           <h1 className="watch-title">{sanitizedWatch.name}</h1>
           <h1 className="article-price">{sanitizedWatch.price}€</h1>
-          <div className="article-buttons-container">
-            <h1 className="add-to-cart" onClick={(e) => handleAddToCart(sanitizedWatch, e)}>AJOUTER AU PANIER</h1>
-            {!isBooking ? 
-              <button ref={bookButtonRef} className="add-to-cart" onClick={(e) => {
+           <div className="article-buttons-container">
+            {is_available ? <button className="add-to-cart" onClick={(e) => {
+              e.stopPropagation();
+              setShowOrderForm(true);
+            }}>
+              COMMANDER
+            </button> : <button className="add-to-cart" disabled style={{cursor: 'not-allowed'}}>
+              INDISPONIBLE
+            </button>}
+            {is_available && <button ref={bookButtonRef} className="add-to-cart" onClick={(e) => {
                 e.stopPropagation();
                 setIsBooking(true);
               }}>
                 PRENDRE RENDEZ-VOUS
-              </button> : null}
+            </button>}
             <button className="add-to-cart" onClick={(e) => {
               e.stopPropagation();
               setShowDescription(true);
@@ -122,7 +115,7 @@ export default function Watch({
                 <h3>Description</h3>
                 <p>{sanitizedWatch.description}</p>
                 <button className="close-popup-btn" onClick={() => setShowDescription(false)}>
-                  Fermer
+                  FERMER
                 </button>
               </div>
             </div>
@@ -133,6 +126,13 @@ export default function Watch({
           </h2>
         </div>
       )}
+
+      {/* Composant OrderForm séparé */}
+      <OrderForm 
+        item={sanitizedWatch}
+        isOpen={showOrderForm}
+        onClose={() => setShowOrderForm(false)}
+      />
     </div>
   );
 } 

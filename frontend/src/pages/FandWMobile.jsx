@@ -8,6 +8,7 @@ import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
+import OrderForm from "../components/OrderForm";
 
 export default function FandWMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
@@ -15,12 +16,14 @@ export default function FandWMobile({ labelRef }) {
   const bookingContainerRef = useRef(null);
   const watchesContainerRef = useRef(null);
   
-  const { isBooking, setIsBooking, addToCart, setCartVisible, setAddToCart } = useStore();
+  const { isBooking, setIsBooking } = useStore();
   const [medias, setMedias] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [selectedWatch, setSelectedWatch] = useState(null);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [selectedWatchForOrder, setSelectedWatchForOrder] = useState(null);
   
   useEffect(() => {
     setIsBooking(false);
@@ -172,22 +175,19 @@ export default function FandWMobile({ labelRef }) {
     setIsBooking(false);
   }
 
-  // Fonction pour ajouter une montre au panier
+  // Fonction pour ouvrir le formulaire de commande
   const handleAddToCart = (watch) => {
-    // Créer un objet similaire aux produits pour le panier
-    const cartItem = {
-      id: `watch_${watch.id}`,
-      cartid: `watch_${Date.now()}_${watch.id}`,
-      title: watch.name,
-      price: watch.price || 0, // Utiliser le prix réel de la montre
-      images: watch.small?.length > 0 ? [{ image: watch.small[0].media }] : [],
-      type: 'watch',
-      quantity: 1
+    const sanitizedWatch = {
+      id: watch.id,
+      name: sanitizeText(watch.name || ''),
+      description: sanitizeText(watch.description || ''),
+      price: watch.price || 0,
+      wide: watch.wide || []
     };
     
-    // Utiliser le store pour ajouter au panier
-    setAddToCart((currentCart) => [...currentCart, cartItem]);
-    console.log("Montre ajoutée au panier:", cartItem);
+    setSelectedWatchForOrder(sanitizedWatch);
+    setShowOrderForm(true);
+    console.log("Ouverture du formulaire de commande pour:", sanitizedWatch.name);
   };
 
   return (
@@ -236,18 +236,10 @@ export default function FandWMobile({ labelRef }) {
                         e.stopPropagation();
                         handleAddToCart(media);
                       }}
-                      aria-label="Ajouter au panier"
+                      aria-label="Commander cette montre"
                     >
-                      <svg viewBox="0 0 453.73 453.73" className="action-icon">
-                        <path d="M447.664,129.262c-5.005-6.031-12.435-9.521-20.271-9.521h-20.86l4.734-4.733c1.641-1.642,2.562-3.867,2.562-6.188
-                          c0-2.321-0.922-4.547-2.562-6.188l-48.674-48.673c-3.415-3.417-8.956-3.416-12.375,0.001l-56.886,56.887v-50.7
-                          c0-4.832-3.918-8.75-8.75-8.75H174.265c-4.832,0-8.75,3.918-8.75,8.75v59.511c0,0.028,0.004,0.056,0.004,0.083h-34.664
-                          l-2.876-14.948c-1.838-9.543-8.78-17.301-18.063-20.18L34.149,61.111C20.257,56.802,5.5,64.571,1.189,78.465
-                          c-4.31,13.894,3.461,28.65,17.354,32.96l60.689,18.824l46.254,202.948c1.612,8.584,7.281,15.535,14.797,19.027
-                          c-0.223,1.806-0.352,3.639-0.352,5.501c0,24.599,20.013,44.609,44.61,44.609c24.597,0,44.61-20.012,44.61-44.609
-                          c0-1.026-0.047-2.042-0.117-3.052h70.424c-0.067,1.01-0.115,2.024-0.115,3.052c0,24.599,20.012,44.609,44.608,44.609
-                          c24.599,0,44.609-20.012,44.609-44.609c0-1.101-0.054-2.187-0.132-3.267c11.271-1.366,20.564-9.866,22.704-21.263l42.145-182.255
-                          C454.726,143.239,452.667,135.293,447.664,129.262z"/>
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width: '45px', height: '45px'}}>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2 8C2 5.79086 3.79086 4 6 4H18C20.2091 4 22 5.79086 22 8V8.5C22 8.77614 21.7761 9 21.5 9L2.5 9C2.22386 9 2 8.77614 2 8.5V8ZM2.5 11C2.22386 11 2 11.2239 2 11.5V16C2 18.2091 3.79086 20 6 20H18C20.2091 20 22 18.2091 22 16V11.5C22 11.2239 21.7761 11 21.5 11L2.5 11ZM13 15C13 14.4477 13.4477 14 14 14H17C17.5523 14 18 14.4477 18 15C18 15.5523 17.5523 16 17 16H14C13.4477 16 13 15.5523 13 15Z" fill="currentColor"/>
                       </svg>
                     </button>
                     
@@ -259,14 +251,10 @@ export default function FandWMobile({ labelRef }) {
                       }}
                       aria-label="Prendre rendez-vous"
                     >
-                      <svg viewBox="0 0 612 612" className="action-icon">
-                        <path d="M612,463.781c0-70.342-49.018-129.199-114.75-144.379c-10.763-2.482-21.951-3.84-33.469-3.84
-                          c-3.218,0-6.397,0.139-9.562,0.34c-71.829,4.58-129.725,60.291-137.69,131.145c-0.617,5.494-0.966,11.073-0.966,16.734
-                          c0,10.662,1.152,21.052,3.289,31.078C333.139,561.792,392.584,612,463.781,612C545.641,612,612,545.641,612,463.781z
-                          M463.781,561.797c-54.133,0-98.016-43.883-98.016-98.016s43.883-98.016,98.016-98.016s98.016,43.883,98.016,98.016
-                          S517.914,561.797,463.781,561.797z"/>
-                        <polygon points="482.906,396.844 449.438,396.844 449.438,449.438 396.844,449.438 396.844,482.906 482.906,482.906 
-                          482.906,449.438 482.906,449.438"/>
+                      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{width: '45px', height: '45px'}}>
+                        <path d="M23,18H20V15a1,1,0,0,0-2,0v3H15a1,1,0,0,0,0,2h3v3a1,1,0,0,0,2,0V20h3a1,1,0,0,0,0-2Z
+                        M11,7v4.586L8.293,14.293a1,1,0,1,0,1.414,1.414l3-3A1,1,0,0,0,13,12V7a1,1,0,0,0-2,0Z
+                        M14.728,21.624a9.985,9.985,0,1,1,6.9-6.895,1,1,0,1,0,1.924.542,11.989,11.989, 0,1,0-8.276,8.277,1,1,0,1,0-.544-1.924Z"/>
                       </svg>
                     </button>
                     
@@ -279,7 +267,7 @@ export default function FandWMobile({ labelRef }) {
                       }}
                       aria-label="Voir la description"
                     >
-                      <svg viewBox="0 0 416.979 416.979" className="action-icon">
+                      <svg viewBox="0 0 416.979 416.979" className="action-icon" style={{width: '45px', height: '45px'}}>
                         <path d="M356.004,61.156c-81.37-81.47-213.377-81.551-294.848-0.182c-81.47,81.371-81.552,213.379-0.181,294.85
                           c81.369,81.47,213.378,81.551,294.849,0.181C437.293,274.636,437.375,142.626,356.004,61.156z M237.6,340.786
                           c0,3.217-2.607,5.822-5.822,5.822h-46.576c-3.215,0-5.822-2.605-5.822-5.822V167.885c0-3.217,2.607-5.822,5.822-5.822h46.576
@@ -315,6 +303,18 @@ export default function FandWMobile({ labelRef }) {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Composant OrderForm pour les commandes de montres */}
+      {selectedWatchForOrder && (
+        <OrderForm 
+          item={selectedWatchForOrder}
+          isOpen={showOrderForm}
+          onClose={() => {
+            setShowOrderForm(false);
+            setSelectedWatchForOrder(null);
+          }}
+        />
       )}
 
       <MenuButtons screenRef={mobileScreenRef} />
