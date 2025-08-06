@@ -548,8 +548,8 @@ def create_stripe_session(request):
                 success_url = "http://localhost:5173/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
                 cancel_url = "http://localhost:5173/fw?payment=cancelled"
             else:
-                success_url = "https://votre-domaine.com/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "https://votre-domaine.com/fw?payment=cancelled"
+                success_url = "https://hoolis-frontend.onrender.com/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
+                cancel_url = "https://hoolis-frontend.onrender.com/fw?payment=cancelled"
             
             metadata = {
                 'type': 'watch_purchase',
