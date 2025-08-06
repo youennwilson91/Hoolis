@@ -28,11 +28,10 @@ from .permissons import IsAdminOrReadOnly
 from .tasks import process_order
 from .utils import SafeErrorHandler, sanitize_phone_number, sanitize_text_input, log_security_event
 
-import vonage
-from django.conf import settings
-import os
-import logging
+    # External libraries
 import stripe
+import vonage
+import logging
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
