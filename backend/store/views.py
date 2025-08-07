@@ -720,7 +720,14 @@ def verify_payment(request):
             
             if payment_type == 'watch_purchase':
                 watch_id = metadata.get('watch_id')
-                watch = Watch.objects.get(id=watch_id)
+                try:
+                    watch = Watch.objects.get(id=watch_id)
+                except Watch.DoesNotExist:
+                    logger.error(f"Watch not found: {watch_id}")
+                    return Response({
+                        'status': 'error',
+                        'message': 'Montre non trouvée'
+                    }, status=status.HTTP_404_NOT_FOUND)
 
                 
                 order = Order.objects.create(
@@ -731,12 +738,16 @@ def verify_payment(request):
                 )
                 
                 # Créer ou récupérer un produit générique pour la montre
+                default_collection = Collection.objects.first()
+                if not default_collection:
+                    default_collection = Collection.objects.create(name='Défaut', description='Collection par défaut')
+                
                 product, created = Product.objects.get_or_create(
                     title=watch.name,
                     defaults={
                         'price': watch.price,
                         'description': watch.description,
-                        'collection': Collection.objects.first(),  # Collection par défaut
+                        'collection': default_collection,
                         'is_available': True
                     }
                 )
