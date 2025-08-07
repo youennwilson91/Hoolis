@@ -687,7 +687,18 @@ def verify_payment(request):
         
         logger.info(f"Vérification paiement: {session_id}")
         
-        session = stripe.checkout.Session.retrieve(session_id)
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            logger.info(f"Session récupérée - Status: {session.payment_status}")
+        except stripe.error.InvalidRequestError as e:
+            logger.error(f"Session Stripe invalide: {session_id} - {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': 'Session de paiement invalide'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except stripe.error.StripeError as e:
+            logger.error(f"Erreur Stripe lors récupération session: {str(e)}")
+            raise  # Re-lancer pour être capturé par le except général
         
         if session.payment_status == 'paid':
             metadata = session.metadata
@@ -699,14 +710,20 @@ def verify_payment(request):
             customer_email = session.customer_email
             customer_name = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
             
-            user, created = User.objects.get_or_create(
-                email=customer_email,
-                defaults={
-                    'username': customer_email,
-                    'first_name': metadata.get('customer_first_name', ''),
-                    'last_name': metadata.get('customer_last_name', ''),
-                }
-            )
+            logger.info(f"Création/récupération utilisateur: {customer_email}")
+            try:
+                user, created = User.objects.get_or_create(
+                    email=customer_email,
+                    defaults={
+                        'username': customer_email,
+                        'first_name': metadata.get('customer_first_name', ''),
+                        'last_name': metadata.get('customer_last_name', ''),
+                    }
+                )
+                logger.info(f"Utilisateur {'créé' if created else 'récupéré'}: {user.id}")
+            except Exception as user_error:
+                logger.error(f"Erreur création utilisateur: {str(user_error)}")
+                raise
             
             customer, created = Customer.objects.get_or_create(
                 user=user,
