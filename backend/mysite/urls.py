@@ -3,11 +3,13 @@ from django.urls import include, path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
+from django.views.generic import TemplateView
 from . import views
 import os
 
 urlpatterns = [
-    path('', views.api_home, name='api_home'),  # Page d'accueil de l'API
+    # API Routes - DOIVENT être avant le catch-all
+    path('api/', views.api_home, name='api_home'),  # Changé pour éviter les conflits
     path('admin/', admin.site.urls),
     path('store/', include('store.urls')),
     path('auth/', include('djoser.urls')),
@@ -29,3 +31,8 @@ if settings.DEBUG:
     urlpatterns += [
         path('__debug__/', include('debug_toolbar.urls')),
     ]
+
+# Catch-all pour React Router - DOIT être en dernier
+urlpatterns += [
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='react_app'),
+]
