@@ -247,7 +247,7 @@ export default function FandW() {
         </div>
         <div className="fandw-gallery-articles" ref={collectionRef}> 
           {loading && 
-            <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+            <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
           }
           {!loading && 
             medias.map((watch, index) => (
