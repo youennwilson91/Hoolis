@@ -45,33 +45,17 @@ export default function PaymentReturn() {
       }
     } catch (error) {
       console.error('Erreur lors de la vérification du paiement:', error);
-      
-      // Si Stripe nous a redirigé avec payment=success, le paiement a réussi
-      // même si notre backend a un problème technique
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('payment') === 'success') {
-        console.log('Paiement validé par Stripe malgré erreur technique backend');
-        setIsLoading(false);
-        // Pas de popup d'erreur, juste nettoyer l'URL
-        setTimeout(() => {
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }, 1000);
-        return;
-      } else {
-        setPaymentStatus('error');
-        setMessage('❌ Erreur lors de la vérification du paiement.');
-      }
+      setPaymentStatus('error');
+      setMessage('❌ Erreur lors de la vérification du paiement.');
     } finally {
       setIsLoading(false);
       
-      // Nettoyer l'URL après 5 secondes (seulement si on a un statut)
-      if (paymentStatus) {
-        setTimeout(() => {
-          window.history.replaceState({}, document.title, window.location.pathname);
-          setPaymentStatus(null);
-          setMessage('');
-        }, 5000);
-      }
+      // Nettoyer l'URL après 3 secondes
+      setTimeout(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        setPaymentStatus(null);
+        setMessage('');
+      }, 5000);
     }
   };
 
