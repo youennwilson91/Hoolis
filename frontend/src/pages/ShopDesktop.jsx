@@ -367,7 +367,7 @@ export default function Shop() {
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
           <div className="shop-gallery-articles" ref={collectionRef}> 
             {loading && 
-              <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+              <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
             }
             {!loading && 
               (() => {
