@@ -22,7 +22,7 @@ class WatchMediaInline(admin.TabularInline):
 
 class WatchAdmin(admin.ModelAdmin):
     inlines = [WatchMediaInline]
-    search_fields = ['title', 'description', 'collection__name']
+    search_fields = ['title', 'description', 'collection__name'] 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
