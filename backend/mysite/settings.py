@@ -73,7 +73,9 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR.parent / 'frontend' / 'dist',  # Chemin vers le build React
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +121,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Configuration pour servir les assets React
+STATICFILES_DIRS = [
+    BASE_DIR.parent / 'frontend' / 'dist' / 'assets',  # Assets générés par Vite
+    BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
+]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
