@@ -733,10 +733,10 @@ def verify_payment(request):
             customer, created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
-                    'name': (customer_name or '')[:199],
-                    'email': (customer_email or '')[:199],
-                    'phone': (metadata.get('customer_phone', '') or '')[:199],
-                    'address': '',
+                    'name': 'xxx',
+                    'email': 'xxx',
+                    'phone': 'xxx',
+                    'address': 'xxx',
                 }
             )
             logger.info(f"Customer {'créé' if created else 'récupéré'}: {customer.name}")
