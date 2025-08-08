@@ -268,19 +268,7 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):  
-        try:
-            customer = Customer.objects.get(user_id=request.user.id)
-        except Customer.DoesNotExist:
-            # Si le customer n'existe pas, on le crée avec des valeurs par défaut
-            customer = Customer.objects.create(
-                user=request.user,
-                name=request.user.username or request.user.email.split('@')[0],
-                email=request.user.email,
-                phone='',
-                address='',
-                has_payed=False
-            )
-        
+        customer = Customer.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
