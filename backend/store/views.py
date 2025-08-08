@@ -730,13 +730,18 @@ def verify_payment(request):
                 logger.error(f"ERREUR création utilisateur: {str(user_error)}")
                 raise
             
+            # Récupérer les vraies données depuis les métadonnées avec troncature sécurisée
+            customer_name_full = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
+            customer_phone = metadata.get('customer_phone', '')
+            customer_address = metadata.get('customer_address', '')
+            
             customer, created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
-                    'name': 'xxx',
-                    'email': 'xxx',
-                    'phone': 'xxx',
-                    'address': 'xxx',
+                    'name': customer_name_full[:100],  # Très court pour éviter problème chiffrement
+                    'email': customer_email[:100],     # Très court pour éviter problème chiffrement  
+                    'phone': customer_phone[:50],      # Très court pour éviter problème chiffrement
+                    'address': customer_address[:100], # Très court pour éviter problème chiffrement
                 }
             )
             logger.info(f"Customer {'créé' if created else 'récupéré'}: {customer.name}")
