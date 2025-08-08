@@ -10,24 +10,12 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'true').lower() == 'true'
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("DJANGO_SECRET_KEY must be set in production!")
         
-# Configuration pour Azure et Render
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS = [
-        RENDER_EXTERNAL_HOSTNAME,
-        '18.156.158.53',  # IP Render
-        'localhost',
-        '127.0.0.1',
-        '0.0.0.0',
-    ]
-else:
-    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.1.184,18.156.158.53').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -157,9 +145,9 @@ REST_FRAMEWORK = {
 if DEBUG:
     # Configuration HTTP pour le développement  
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:3000",
+        "http://localhost:8000",
         "http://localhost:5173", 
-        "http://127.0.0.1:3000",
+        "http://127.0.0.1:8000",
         "http://127.0.0.1:5173",
     ]
     SESSION_COOKIE_SECURE = False
@@ -198,12 +186,6 @@ CACHES = {
 # Configuration CORS robuste
 CORS_ALLOW_CREDENTIALS = True
 
-if DEBUG:
-    # En développement, on peut être plus permissif
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    # En production, seules les origines spécifiques sont autorisées
-    CORS_ALLOW_ALL_ORIGINS = False
 
 # Permettre toutes les méthodes HTTP
 CORS_ALLOWED_METHODS = [
