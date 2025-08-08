@@ -19,6 +19,17 @@ urlpatterns = [
 # Servir les fichiers média en développement
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Servir les assets statiques React (CSS, JS, etc.)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    # Servir les fichiers du dossier dist de Vite
+    urlpatterns += [
+        re_path(r'^assets/(?P<path>.*)$', serve, {
+            'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist' / 'assets',
+        }),
+        re_path(r'^(?P<path>.*\.(js|css|png|jpg|jpeg|gif|ico|svg|webp|webm|mp4|ttf|woff|woff2|eot|json|xml|txt|webmanifest))$', serve, {
+            'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist',
+        }),
+    ]
 else:
     # Servir les fichiers média en production
     urlpatterns += [
