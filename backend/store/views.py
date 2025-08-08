@@ -690,6 +690,7 @@ def verify_payment(request):
         logger.info(f"Type session_id: {type(session_id)}")
         logger.info(f"Longueur session_id: {len(session_id) if session_id else 0}")
         
+
         # Récupération session Stripe avec logs détaillés
         logger.info(f"Récupération session Stripe...")
         try:
@@ -748,51 +749,27 @@ def verify_payment(request):
             logger.error(f"  - Message: {str(e)}")
             logger.error(f"  - Code: {e.code if hasattr(e, 'code') else 'N/A'}")
             logger.error(f"  - Type: {e.type if hasattr(e, 'type') else 'N/A'}")
-            raise  # Re-lancer pour être capturé par le except général
+            
+        session = stripe.checkout.Session.retrieve(session_id)
         
         if session.payment_status == 'paid':
-            logger.info("=== DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===")
-            
-            # Étape 1: Récupération métadonnées
             metadata = session.metadata
-            logger.info(f"Métadonnées récupérées: {metadata}")
-            
             payment_type = metadata.get('type')
-            logger.info(f"Type de paiement: {payment_type}")
             
-            # Étape 2: Import User model
-            logger.info("Import du modèle User...")
             from django.contrib.auth import get_user_model
             User = get_user_model()
-            logger.info("Modèle User importé avec succès")
             
-            # Étape 3: Récupération email client
             customer_email = session.customer_email
-            logger.info(f"Email client: {customer_email}")
-            
-            # Étape 4: Construction nom client
             customer_name = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
-            logger.info(f"Nom client construit: {customer_name}")
             
-            # Étape 5: Création/récupération utilisateur
-            logger.info(f"Création/récupération utilisateur: {customer_email}")
-            try:
-                logger.info("Tentative get_or_create User...")
-                user, created = User.objects.get_or_create(
-                    email=customer_email,
-                    defaults={
-                        'username': customer_email,
-                        'first_name': metadata.get('customer_first_name', ''),
-                        'last_name': metadata.get('customer_last_name', ''),
-                    }
-                )
-                logger.info(f"Utilisateur {'créé' if created else 'récupéré'}: {user.id}")
-            except Exception as user_error:
-                logger.error(f"ERREUR création utilisateur: {str(user_error)}")
-                logger.error(f"Type erreur: {type(user_error).__name__}")
-                import traceback
-                logger.error(f"Traceback: {traceback.format_exc()}")
-                raise
+            user, created = User.objects.get_or_create(
+                email=customer_email,
+                defaults={
+                    'username': customer_email,
+                    'first_name': metadata.get('customer_first_name', ''),
+                    'last_name': metadata.get('customer_last_name', ''),
+                }
+            )
             
             customer, created = Customer.objects.get_or_create(
                 user=user,
@@ -1041,28 +1018,5 @@ def verify_payment(request):
         )
     
     except Exception as e:
-        import traceback
-        import sys
-        
-        # Capturer tous les détails de l'erreur
-        error_details = traceback.format_exc()
-        error_type = type(e).__name__
-        error_message = str(e)
-        
-        # Logger avec maximum de détails
-        logger.error(f"=== ERREUR CRITIQUE verify_payment ===")
-        logger.error(f"Type: {error_type}")
-        logger.error(f"Message: {error_message}")
-        logger.error(f"Traceback complet:\n{error_details}")
-        logger.error(f"Python version: {sys.version}")
-        logger.error(f"Request data: {request.data}")
-        logger.error(f"=== FIN ERREUR CRITIQUE ===")
-        
-        # Retourner une réponse avec détails (temporaire pour debug)
-        return Response({
-            "error": "Erreur serveur détaillée",
-            "type": error_type,
-            "message": error_message[:500],  # Limiter la taille
-            "traceback": error_details[-1000:] if error_details else "N/A"  # Dernières 1000 chars
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return SafeErrorHandler.handle_exception(e, "verify_payment")
 
