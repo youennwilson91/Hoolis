@@ -705,10 +705,7 @@ def verify_payment(request):
             
             # Étape 1: Récupération métadonnées
             metadata = session.metadata
-            logger.info(f"Métadonnées récupérées: {metadata}")
-            
             payment_type = metadata.get('type')
-            logger.info(f"Type de paiement: {payment_type}")
             
             # Import User model
             from django.contrib.auth import get_user_model
@@ -892,28 +889,5 @@ def verify_payment(request):
         )
     
     except Exception as e:
-        import traceback
-        import sys
-        
-        # Capturer tous les détails de l'erreur
-        error_details = traceback.format_exc()
-        error_type = type(e).__name__
-        error_message = str(e)
-        
-        # Logger avec maximum de détails
-        logger.error(f"=== ERREUR CRITIQUE verify_payment ===")
-        logger.error(f"Type: {error_type}")
-        logger.error(f"Message: {error_message}")
-        logger.error(f"Traceback complet:\n{error_details}")
-        logger.error(f"Python version: {sys.version}")
-        logger.error(f"Request data: {request.data}")
-        logger.error(f"=== FIN ERREUR CRITIQUE ===")
-        
-        # Retourner une réponse avec détails (temporaire pour debug)
-        return Response({
-            "error": "Erreur serveur détaillée",
-            "type": error_type,
-            "message": error_message[:500],  # Limiter la taille
-            "traceback": error_details[-1000:] if error_details else "N/A"  # Dernières 1000 chars
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return SafeErrorHandler.handle_exception(e, "verify_payment")
 
