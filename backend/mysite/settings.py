@@ -155,10 +155,8 @@ if DEBUG:
     SECURE_SSL_REDIRECT = False
 else:
     # Production 
-    CORS_ALLOWED_ORIGINS = [
-        "https://hoolis-frontend.onrender.com",
-        os.getenv('FRONTEND_URL', 'https://hoolis-frontend.onrender.com'),
-    ]
+    CORS_ALLOW_ALL_ORIGINS = True
+
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -197,7 +195,6 @@ CORS_ALLOWED_METHODS = [
     'POST',
     'PUT',
 ]
-
 # Permettre tous les headers nécessaires
 CORS_ALLOW_HEADERS = [
     'accept',
