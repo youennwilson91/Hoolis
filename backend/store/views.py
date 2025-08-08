@@ -268,7 +268,19 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):  
-        customer = Customer.objects.get(user_id=request.user.id)
+        try:
+            customer = Customer.objects.get(user_id=request.user.id)
+        except Customer.DoesNotExist:
+            # Si le customer n'existe pas, on le crée avec des valeurs par défaut
+            customer = Customer.objects.create(
+                user=request.user,
+                name=request.user.username or request.user.email.split('@')[0],
+                email=request.user.email,
+                phone='',
+                address='',
+                has_payed=False
+            )
+        
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -305,8 +317,12 @@ class OrderViewSet(ModelViewSet):
         user = self.request.user
         if user.is_staff:
             return Order.objects.all()
-        customer = Customer.objects.get(user_id=user.id)[0]
-        return Order.objects.filter(customer_id=customer.id)
+        try:
+            customer = Customer.objects.get(user_id=user.id)
+            return Order.objects.filter(customer_id=customer.id)
+        except Customer.DoesNotExist:
+            # Si le customer n'existe pas, retourner un queryset vide
+            return Order.objects.none()
     
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
@@ -540,17 +556,17 @@ def create_stripe_session(request):
             customer, customer_created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
-                    'name': customer_name_full[:100],
+                    'name': customer_name_full[:100] if customer_name_full else user.email.split('@')[0],
                     'email': customer_email[:100], 
-                    'phone': customer_phone[:50],
-                    'address': customer_address[:100],
+                    'phone': customer_phone[:50] if customer_phone else '',
+                    'address': customer_address[:100] if customer_address else '',
                     'has_payed': False  # Créé avec has_payed=False
                 }
             )
             logger.info(f"Customer {'créé' if customer_created else 'récupéré'}: {customer.name} (has_payed: {customer.has_payed})")
             
         except Exception as user_error:
-            logger.error(f"ERREUR création utilisateur/customer: {str(user_error)}")
+            logger.error(f"ERREUR création utilisateur/customer: {str(user_error)}", exc_info=True)
             return Response(
                 {"error": "Erreur création utilisateur"}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
