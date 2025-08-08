@@ -730,22 +730,13 @@ def verify_payment(request):
                 logger.error(f"ERREUR création utilisateur: {str(user_error)}")
                 raise
             
-            # Construction et troncature des champs customer
-            address_parts = [
-                metadata.get('customer_address', '').strip(),
-                metadata.get('customer_city', '').strip(),
-                metadata.get('customer_postal_code', '').strip(),
-                metadata.get('customer_country', '').strip()
-            ]
-            full_address = ', '.join([part for part in address_parts if part])
-            
             customer, created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
-                    'name': customer_name[:200] if customer_name else '',
-                    'email': customer_email[:200] if customer_email else '',
-                    'phone': metadata.get('customer_phone', '')[:200] if metadata.get('customer_phone', '') else '',
-                    'address': full_address[:200] if full_address else '',
+                    'name': (customer_name or '')[:199],
+                    'email': (customer_email or '')[:199],
+                    'phone': (metadata.get('customer_phone', '') or '')[:199],
+                    'address': '',
                 }
             )
             logger.info(f"Customer {'créé' if created else 'récupéré'}: {customer.name}")
