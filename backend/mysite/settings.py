@@ -141,6 +141,18 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
+# Configuration pour Azure et Render
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS = [
+        RENDER_EXTERNAL_HOSTNAME,
+        '18.156.158.53',  # IP Render
+        'localhost',
+        '127.0.0.1',
+        '0.0.0.0',
+    ]
+else:
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.1.184,18.156.158.53').split(',')
 
 if DEBUG:
     # Configuration HTTP pour le développement  
