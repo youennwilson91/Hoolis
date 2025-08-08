@@ -302,7 +302,21 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         with transaction.atomic():
             cart_id = self.validated_data['cart_id']
-            customer = Customer.objects.get(user_id=self.context['user_id'])
+            try:
+                customer = Customer.objects.get(user_id=self.context['user_id'])
+            except Customer.DoesNotExist:
+                # Si le customer n'existe pas, on le crée avec des valeurs par défaut
+                from django.contrib.auth import get_user_model
+                User = get_user_model()
+                user = User.objects.get(id=self.context['user_id'])
+                customer = Customer.objects.create(
+                    user=user,
+                    name=user.username or user.email.split('@')[0],
+                    email=user.email,
+                    phone='',
+                    address='',
+                    has_payed=False
+                )
             order = Order.objects.create(customer=customer)
             
             cart_items = CartItem.objects.select_related('product').filter(cart__id=cart_id)
