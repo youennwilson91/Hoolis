@@ -22,6 +22,7 @@ from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.views.decorators.vary import vary_on_headers
+from django.contrib.auth import get_user_model
 
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
@@ -516,6 +517,45 @@ def create_stripe_session(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        # Créer le customer immédiatement avec has_payed=False
+        customer_email = sanitize_text_input(customer_data.get('email', '').strip())
+        customer_first_name = sanitize_text_input(customer_data.get('firstName', ''))
+        customer_last_name = sanitize_text_input(customer_data.get('lastName', ''))
+        customer_name_full = f"{customer_first_name} {customer_last_name}".strip()
+        customer_phone = sanitize_text_input(customer_data.get('phone', ''))
+        customer_address = sanitize_text_input(customer_data.get('address', ''))
+        
+
+        User = get_user_model()
+        
+        try:
+            # Créer ou récupérer l'utilisateur
+            user, created = User.objects.get_or_create(
+                email=customer_email,
+                defaults={'username': customer_email}
+            )
+            logger.info(f"User {'créé' if created else 'récupéré'}: {user.email}")
+            
+            # Créer ou récupérer le customer avec has_payed=False par défaut
+            customer, customer_created = Customer.objects.get_or_create(
+                user=user,
+                defaults={
+                    'name': customer_name_full[:100],
+                    'email': customer_email[:100], 
+                    'phone': customer_phone[:50],
+                    'address': customer_address[:100],
+                    'has_payed': False  # Créé avec has_payed=False
+                }
+            )
+            logger.info(f"Customer {'créé' if customer_created else 'récupéré'}: {customer.name} (has_payed: {customer.has_payed})")
+            
+        except Exception as user_error:
+            logger.error(f"ERREUR création utilisateur/customer: {str(user_error)}")
+            return Response(
+                {"error": "Erreur création utilisateur"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
         if watch_id:
             try:
                 watch = Watch.objects.get(id=watch_id)
@@ -713,38 +753,33 @@ def verify_payment(request):
             
             # Récupération données client
             customer_email = session.customer_email
-            customer_name = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
             
-            # Création/récupération utilisateur
+            # Récupérer l'utilisateur existant (il devrait déjà exister depuis create_stripe_session)
             try:
-                user, created = User.objects.get_or_create(
-                    email=customer_email,
-                    defaults={
-                        'username': customer_email,
-                        'first_name': metadata.get('customer_first_name', ''),
-                        'last_name': metadata.get('customer_last_name', ''),
-                    }
-                )
-                logger.info(f"Utilisateur {'créé' if created else 'récupéré'}: {user.id}")
-            except Exception as user_error:
-                logger.error(f"ERREUR création utilisateur: {str(user_error)}")
-                raise
+                user = User.objects.get(email=customer_email)
+                logger.info(f"Utilisateur récupéré: {user.id}")
+            except User.DoesNotExist:
+                logger.error(f"ERREUR: Utilisateur non trouvé pour email: {customer_email}")
+                return Response({
+                    'status': 'error',
+                    'message': 'Utilisateur non trouvé'
+                }, status=status.HTTP_404_NOT_FOUND)
             
-            # Récupérer les vraies données depuis les métadonnées avec troncature sécurisée
-            customer_name_full = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
-            customer_phone = metadata.get('customer_phone', '')
-            customer_address = metadata.get('customer_address', '')
-            
-            customer, created = Customer.objects.get_or_create(
-                user=user,
-                defaults={
-                    'name': customer_name_full[:100],  # Très court pour éviter problème chiffrement
-                    'email': customer_email[:100],     # Très court pour éviter problème chiffrement  
-                    'phone': customer_phone[:50],      # Très court pour éviter problème chiffrement
-                    'address': customer_address[:100], # Très court pour éviter problème chiffrement
-                }
-            )
-            logger.info(f"Customer {'créé' if created else 'récupéré'}: {customer.name}")
+            # Récupérer le customer existant et marquer has_payed=True
+            try:
+                customer = Customer.objects.get(user=user)
+                if not customer.has_payed:
+                    customer.has_payed = True
+                    customer.save()
+                    logger.info(f"Customer mis à jour: {customer.name} - has_payed=True")
+                else:
+                    logger.info(f"Customer déjà payé: {customer.name}")
+            except Customer.DoesNotExist:
+                logger.error(f"ERREUR: Customer non trouvé pour user: {user.id}")
+                return Response({
+                    'status': 'error',
+                    'message': 'Customer non trouvé'
+                }, status=status.HTTP_404_NOT_FOUND)
             
             if payment_type == 'watch_purchase':
                 watch_id = metadata.get('watch_id')
