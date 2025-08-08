@@ -266,7 +266,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Customer
-        fields = ['user_id', 'name', 'email', 'phone', 'address']
+        fields = ['user_id', 'name', 'email', 'phone', 'address', 'has_payed']
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
