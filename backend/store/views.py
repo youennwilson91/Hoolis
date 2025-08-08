@@ -685,234 +685,142 @@ def verify_payment(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        logger.info(f"=== DÉBUT VÉRIFICATION PAIEMENT ===")
-        logger.info(f"Session ID reçu: {session_id}")
-        logger.info(f"Type session_id: {type(session_id)}")
-        logger.info(f"Longueur session_id: {len(session_id) if session_id else 0}")
+        logger.info(f"Vérification paiement: {session_id}")
         
-
-        # Récupération session Stripe avec logs détaillés
-        logger.info(f"Récupération session Stripe...")
         try:
             session = stripe.checkout.Session.retrieve(session_id)
-            logger.info(f"✅ Session Stripe récupérée avec succès")
-            logger.info(f"Session complète - Détails:")
-            logger.info(f"  - ID: {session.id}")
-            logger.info(f"  - Payment Status: {session.payment_status}")
-            logger.info(f"  - Payment Intent: {session.payment_intent}")
-            logger.info(f"  - Amount Total: {session.amount_total} centimes")
-            logger.info(f"  - Amount Subtotal: {session.amount_subtotal} centimes")
-            logger.info(f"  - Currency: {session.currency}")
-            logger.info(f"  - Customer Email: {session.customer_email}")
-            logger.info(f"  - Mode: {session.mode}")
-            logger.info(f"  - Status: {session.status}")
-            logger.info(f"  - Created: {session.created}")
-            logger.info(f"  - Expires At: {session.expires_at}")
-            logger.info(f"  - Metadata: {dict(session.metadata) if session.metadata else 'Aucune'}")
-            logger.info(f"  - Success URL: {session.success_url}")
-            logger.info(f"  - Cancel URL: {session.cancel_url}")
-            
-            # Vérifier si payment_intent existe et le récupérer
-            if session.payment_intent:
-                logger.info(f"Récupération Payment Intent: {session.payment_intent}")
-                try:
-                    payment_intent = stripe.PaymentIntent.retrieve(session.payment_intent)
-                    logger.info(f"Payment Intent détails:")
-                    logger.info(f"  - ID: {payment_intent.id}")
-                    logger.info(f"  - Status: {payment_intent.status}")
-                    logger.info(f"  - Amount: {payment_intent.amount}")
-                    logger.info(f"  - Currency: {payment_intent.currency}")
-                    logger.info(f"  - Charges count: {len(payment_intent.charges.data) if payment_intent.charges else 0}")
-                    if payment_intent.charges and len(payment_intent.charges.data) > 0:
-                        charge = payment_intent.charges.data[0]
-                        logger.info(f"  - Last Charge ID: {charge.id}")
-                        logger.info(f"  - Last Charge Status: {charge.status}")
-                        logger.info(f"  - Last Charge Paid: {charge.paid}")
-                except Exception as pi_error:
-                    logger.error(f"Erreur récupération Payment Intent: {str(pi_error)}")
-            else:
-                logger.warning("Aucun Payment Intent associé à cette session")
-                
+            logger.info(f"Session récupérée - Status: {session.payment_status}, Amount: {session.amount_total/100}€")
         except stripe.error.InvalidRequestError as e:
-            logger.error(f"❌ ERREUR: Session Stripe invalide")
-            logger.error(f"  - Session ID fourni: {session_id}")
-            logger.error(f"  - Message d'erreur: {str(e)}")
-            logger.error(f"  - Code d'erreur: {e.code if hasattr(e, 'code') else 'N/A'}")
-            logger.error(f"  - Type d'erreur: {e.type if hasattr(e, 'type') else 'N/A'}")
+            logger.error(f"Session Stripe invalide: {session_id} - {str(e)}")
             return Response({
                 'status': 'error',
                 'message': 'Session de paiement invalide'
             }, status=status.HTTP_400_BAD_REQUEST)
         except stripe.error.StripeError as e:
-            logger.error(f"❌ ERREUR Stripe générale lors récupération session")
-            logger.error(f"  - Type d'erreur: {type(e).__name__}")
-            logger.error(f"  - Message: {str(e)}")
-            logger.error(f"  - Code: {e.code if hasattr(e, 'code') else 'N/A'}")
-            logger.error(f"  - Type: {e.type if hasattr(e, 'type') else 'N/A'}")
-            
-        session = stripe.checkout.Session.retrieve(session_id)
+            logger.error(f"Erreur Stripe lors récupération session: {str(e)}")
+            raise  # Re-lancer pour être capturé par le except général
         
         if session.payment_status == 'paid':
+            logger.info("=== DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===")
+            
+            # Étape 1: Récupération métadonnées
             metadata = session.metadata
             payment_type = metadata.get('type')
             
+            # Import User model
             from django.contrib.auth import get_user_model
             User = get_user_model()
             
+            # Récupération données client
             customer_email = session.customer_email
             customer_name = f"{metadata.get('customer_first_name', '')} {metadata.get('customer_last_name', '')}".strip()
             
-            user, created = User.objects.get_or_create(
-                email=customer_email,
-                defaults={
-                    'username': customer_email,
-                    'first_name': metadata.get('customer_first_name', ''),
-                    'last_name': metadata.get('customer_last_name', ''),
-                }
-            )
+            # Création/récupération utilisateur
+            try:
+                user, created = User.objects.get_or_create(
+                    email=customer_email,
+                    defaults={
+                        'username': customer_email,
+                        'first_name': metadata.get('customer_first_name', ''),
+                        'last_name': metadata.get('customer_last_name', ''),
+                    }
+                )
+                logger.info(f"Utilisateur {'créé' if created else 'récupéré'}: {user.id}")
+            except Exception as user_error:
+                logger.error(f"ERREUR création utilisateur: {str(user_error)}")
+                raise
+            
+            # Construction et troncature des champs customer
+            address_parts = [
+                metadata.get('customer_address', '').strip(),
+                metadata.get('customer_city', '').strip(),
+                metadata.get('customer_postal_code', '').strip(),
+                metadata.get('customer_country', '').strip()
+            ]
+            full_address = ', '.join([part for part in address_parts if part])
             
             customer, created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
-                    'name': customer_name,
-                    'email': customer_email,
-                    'phone': metadata.get('customer_phone', ''),
-                    'address': f"{metadata.get('customer_address', '')}, {metadata.get('customer_city', '')} {metadata.get('customer_postal_code', '')}, {metadata.get('customer_country', '')}".strip(),
+                    'name': customer_name[:200] if customer_name else '',
+                    'email': customer_email[:200] if customer_email else '',
+                    'phone': metadata.get('customer_phone', '')[:200] if metadata.get('customer_phone', '') else '',
+                    'address': full_address[:200] if full_address else '',
                 }
             )
+            logger.info(f"Customer {'créé' if created else 'récupéré'}: {customer.name}")
             
             if payment_type == 'watch_purchase':
-                logger.info("🔍 TRAITEMENT ACHAT DE MONTRE")
                 watch_id = metadata.get('watch_id')
-                logger.info(f"  - Watch ID: {watch_id}")
                 
                 try:
                     watch = Watch.objects.get(id=watch_id)
-                    logger.info(f"  - Montre trouvée: {watch.name}")
-                    logger.info(f"  - Prix: {watch.price}€")
-                    logger.info(f"  - Disponible: {watch.is_available}")
+                    logger.info(f"Montre trouvée: {watch.name} - {watch.price}€")
                 except Watch.DoesNotExist:
-                    logger.error(f"❌ ERREUR: Montre non trouvée - ID: {watch_id}")
+                    logger.error(f"Montre non trouvée - ID: {watch_id}")
                     return Response({
                         'status': 'error',
                         'message': 'Montre non trouvée'
                     }, status=status.HTTP_404_NOT_FOUND)
-                except Exception as watch_error:
-                    logger.error(f"❌ ERREUR récupération montre: {str(watch_error)}")
-                    raise
 
-                logger.info("📦 Création de la commande...")
-                try:
-                    order = Order.objects.create(
-                        customer=customer,
-                        quantity=1,
-                        total_price=session.amount_total / 100,
-                        payment_status=Order.PAYMENT_COMPLETED
-                    )
-                    logger.info(f"  - Order créée: ID #{order.id}")
-                    logger.info(f"  - Total: {order.total_price}€")
-                    logger.info(f"  - Status: {order.payment_status}")
-                except Exception as order_error:
-                    logger.error(f"❌ ERREUR création commande: {str(order_error)}")
-                    raise
+                # Création commande
+                order = Order.objects.create(
+                    customer=customer,
+                    quantity=1,
+                    total_price=session.amount_total / 100,
+                    payment_status=Order.PAYMENT_COMPLETED
+                )
                 
-                # Créer ou récupérer un produit générique pour la montre
-                logger.info("🏷️ Création/récupération produit générique...")
-                try:
-                    default_collection = Collection.objects.first()
-                    if not default_collection:
-                        logger.info("  - Création collection par défaut...")
-                        default_collection = Collection.objects.create(name='Défaut', description='Collection par défaut')
-                    
-                    product, product_created = Product.objects.get_or_create(
-                        title=watch.name,
-                        defaults={
-                            'price': watch.price,
-                            'description': watch.description,
-                            'collection': default_collection,
-                            'is_available': True
-                        }
-                    )
-                    logger.info(f"  - Produit {'créé' if product_created else 'récupéré'}: {product.title}")
-                    
-                    order_item = OrderItem.objects.create(
-                        order=order,
-                        product=product,
-                        quantity=1
-                    )
-                    logger.info(f"  - OrderItem créé: ID #{order_item.id}")
-                except Exception as product_error:
-                    logger.error(f"❌ ERREUR création produit/order item: {str(product_error)}")
-                    raise
-
-                # Marquer la montre comme indisponible
-                logger.info("🔒 Marquage montre comme indisponible...")
-                try:
-                    watch.is_available = False
-                    watch.save()
-                    logger.info(f"  - Montre {watch.name} marquée comme indisponible")
-                except Exception as watch_save_error:
-                    logger.error(f"❌ ERREUR sauvegarde montre: {str(watch_save_error)}")
-                    # Ne pas faire échouer le processus pour ça
+                # Créer produit générique et order item
+                default_collection = Collection.objects.first()
+                if not default_collection:
+                    default_collection = Collection.objects.create(name='Défaut', description='Collection par défaut')
+                
+                product, created = Product.objects.get_or_create(
+                    title=watch.name,
+                    defaults={
+                        'price': watch.price,
+                        'description': watch.description,
+                        'collection': default_collection,
+                        'is_available': True
+                    }
+                )
+                
+                OrderItem.objects.create(order=order, product=product, quantity=1)
+                
+                # Marquer montre indisponible
+                watch.is_available = False
+                watch.save()
                 
                 email_subject = f'Commande confirmée #{order.id} - F&W'
                 products_details = [f"1x {watch.name} - {watch.price}€"]
-                logger.info(f"  - Email subject: {email_subject}")
-                logger.info(f"  - Products details: {products_details}")
                 
             elif payment_type == 'cart_purchase':
-                logger.info("🛒 TRAITEMENT ACHAT PANIER")
                 cart_id = metadata.get('cart_id')
-                logger.info(f"  - Cart ID: {cart_id}")
                 
-                logger.info("📋 Création commande via serializer...")
-                try:
-                    serializer = CreateOrderSerializer(
-                        data={'cart_id': cart_id}, 
-                        context={'user_id': user.id}
-                    )
-                    
-                    if not serializer.is_valid():
-                        logger.error(f"❌ ERREUR: Serializer invalide")
-                        logger.error(f"  - Erreurs: {serializer.errors}")
-                        return Response({
-                            'status': 'error',
-                            'message': 'Erreur création commande'
-                        })
-                    
-                    order = serializer.save()
-                    logger.info(f"  - Order créée via serializer: ID #{order.id}")
-                    
-                    # Mettre à jour le statut et le prix
-                    order.payment_status = Order.PAYMENT_COMPLETED
-                    order.total_price = session.amount_total / 100
-                    order.save()
-                    logger.info(f"  - Status mis à jour: {order.payment_status}")
-                    logger.info(f"  - Prix mis à jour: {order.total_price}€")
-                    
-                except Exception as cart_order_error:
-                    logger.error(f"❌ ERREUR création commande panier: {str(cart_order_error)}")
-                    import traceback
-                    logger.error(f"  - Traceback: {traceback.format_exc()}")
-                    raise
+                serializer = CreateOrderSerializer(
+                    data={'cart_id': cart_id}, 
+                    context={'user_id': user.id}
+                )
+                
+                if not serializer.is_valid():
+                    logger.error(f"Serializer invalide: {serializer.errors}")
+                    return Response({
+                        'status': 'error',
+                        'message': 'Erreur création commande'
+                    })
+                
+                order = serializer.save()
+                order.payment_status = Order.PAYMENT_COMPLETED
+                order.total_price = session.amount_total / 100
+                order.save()
                 
                 email_subject = f'Commande confirmée #{order.id} - Hoolis'
                 products_details = []
-                logger.info("📝 Construction détails produits pour email...")
-                try:
-                    for item in order.order_items.all():
-                        detail = f"{item.quantity}x {item.product.title} - {item.product.price}€"
-                        products_details.append(detail)
-                        logger.info(f"  - {detail}")
-                except Exception as details_error:
-                    logger.error(f"❌ ERREUR construction détails produits: {str(details_error)}")
-                    products_details = ["Détails indisponibles"]
-                
-                logger.info(f"  - Email subject: {email_subject}")
-                logger.info(f"  - Nombre de produits: {len(products_details)}")
+                for item in order.order_items.all():
+                    products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
             
             # Envoi email de confirmation
-            logger.info("📧 ENVOI EMAIL DE CONFIRMATION")
             try:
                 import requests
                 
@@ -934,63 +842,31 @@ def verify_payment(request):
                     '_template': 'table'
                 }
                 
-                logger.info(f"  - Données email préparées:")
-                logger.info(f"    * Destinataire: {customer_email}")
-                logger.info(f"    * Sujet: {email_subject}")
-                logger.info(f"    * Order ID: {order.id}")
-                logger.info(f"    * Produits: {' | '.join(products_details)}")
-                logger.info(f"    * Prix total: {order.total_price}€")
-                logger.info(f"    * Payment Intent: {session.payment_intent}")
-                
-                logger.info("  - Envoi requête vers FormSubmit...")
                 response = requests.post(
                     'https://formsubmit.co/youson91@hotmail.fr',
                     data=form_data,
                     timeout=30
                 )
                 
-                logger.info(f"  - Réponse FormSubmit:")
-                logger.info(f"    * Status Code: {response.status_code}")
-                logger.info(f"    * Headers: {dict(response.headers)}")
-                logger.info(f"    * Content Length: {len(response.content) if response.content else 0}")
-                
                 if response.status_code == 200:
-                    logger.info("✅ Email envoyé avec succès")
+                    logger.info("Email envoyé avec succès")
                 else:
-                    logger.warning(f"⚠️ Email - Status code inattendu: {response.status_code}")
-                    logger.warning(f"  - Contenu réponse: {response.text[:500]}")
+                    logger.warning(f"Email - Status code: {response.status_code}")
                 
-            except requests.exceptions.Timeout as timeout_error:
-                logger.error(f"❌ TIMEOUT lors envoi email: {str(timeout_error)}")
-            except requests.exceptions.RequestException as req_error:
-                logger.error(f"❌ ERREUR REQUEST lors envoi email: {str(req_error)}")
             except Exception as email_error:
-                logger.error(f"❌ ERREUR GÉNÉRALE lors envoi email: {str(email_error)}")
-                import traceback
-                logger.error(f"  - Traceback: {traceback.format_exc()}")
+                logger.error(f"Erreur envoi email: {str(email_error)}")
             
-            logger.info("✅ PAIEMENT TRAITÉ AVEC SUCCÈS")
-            logger.info(f"  - Order ID créé: {order.id}")
-            logger.info(f"  - Payment Status: {session.payment_status}")
-            logger.info(f"  - Session ID: {session.id}")
-            logger.info(f"  - Customer: {customer.name} ({customer.email})")
-            logger.info(f"  - Montant: {order.total_price}€")
-            logger.info("=== FIN TRAITEMENT PAIEMENT RÉUSSI ===")
+            logger.info(f"Paiement traité avec succès - Order #{order.id} - {order.total_price}€")
             
-            response_data = {
+            return Response({
                 'status': 'success',
                 'payment_status': session.payment_status,
                 'order_id': order.id,
                 'message': 'Commande créée'
-            }
-            logger.info(f"Réponse envoyée au frontend: {response_data}")
-            return Response(response_data)
+            })
         
         elif session.payment_status == 'unpaid':
-            logger.warning(f"⚠️ PAIEMENT NON PAYÉ")
-            logger.warning(f"  - Status de session: {session.status}")
-            logger.warning(f"  - Payment status: {session.payment_status}")
-            logger.warning(f"  - Session ID: {session.id}")
+            logger.warning(f"Paiement non payé - Status: {session.payment_status}")
             return Response({
                 'status': 'pending',
                 'payment_status': session.payment_status,
@@ -998,12 +874,7 @@ def verify_payment(request):
             })
             
         else:
-            logger.error(f"❌ STATUT DE PAIEMENT INATTENDU")
-            logger.error(f"  - Payment Status: {session.payment_status}")
-            logger.error(f"  - Session Status: {session.status}")
-            logger.error(f"  - Session ID: {session.id}")
-            logger.error(f"  - Mode: {session.mode}")
-            logger.error(f"  - Payment Intent: {session.payment_intent}")
+            logger.error(f"Statut de paiement inattendu: {session.payment_status}")
             return Response({
                 'status': 'failed',
                 'payment_status': session.payment_status,
