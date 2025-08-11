@@ -999,3 +999,4 @@ INFO 2025-08-11 14:19:26,899 autoreload 30244 29336 C:\Users\youso\Documents\rea
 INFO 2025-08-11 14:19:28,510 autoreload 29560 26252 Watching for file changes with StatReloader
 INFO 2025-08-11 14:19:35,740 autoreload 29560 26252 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
 INFO 2025-08-11 14:19:37,271 autoreload 30556 23864 Watching for file changes with StatReloader
+INFO 2025-08-11 14:20:01,310 autoreload 30556 23864 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
