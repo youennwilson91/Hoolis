@@ -836,3 +836,114 @@ INFO 2025-08-10 14:55:08,716 autoreload 10648 20940 C:\Users\youso\Documents\rea
 INFO 2025-08-10 14:55:10,287 autoreload 17596 3888 Watching for file changes with StatReloader
 INFO 2025-08-10 14:55:16,300 autoreload 17596 3888 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
 INFO 2025-08-10 14:55:17,786 autoreload 23320 2820 Watching for file changes with StatReloader
+INFO 2025-08-10 18:54:24,705 basehttp 23320 26220 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 18:54:24,705 basehttp 23320 26224 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 18:54:25,093 log 23320 26388 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 18:54:25,094 log 23320 26384 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 18:54:25,095 basehttp 23320 26388 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 18:54:25,095 basehttp 23320 26384 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 18:54:25,127 log 23320 26388 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 18:54:25,128 basehttp 23320 26388 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 18:54:25,132 log 23320 26384 Unauthorized: /auth/jwt/verify/
+INFO 2025-08-10 18:54:25,133 basehttp 23320 26224 "OPTIONS /auth/jwt/refresh/ HTTP/1.1" 200 0
+WARNING 2025-08-10 18:54:25,133 basehttp 23320 26384 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+ERROR 2025-08-10 18:54:25,778 log 23320 26384 Internal Server Error: /auth/jwt/refresh/
+Traceback (most recent call last):
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 141, in validate
+    refresh.outstand()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-08-10 18:54:25,783 log 23320 26388 Internal Server Error: /auth/jwt/refresh/
+Traceback (most recent call last):
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 141, in validate
+    refresh.outstand()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-08-10 18:54:25,904 basehttp 23320 26384 "POST /auth/jwt/refresh/ HTTP/1.1" 500 139242
+ERROR 2025-08-10 18:54:25,911 basehttp 23320 26388 "POST /auth/jwt/refresh/ HTTP/1.1" 500 139242
+WARNING 2025-08-10 19:19:37,081 log 23320 5936 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 19:19:37,082 basehttp 23320 5936 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 19:19:37,089 log 23320 25876 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 19:19:37,090 basehttp 23320 25876 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-11 00:00:41,920 basehttp 23320 26360 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-11 00:00:41,921 basehttp 23320 27324 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-11 00:00:42,288 log 23320 18204 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 00:00:42,295 log 23320 26368 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 00:00:42,296 basehttp 23320 18204 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-11 00:00:42,297 basehttp 23320 26368 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-11 00:18:20,516 log 23320 27076 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 00:18:20,519 log 23320 27196 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 00:18:20,520 basehttp 23320 27076 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-11 00:18:20,520 basehttp 23320 27196 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-11 03:29:21,298 basehttp 23320 23644 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-11 03:29:21,298 basehttp 23320 28408 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-11 03:29:21,649 log 23320 27896 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 03:29:21,653 log 23320 28468 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 03:29:21,655 basehttp 23320 28468 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-11 03:29:21,655 basehttp 23320 27896 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-11 08:58:27,145 basehttp 23320 18484 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-11 08:58:27,145 basehttp 23320 26504 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-11 08:58:27,484 log 23320 21264 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 08:58:27,489 log 23320 22588 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-11 08:58:27,491 basehttp 23320 21264 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-11 08:58:27,491 basehttp 23320 22588 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-11 09:44:56,767 basehttp 23320 26112 "GET /media/store/F%26W/watch1-wide-4.webm HTTP/1.1" 304 0
+INFO 2025-08-11 09:44:56,802 basehttp 23320 26032 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 304 0
