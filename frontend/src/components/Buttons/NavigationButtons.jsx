@@ -57,7 +57,7 @@ export default function NavigationButtons({ screenRef, homeTo, image, label }) {
       onMouseLeave={handleHoverOut}
     >
       {/* <span className="hoolis-fw-button-text">{buttonLabel}</span> */}
-      <img src={image} alt="logo" />
+      <img src={image} alt="logo" loading="lazy" />
     </button>
   );
 } 

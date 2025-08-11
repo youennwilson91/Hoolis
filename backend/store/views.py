@@ -33,6 +33,9 @@ from .utils import SafeErrorHandler, sanitize_phone_number, sanitize_text_input,
 import stripe
 import vonage
 import logging
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
@@ -699,6 +702,8 @@ def verify_payment(request):
     """
     Vérifier le paiement Stripe et créer une commande
     """
+    logger.info("🚀 === VERIFY_PAYMENT APPELÉE ===")
+    logger.info(f"Request data: {request.data}")
     try:
         stripe.api_key = settings.STRIPE_SECRET_KEY
         
@@ -841,41 +846,58 @@ def verify_payment(request):
                 for item in order.order_items.all():
                     products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
             
-            # Envoi email de confirmation
+            # Envoi email de confirmation avec Django
             try:
-                import requests
+                logger.info(f"=== DÉBUT ENVOI EMAIL DJANGO ===")
+                logger.info(f"Email destinataire: {customer_email}")
+                logger.info(f"Type de paiement: {payment_type}")
+                logger.info(f"Order ID: {order.id}")
                 
-                form_data = {
-                    'firstName': metadata.get('customer_first_name', ''),
-                    'lastName': metadata.get('customer_last_name', ''),
-                    'email': customer_email,
-                    'phone': metadata.get('customer_phone', ''),
-                    'address': metadata.get('customer_address', ''),
-                    'city': metadata.get('customer_city', ''),
-                    'postalCode': metadata.get('customer_postal_code', ''),
-                    'country': metadata.get('customer_country', ''),
-                    'orderId': str(order.id),
-                    'products': ' | '.join(products_details),
-                    'totalPrice': f"{order.total_price}€",
-                    'paymentId': session.payment_intent,
-                    '_subject': email_subject,
-                    '_captcha': 'false',
-                    '_template': 'table'
+                # Préparer les données pour le template
+                from datetime import datetime
+                
+                brand_name = "F&W" if payment_type == 'watch_purchase' else "Hoolis"
+                
+                email_context = {
+                    'brand_name': brand_name,
+                    'customer_first_name': metadata.get('customer_first_name', ''),
+                    'customer_last_name': metadata.get('customer_last_name', ''),
+                    'customer_address': metadata.get('customer_address', ''),
+                    'customer_city': metadata.get('customer_city', ''),
+                    'customer_postal_code': metadata.get('customer_postal_code', ''),
+                    'customer_country': metadata.get('customer_country', ''),
+                    'order_id': order.id,
+                    'order_date': datetime.now().strftime('%d/%m/%Y'),
+                    'products': products_details,
+                    'total_price': f"{order.total_price}€",
+                    'payment_id': session.payment_intent,
+                    'year': datetime.now().year,
                 }
                 
-                response = requests.post(
-                    'https://formsubmit.co/youson91@hotmail.fr',
-                    data=form_data,
-                    timeout=30
+                logger.info(f"Contexte email préparé pour {brand_name}")
+                
+                # Générer le contenu HTML et texte
+                html_message = render_to_string('emails/order_confirmation.html', email_context)
+                plain_message = strip_tags(html_message)
+                
+                logger.info("Template email généré, envoi en cours...")
+                
+                # Envoyer l'email
+                send_mail(
+                    subject=email_subject,
+                    message=plain_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[customer_email, 'youson91@hotmail.fr'],  # Copie pour vous
+                    html_message=html_message,
+                    fail_silently=False,
                 )
                 
-                if response.status_code == 200:
-                    logger.info("Email envoyé avec succès")
-                else:
-                    logger.warning(f"Email - Status code: {response.status_code}")
+                logger.info("Email envoyé avec succès via Django")
                 
             except Exception as email_error:
-                logger.error(f"Erreur envoi email: {str(email_error)}")
+                logger.error(f"Erreur envoi email Django: {str(email_error)}")
+                import traceback
+                logger.error(f"Traceback complet: {traceback.format_exc()}")
             
             logger.info(f"Paiement traité avec succès - Order #{order.id} - {order.total_price}€")
             
