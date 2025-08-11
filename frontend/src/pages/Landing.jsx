@@ -3,6 +3,7 @@ import MenuButtons from "../components/Buttons/Menu.jsx";
 import useStore from "../utils/store";
 import SEOHead from "../components/SEOHead";
 import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../components/StructuredData";
+import PaymentReturn from "../components/PaymentReturn";
 import "./Landing.scss";
 
 export default function Landing() {

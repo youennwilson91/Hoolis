@@ -576,12 +576,8 @@ def create_stripe_session(request):
                 'quantity': 1,
             }]
             
-            if settings.DEBUG:
-                success_url = "http://localhost:5173/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "http://localhost:5173/fw?payment=cancelled"
-            else:
-                success_url = "https://hoolis-frontend.onrender.com/fw?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "https://hoolis-frontend.onrender.com/fw?payment=cancelled"
+            success_url = f"{settings.FRONTEND_URL}/fw?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
+            cancel_url = f"{settings.FRONTEND_URL}/fw?payment=cancelled"
             
             metadata = {
                 'type': 'watch_purchase',
@@ -636,12 +632,8 @@ def create_stripe_session(request):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            if settings.DEBUG:
-                success_url = "http://localhost:5173/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "http://localhost:5173/hoolis?payment=cancelled"
-            else:
-                success_url = "https://hoolis-frontend.onrender.com/hoolis?payment=success&session_id={CHECKOUT_SESSION_ID}"
-                cancel_url = "https://hoolis-frontend.onrender.com/hoolis?payment=cancelled"
+            success_url = f"{settings.FRONTEND_URL}/hoolis?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
+            cancel_url = f"{settings.FRONTEND_URL}/hoolis?payment=cancelled"
             
             metadata = {
                 'type': 'cart_purchase',
@@ -881,6 +873,11 @@ def verify_payment(request):
                 plain_message = strip_tags(html_message)
                 
                 logger.info("Template email généré, envoi en cours...")
+                logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
+                logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
+                logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
+                logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
+                logger.info(f"Recipients: {[customer_email, 'youson91@hotmail.fr']}")
                 
                 # Envoyer l'email
                 send_mail(
