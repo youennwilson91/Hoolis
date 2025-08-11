@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-// Configuration axios pour l'API Django
-export const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://hoolis-backend.onrender.com'
-  : 'http://localhost:8000';
+const ENVIRONMENT = import.meta.env.VITE_ENVIRONMENT?.toLowerCase() || 'local';
+
+export const API_BASE_URL = 
+  ENVIRONMENT === 'local' 
+    ? 'http://localhost:8000'  // Toujours localhost en local
+    : ENVIRONMENT === 'dev'
+    ? 'https://dev-hoolis-backend.onrender.com' 
+    : 'https://hoolis-backend.onrender.com';  // prod
 
 // Instance axios configurée
 export const apiClient = axios.create({

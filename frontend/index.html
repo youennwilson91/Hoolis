@@ -27,14 +27,14 @@
     <meta property="og:url" content="https://hoolis.com/">
     <meta property="og:title" content="Hoolis - Boutique de Luxe | Vêtements, Maroquinerie & Montres">
     <meta property="og:description" content="Découvrez l'univers Hoolis : collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses.">
-    <meta property="og:image" content="https://hoolis.com/og-image.jpg">
+    <meta property="og:image" content="https://hoolis.com/hoolis-logo.png">
 
     <!-- Fallback Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://hoolis.com/">
     <meta property="twitter:title" content="Hoolis - Boutique de Luxe | Vêtements, Maroquinerie & Montres">
     <meta property="twitter:description" content="Découvrez l'univers Hoolis : collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses.">
-    <meta property="twitter:image" content="https://hoolis.com/og-image.jpg">
+    <meta property="twitter:image" content="https://hoolis.com/hoolis-logo.png">
     
     <!-- Canonical URL (sera modifiée dynamiquement) -->
     <link rel="canonical" href="https://hoolis.com/">
@@ -49,6 +49,7 @@
     
     <!-- Preload fonts for better performance -->
     <link rel="preload" href="/champagne-limousines-bold.ttf" as="font" type="font/truetype" crossorigin>
+    <link rel="preload" href="/champagne-limousines.ttf" as="font" type="font/truetype" crossorigin>
     
     <!-- Font loading with fallback -->
     <style>
@@ -56,6 +57,13 @@
         font-family: 'Champagne Limousines';
         font-display: swap;
         src: url('/champagne-limousines-bold.ttf') format('truetype');
+        font-weight: bold;
+      }
+      @font-face {
+        font-family: 'Champagne Limousines';
+        font-display: swap;
+        src: url('/champagne-limousines.ttf') format('truetype');
+        font-weight: normal;
       }
       body {
         font-family: 'Champagne Limousines', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
