@@ -10,7 +10,11 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'true').lower() == 'true'
+# Configuration de l'environnement : local/dev/prod
+ENVIRONMENT = os.environ.get('DJANGO_ENVIRONMENT', 'local').lower()
+
+# Configuration DEBUG basée sur l'environnement
+DEBUG = False if ENVIRONMENT == 'prod' else True
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 if not SECRET_KEY:

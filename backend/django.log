@@ -947,3 +947,43 @@ WARNING 2025-08-11 08:58:27,491 basehttp 23320 21264 "POST /auth/jwt/verify/ HTT
 WARNING 2025-08-11 08:58:27,491 basehttp 23320 22588 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
 INFO 2025-08-11 09:44:56,767 basehttp 23320 26112 "GET /media/store/F%26W/watch1-wide-4.webm HTTP/1.1" 304 0
 INFO 2025-08-11 09:44:56,802 basehttp 23320 26032 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 304 0
+INFO 2025-08-11 12:11:12,344 autoreload 23320 2820 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:11:14,314 autoreload 30664 30652 Watching for file changes with StatReloader
+INFO 2025-08-11 12:11:43,160 autoreload 30664 30652 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:11:44,885 autoreload 29956 23372 Watching for file changes with StatReloader
+INFO 2025-08-11 12:12:00,801 autoreload 29956 23372 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:12:02,489 autoreload 9496 28940 Watching for file changes with StatReloader
+INFO 2025-08-11 12:12:05,604 autoreload 9496 28940 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:12:07,266 autoreload 11040 9752 Watching for file changes with StatReloader
+INFO 2025-08-11 12:12:51,487 autoreload 11040 9752 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:12:53,223 autoreload 22748 3332 Watching for file changes with StatReloader
+INFO 2025-08-11 12:12:57,421 autoreload 22748 3332 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:12:59,184 autoreload 14940 10328 Watching for file changes with StatReloader
+INFO 2025-08-11 12:13:42,622 autoreload 14940 10328 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:13:44,539 autoreload 25664 18212 Watching for file changes with StatReloader
+INFO 2025-08-11 12:13:53,169 autoreload 25664 18212 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 12:13:54,821 autoreload 17136 29396 Watching for file changes with StatReloader
+INFO 2025-08-11 12:44:37,536 autoreload 17136 29396 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 12:44:39,243 autoreload 25996 29464 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:02,190 autoreload 25996 29464 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:03:03,744 autoreload 27060 30680 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:12,922 autoreload 27060 30680 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:03:14,516 autoreload 28900 28220 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:17,427 autoreload 28900 28220 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:03:18,913 autoreload 28704 5236 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:21,866 autoreload 28704 5236 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:03:23,591 autoreload 27780 10612 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:36,024 autoreload 27780 10612 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 13:03:37,577 autoreload 26832 21240 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:40,437 autoreload 26832 21240 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 13:03:41,984 autoreload 19684 3180 Watching for file changes with StatReloader
+INFO 2025-08-11 13:03:54,468 autoreload 19684 3180 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\urls.py changed, reloading.
+INFO 2025-08-11 13:03:56,057 autoreload 17840 24828 Watching for file changes with StatReloader
+INFO 2025-08-11 13:04:42,965 autoreload 17840 24828 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:04:44,480 autoreload 15556 19556 Watching for file changes with StatReloader
+INFO 2025-08-11 13:05:17,810 autoreload 15556 19556 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:05:19,517 autoreload 18456 22724 Watching for file changes with StatReloader
+INFO 2025-08-11 13:05:27,717 autoreload 18456 22724 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:05:29,205 autoreload 15484 29540 Watching for file changes with StatReloader
+INFO 2025-08-11 13:05:34,089 autoreload 15484 29540 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-11 13:05:35,595 autoreload 29320 29952 Watching for file changes with StatReloader
