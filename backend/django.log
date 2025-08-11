@@ -1,0 +1,838 @@
+INFO 2025-08-10 13:46:34,687 autoreload 22708 4704 Watching for file changes with StatReloader
+INFO 2025-08-10 13:46:49,122 autoreload 9208 24156 Watching for file changes with StatReloader
+INFO 2025-08-10 13:46:56,076 basehttp 9208 8704 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:46:56,077 basehttp 9208 16456 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 13:46:56,467 log 9208 24436 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 13:46:56,468 basehttp 9208 24436 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 13:46:56,472 log 9208 6036 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 13:46:56,473 basehttp 9208 6036 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 13:46:56,477 basehttp 9208 8704 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:46:56,483 basehttp 9208 8704 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:46:56,558 basehttp 9208 6036 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 13:46:56,596 basehttp 9208 8704 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:46:56,596 basehttp 9208 16456 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:46:56,687 basehttp 9208 24436 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 13:46:56,735 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:46:56,851 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:46:56,999 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:46:57,098 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:46:57,100 basehttp 9208 428 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:46:57,186 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:46:57,263 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:46:57,272 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:46:57,316 basehttp 9208 3820 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:46:57,408 basehttp 9208 6036 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:46:57,421 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:46:57,579 basehttp 9208 24436 "GET /store/products/ HTTP/1.1" 200 5692
+INFO 2025-08-10 13:46:57,583 basehttp 9208 23844 "GET /store/products/ HTTP/1.1" 200 5692
+INFO 2025-08-10 13:46:57,656 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:46:57,658 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:46:57,683 basehttp 9208 428 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:46:57,757 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:46:57,837 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:46:57,845 basehttp 9208 6036 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:46:57,854 basehttp 9208 23844 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:46:57,860 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:46:57,866 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:46:57,954 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:46:57,978 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:46:58,114 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:46:58,118 basehttp 9208 23844 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:46:58,181 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:46:58,184 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:46:58,191 basehttp 9208 428 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:46:58,216 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:46:58,252 basehttp 9208 23844 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:46:58,287 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:46:58,293 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:46:58,349 basehttp 9208 3820 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:46:58,482 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:46:58,542 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:46:58,564 basehttp 9208 23844 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:46:58,574 basehttp 9208 428 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:46:58,583 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:46:58,643 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:46:58,689 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:46:58,718 basehttp 9208 24436 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:46:58,721 basehttp 9208 23844 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:46:58,754 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:46:58,825 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:47:02,526 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:47:16,345 basehttp 9208 16456 "OPTIONS /store/carts/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:16,424 basehttp 9208 428 "POST /store/carts/ HTTP/1.1" 201 72
+INFO 2025-08-10 13:47:16,430 basehttp 9208 16456 "OPTIONS /store/carts/cd67a0f6-20c5-4ed8-ab40-2be97a1be02e/items/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:16,501 basehttp 9208 428 "POST /store/carts/cd67a0f6-20c5-4ed8-ab40-2be97a1be02e/items/ HTTP/1.1" 201 36
+INFO 2025-08-10 13:47:16,506 basehttp 9208 16456 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:16,549 views 9208 428 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 13:47:16,553 views 9208 428 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 13:47:17,518 views 9208 428 Session Stripe créée: cs_test_a1hgUlvWgTVXS43LHcM8uNS89FCBCcVJjDnHsXAZ1SNUIbUYNrDhhaqXqQ
+INFO 2025-08-10 13:47:17,545 basehttp 9208 428 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+INFO 2025-08-10 13:47:26,323 basehttp 9208 16456 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,328 basehttp 9208 16456 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 13:47:26,398 log 9208 428 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 13:47:26,399 basehttp 9208 428 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 13:47:26,409 basehttp 9208 16456 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 13:47:26,413 log 9208 24440 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 13:47:26,415 basehttp 9208 24440 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 13:47:26,421 basehttp 9208 16456 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,476 basehttp 9208 428 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 13:47:26,487 basehttp 9208 24440 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 13:47:26,524 basehttp 9208 16456 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,525 basehttp 9208 6020 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,526 basehttp 9208 8704 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,532 basehttp 9208 6020 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 13:47:26,683 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:47:26,739 basehttp 9208 428 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:47:26,749 basehttp 9208 23844 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:47:26,755 basehttp 9208 3820 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:47:26,761 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:47:26,765 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:47:26,826 views 9208 23844 Vérification paiement: cs_test_a1hgUlvWgTVXS43LHcM8uNS89FCBCcVJjDnHsXAZ1SNUIbUYNrDhhaqXqQ
+INFO 2025-08-10 13:47:26,836 basehttp 9208 428 "GET /store/products/ HTTP/1.1" 200 5692
+INFO 2025-08-10 13:47:26,843 views 9208 3820 Vérification paiement: cs_test_a1hgUlvWgTVXS43LHcM8uNS89FCBCcVJjDnHsXAZ1SNUIbUYNrDhhaqXqQ
+INFO 2025-08-10 13:47:26,898 basehttp 9208 24440 "GET /store/products/ HTTP/1.1" 200 5692
+INFO 2025-08-10 13:47:26,927 basehttp 9208 6036 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:47:26,928 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:47:26,983 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:47:27,009 basehttp 9208 24436 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:47:27,038 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:47:27,148 basehttp 9208 428 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:47:27,192 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:47:27,196 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:47:27,285 basehttp 9208 428 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:47:27,293 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:47:27,344 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:47:27,383 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:47:27,436 basehttp 9208 6036 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:47:27,472 basehttp 9208 24436 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:47:27,493 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:47:27,526 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:47:27,570 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:47:27,611 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:47:27,612 basehttp 9208 428 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:47:27,640 views 9208 3820 Session récupérée - Status: paid, Amount: 195.0€
+INFO 2025-08-10 13:47:27,641 views 9208 3820 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 13:47:27,645 views 9208 23844 Session récupérée - Status: paid, Amount: 195.0€
+INFO 2025-08-10 13:47:27,646 views 9208 3820 Utilisateur récupéré: 2
+INFO 2025-08-10 13:47:27,646 views 9208 23844 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 13:47:27,651 views 9208 23844 Utilisateur récupéré: 2
+INFO 2025-08-10 13:47:27,653 views 9208 3820 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 13:47:27,659 views 9208 23844 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 13:47:27,726 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 13:47:27,819 basehttp 9208 428 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 13:47:27,824 basehttp 9208 24436 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 13:47:27,848 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 13:47:27,868 basehttp 9208 24440 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 13:47:27,964 basehttp 9208 428 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 13:47:27,969 basehttp 9208 6036 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 13:47:27,993 basehttp 9208 24436 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 13:47:28,076 basehttp 9208 428 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 13:47:28,081 basehttp 9208 24440 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 13:47:28,085 basehttp 9208 6036 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 13:47:28,282 views 9208 23844 Email envoyé avec succès
+INFO 2025-08-10 13:47:28,282 views 9208 23844 Paiement traité avec succès - Order #30 - 195.0€
+INFO 2025-08-10 13:47:28,288 views 9208 3820 Email envoyé avec succès
+INFO 2025-08-10 13:47:28,289 views 9208 3820 Paiement traité avec succès - Order #29 - 195.0€
+INFO 2025-08-10 13:47:28,326 basehttp 9208 23844 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 13:47:28,356 basehttp 9208 3820 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 13:49:11,604 autoreload 9208 24156 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:49:13,775 autoreload 13004 15992 Watching for file changes with StatReloader
+INFO 2025-08-10 13:51:19,816 autoreload 13004 15992 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:51:21,749 autoreload 4804 4416 Watching for file changes with StatReloader
+INFO 2025-08-10 13:51:29,244 autoreload 4804 4416 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:51:30,834 autoreload 3040 2432 Watching for file changes with StatReloader
+INFO 2025-08-10 13:54:23,527 autoreload 3040 2432 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 13:54:25,127 autoreload 26236 25768 Watching for file changes with StatReloader
+INFO 2025-08-10 13:54:35,663 autoreload 26236 25768 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:54:37,289 autoreload 7700 11064 Watching for file changes with StatReloader
+INFO 2025-08-10 13:55:04,688 autoreload 7700 11064 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:55:06,403 autoreload 9568 12088 Watching for file changes with StatReloader
+INFO 2025-08-10 13:55:10,496 autoreload 9568 12088 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 13:55:12,245 autoreload 6776 25680 Watching for file changes with StatReloader
+INFO 2025-08-10 13:55:31,259 autoreload 6776 25680 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 13:55:33,039 autoreload 12868 25464 Watching for file changes with StatReloader
+INFO 2025-08-10 13:55:55,058 autoreload 12868 25464 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 13:55:56,663 autoreload 22256 13616 Watching for file changes with StatReloader
+INFO 2025-08-10 13:56:19,577 autoreload 22256 13616 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 13:56:21,162 autoreload 24376 2348 Watching for file changes with StatReloader
+INFO 2025-08-10 13:59:59,764 autoreload 16184 1432 Watching for file changes with StatReloader
+INFO 2025-08-10 14:02:17,145 autoreload 16184 1432 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:02:18,891 autoreload 10668 7840 Watching for file changes with StatReloader
+INFO 2025-08-10 14:02:30,620 autoreload 10668 7840 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:02:32,399 autoreload 24432 11624 Watching for file changes with StatReloader
+INFO 2025-08-10 14:02:48,293 autoreload 23836 3264 Watching for file changes with StatReloader
+INFO 2025-08-10 14:03:50,243 basehttp 23836 10692 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:03:50,243 basehttp 23836 22300 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:03:50,897 basehttp 23836 4936 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:03:50,897 basehttp 23836 7380 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:03:50,996 basehttp 23836 4936 "GET /media/store/F%26W/watch1-wide-2.png HTTP/1.1" 200 147388
+INFO 2025-08-10 14:03:51,011 basehttp 23836 25520 "GET /media/store/F%26W/watch1-wide-3.png HTTP/1.1" 200 39573
+INFO 2025-08-10 14:03:51,075 basehttp 23836 4936 "GET /media/store/F%26W/watch2-wide-1.png HTTP/1.1" 200 48629
+INFO 2025-08-10 14:03:51,103 basehttp 23836 25520 "GET /media/store/F%26W/watch2-wide-2.png HTTP/1.1" 200 94995
+INFO 2025-08-10 14:03:51,154 basehttp 23836 7380 "GET /media/store/F%26W/watch1-wide-1.png HTTP/1.1" 200 426831
+INFO 2025-08-10 14:03:51,204 basehttp 23836 4936 "GET /media/store/F%26W/watch2-wide-3.png HTTP/1.1" 200 44759
+INFO 2025-08-10 14:03:51,294 basehttp 23836 7380 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 200 1623272
+INFO 2025-08-10 14:04:05,037 basehttp 23836 22300 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:05,089 views 23836 7380 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 14:04:05,093 views 23836 7380 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 14:04:06,010 views 23836 7380 Session Stripe créée: cs_test_a1ZgmTiPLOF493Js3mvMebEDCFwqKgENbDJmVsRTL3EBZrudZmwTD9WYRW
+INFO 2025-08-10 14:04:06,030 basehttp 23836 7380 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+INFO 2025-08-10 14:04:06,221 basehttp 23836 25520 - Broken pipe from ('127.0.0.1', 1422)
+INFO 2025-08-10 14:04:21,470 basehttp 23836 22300 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,477 basehttp 23836 22300 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:04:21,603 log 23836 4936 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:04:21,605 basehttp 23836 4936 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:04:21,624 log 23836 7380 Unauthorized: /auth/jwt/verify/
+INFO 2025-08-10 14:04:21,626 basehttp 23836 22300 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:04:21,626 basehttp 23836 7380 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:04:21,635 basehttp 23836 22300 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,698 basehttp 23836 7380 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:04:21,746 basehttp 23836 22300 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,746 basehttp 23836 10692 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,748 basehttp 23836 2844 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,764 basehttp 23836 2844 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:04:21,829 basehttp 23836 4936 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:04:21,850 basehttp 23836 7380 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:04:21,878 views 23836 3040 Request data: {'session_id': 'cs_test_a1ZgmTiPLOF493Js3mvMebEDCFwqKgENbDJmVsRTL3EBZrudZmwTD9WYRW'}
+INFO 2025-08-10 14:04:21,879 views 23836 3040 Vérification paiement: cs_test_a1ZgmTiPLOF493Js3mvMebEDCFwqKgENbDJmVsRTL3EBZrudZmwTD9WYRW
+INFO 2025-08-10 14:04:21,954 views 23836 240 Request data: {'session_id': 'cs_test_a1ZgmTiPLOF493Js3mvMebEDCFwqKgENbDJmVsRTL3EBZrudZmwTD9WYRW'}
+INFO 2025-08-10 14:04:21,954 views 23836 240 Vérification paiement: cs_test_a1ZgmTiPLOF493Js3mvMebEDCFwqKgENbDJmVsRTL3EBZrudZmwTD9WYRW
+INFO 2025-08-10 14:04:21,968 basehttp 23836 21816 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:04:22,170 basehttp 23836 4936 "GET /media/store/F%26W/watch1-wide-3.png HTTP/1.1" 200 39573
+INFO 2025-08-10 14:04:22,181 basehttp 23836 21816 "GET /media/store/F%26W/watch1-wide-1.png HTTP/1.1" 200 426831
+INFO 2025-08-10 14:04:22,250 basehttp 23836 4936 "GET /media/store/F%26W/watch2-wide-1.png HTTP/1.1" 200 48629
+INFO 2025-08-10 14:04:22,277 basehttp 23836 21816 "GET /media/store/F%26W/watch2-wide-2.png HTTP/1.1" 200 94995
+INFO 2025-08-10 14:04:22,283 basehttp 23836 7380 "GET /media/store/F%26W/watch1-wide-2.png HTTP/1.1" 200 147388
+INFO 2025-08-10 14:04:22,354 basehttp 23836 4936 "GET /media/store/F%26W/watch2-wide-3.png HTTP/1.1" 200 44759
+INFO 2025-08-10 14:04:22,408 basehttp 23836 7380 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 200 1623272
+INFO 2025-08-10 14:04:22,637 views 23836 3040 Session récupérée - Status: paid, Amount: 28000.0€
+INFO 2025-08-10 14:04:22,637 views 23836 3040 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:04:22,639 views 23836 3040 Utilisateur récupéré: 2
+INFO 2025-08-10 14:04:22,641 views 23836 3040 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:04:22,643 views 23836 3040 Montre trouvée: Royal Oak Jumbo - 28000.00€
+INFO 2025-08-10 14:04:22,655 views 23836 3040 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:04:22,655 views 23836 3040 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:04:22,655 views 23836 3040 Type de paiement: watch_purchase
+INFO 2025-08-10 14:04:22,656 views 23836 3040 Order ID: 31
+INFO 2025-08-10 14:04:22,656 views 23836 3040 Contexte email préparé pour F&W
+INFO 2025-08-10 14:04:22,659 views 23836 3040 Template email généré, envoi en cours...
+INFO 2025-08-10 14:04:22,712 views 23836 240 Session récupérée - Status: paid, Amount: 28000.0€
+INFO 2025-08-10 14:04:22,712 views 23836 240 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:04:22,715 views 23836 240 Utilisateur récupéré: 2
+INFO 2025-08-10 14:04:22,717 views 23836 240 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:04:22,718 views 23836 240 Montre trouvée: Royal Oak Jumbo - 28000.00€
+INFO 2025-08-10 14:04:22,728 views 23836 240 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:04:22,728 views 23836 240 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:04:22,728 views 23836 240 Type de paiement: watch_purchase
+INFO 2025-08-10 14:04:22,728 views 23836 240 Order ID: 32
+INFO 2025-08-10 14:04:22,728 views 23836 240 Contexte email préparé pour F&W
+INFO 2025-08-10 14:04:22,729 views 23836 240 Template email généré, envoi en cours...
+INFO 2025-08-10 14:04:23,965 views 23836 3040 Paiement traité avec succès - Order #31 - 28000.0€
+INFO 2025-08-10 14:04:23,993 basehttp 23836 3040 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:04:24,031 views 23836 240 Paiement traité avec succès - Order #32 - 28000.0€
+INFO 2025-08-10 14:04:24,053 basehttp 23836 240 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:04:39,693 basehttp 23836 21816 - Broken pipe from ('127.0.0.1', 1437)
+INFO 2025-08-10 14:05:49,335 autoreload 23836 3264 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:05:51,076 autoreload 7648 3396 Watching for file changes with StatReloader
+INFO 2025-08-10 14:05:54,248 autoreload 7648 3396 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:05:55,878 autoreload 16060 14488 Watching for file changes with StatReloader
+INFO 2025-08-10 14:06:08,665 autoreload 16060 14488 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:06:10,447 autoreload 12992 19868 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:14,767 autoreload 12992 19868 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:16,399 autoreload 7628 4936 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:24,872 autoreload 7628 4936 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:26,541 autoreload 21424 26596 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:34,749 autoreload 21424 26596 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:36,229 autoreload 7700 24860 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:44,379 autoreload 7700 24860 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:45,903 autoreload 1632 3208 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:53,037 autoreload 1632 3208 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:54,555 autoreload 23116 21068 Watching for file changes with StatReloader
+INFO 2025-08-10 14:07:57,569 autoreload 23116 21068 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:07:59,049 autoreload 23832 14488 Watching for file changes with StatReloader
+INFO 2025-08-10 14:08:12,510 autoreload 23832 14488 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:08:14,073 autoreload 15460 22144 Watching for file changes with StatReloader
+INFO 2025-08-10 14:08:19,048 autoreload 15460 22144 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:08:20,622 autoreload 13416 25320 Watching for file changes with StatReloader
+INFO 2025-08-10 14:20:46,021 autoreload 9672 7412 Watching for file changes with StatReloader
+INFO 2025-08-10 14:21:05,979 basehttp 9672 21020 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:21:05,981 basehttp 9672 21040 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:21:06,265 basehttp 9672 8484 "GET /admin/store/order/28/change/ HTTP/1.1" 200 37184
+WARNING 2025-08-10 14:21:06,354 log 9672 8484 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:21:06,355 basehttp 9672 8484 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:21:06,392 log 9672 8888 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:21:06,394 basehttp 9672 8888 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:21:06,468 basehttp 9672 8888 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:21:06,518 basehttp 9672 21040 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:21:06,518 basehttp 9672 21020 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:21:06,580 basehttp 9672 8484 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+WARNING 2025-08-10 14:21:06,640 log 9672 8888 Not Found: /favicon.ico
+WARNING 2025-08-10 14:21:06,654 basehttp 9672 8888 "GET /favicon.ico HTTP/1.1" 404 16730
+INFO 2025-08-10 14:21:06,693 basehttp 9672 4880 "GET /store/watches/ HTTP/1.1" 200 1889
+INFO 2025-08-10 14:21:26,335 basehttp 9672 4880 - Broken pipe from ('127.0.0.1', 49972)
+WARNING 2025-08-10 14:21:48,306 log 9672 21924 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:21:48,307 basehttp 9672 21924 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:21:48,359 basehttp 9672 21924 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+WARNING 2025-08-10 14:21:48,414 log 9672 21928 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:21:48,414 basehttp 9672 21928 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:21:48,498 basehttp 9672 21928 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:22:03,722 basehttp 9672 21924 - Broken pipe from ('127.0.0.1', 50083)
+INFO 2025-08-10 14:22:06,867 basehttp 9672 11316 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:22:06,908 views 9672 21928 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 14:22:06,911 views 9672 21928 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 14:22:07,659 views 9672 21928 Session Stripe créée: cs_test_a1h4CZkG97XhEUVVdJ2EcFFip0hy9YRVpFm9VRfvEs6UKv8ylf6gsj0OXP
+INFO 2025-08-10 14:22:07,675 basehttp 9672 21928 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+WARNING 2025-08-10 14:22:14,111 log 9672 21832 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:22:14,111 basehttp 9672 21832 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:22:14,170 basehttp 9672 21832 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:22:14,210 basehttp 9672 11316 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:22:14,211 basehttp 9672 22500 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:22:14,232 log 9672 21928 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:22:14,233 basehttp 9672 21928 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:22:14,281 views 9672 21832 Request data: {'session_id': 'cs_test_a1h4CZkG97XhEUVVdJ2EcFFip0hy9YRVpFm9VRfvEs6UKv8ylf6gsj0OXP'}
+INFO 2025-08-10 14:22:14,282 views 9672 21832 Vérification paiement: cs_test_a1h4CZkG97XhEUVVdJ2EcFFip0hy9YRVpFm9VRfvEs6UKv8ylf6gsj0OXP
+INFO 2025-08-10 14:22:14,405 views 9672 21928 Request data: {'session_id': 'cs_test_a1h4CZkG97XhEUVVdJ2EcFFip0hy9YRVpFm9VRfvEs6UKv8ylf6gsj0OXP'}
+INFO 2025-08-10 14:22:14,405 views 9672 21928 Vérification paiement: cs_test_a1h4CZkG97XhEUVVdJ2EcFFip0hy9YRVpFm9VRfvEs6UKv8ylf6gsj0OXP
+INFO 2025-08-10 14:22:14,570 basehttp 9672 18900 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:22:14,646 views 9672 21928 Session récupérée - Status: paid, Amount: 15800.0€
+INFO 2025-08-10 14:22:14,646 views 9672 21928 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:22:14,649 views 9672 21928 Utilisateur récupéré: 2
+INFO 2025-08-10 14:22:14,651 views 9672 21928 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:22:14,652 views 9672 21928 Montre trouvée: Heritage Dress Watch - 15800.00€
+INFO 2025-08-10 14:22:14,676 views 9672 21928 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:22:14,677 views 9672 21928 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:22:14,677 views 9672 21928 Type de paiement: watch_purchase
+INFO 2025-08-10 14:22:14,677 views 9672 21928 Order ID: 33
+INFO 2025-08-10 14:22:14,677 views 9672 21928 Contexte email préparé pour F&W
+INFO 2025-08-10 14:22:14,679 views 9672 21928 Template email généré, envoi en cours...
+INFO 2025-08-10 14:22:14,686 views 9672 21928 Email envoyé avec succès via Django
+INFO 2025-08-10 14:22:14,686 views 9672 21928 Paiement traité avec succès - Order #33 - 15800.0€
+INFO 2025-08-10 14:22:14,732 basehttp 9672 21928 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:22:14,810 views 9672 21832 Session récupérée - Status: paid, Amount: 15800.0€
+INFO 2025-08-10 14:22:14,811 views 9672 21832 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:22:14,813 views 9672 21832 Utilisateur récupéré: 2
+INFO 2025-08-10 14:22:14,816 views 9672 21832 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:22:14,818 views 9672 21832 Montre trouvée: Heritage Dress Watch - 15800.00€
+INFO 2025-08-10 14:22:14,831 views 9672 21832 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:22:14,831 views 9672 21832 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:22:14,832 views 9672 21832 Type de paiement: watch_purchase
+INFO 2025-08-10 14:22:14,832 views 9672 21832 Order ID: 34
+INFO 2025-08-10 14:22:14,832 views 9672 21832 Contexte email préparé pour F&W
+INFO 2025-08-10 14:22:14,833 views 9672 21832 Template email généré, envoi en cours...
+INFO 2025-08-10 14:22:14,836 views 9672 21832 Email envoyé avec succès via Django
+INFO 2025-08-10 14:22:14,836 views 9672 21832 Paiement traité avec succès - Order #34 - 15800.0€
+INFO 2025-08-10 14:22:14,864 basehttp 9672 21832 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:22:31,668 basehttp 9672 20944 - Broken pipe from ('127.0.0.1', 50130)
+INFO 2025-08-10 14:23:13,049 autoreload 9672 7412 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:23:24,909 autoreload 3164 18468 Watching for file changes with StatReloader
+INFO 2025-08-10 14:23:43,177 views 3164 21812 User créé: youenn.wilson.19@neoma-bs.com
+ERROR 2025-08-10 14:23:43,186 views 3164 21812 ERREUR création utilisateur/customer: une valeur NULL viole la contrainte NOT NULL de la colonne « has_ordered » dans la relation « customers »
+DETAIL:  La ligne en échec contient (Sewa Wilson, \x800000000068988f4fe5d688def30e98a2236993df8d513955f83b074f5357..., \x800000000068988f4f46f58d253e7888503d2d20a591055fae2bc5ec1c2b68..., \x800000000068988f4f4009421eaf2a3696bb716629416ec45539c4975c1b80..., 2025-08-10 12:23:43.180586+00, 3, null, f).
+ERROR 2025-08-10 14:23:43,233 log 3164 21812 Internal Server Error: /store/create-stripe-session/
+ERROR 2025-08-10 14:23:43,234 basehttp 3164 21812 "POST /store/create-stripe-session/ HTTP/1.1" 500 40
+WARNING 2025-08-10 14:23:53,840 log 3164 11448 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:53,841 basehttp 3164 11448 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:23:53,853 log 3164 21812 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:53,854 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:23:53,912 basehttp 3164 11448 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:54,034 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:55,185 basehttp 3164 11448 - Broken pipe from ('127.0.0.1', 50152)
+INFO 2025-08-10 14:23:55,699 basehttp 3164 5940 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:23:55,699 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:23:55,746 log 3164 21812 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:55,746 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:23:55,793 log 3164 21812 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:55,794 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:23:55,843 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:55,906 basehttp 3164 21812 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:56,526 basehttp 3164 21812 - Broken pipe from ('127.0.0.1', 50150)
+WARNING 2025-08-10 14:23:56,772 log 3164 7780 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:56,772 basehttp 3164 7780 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:23:56,781 log 3164 22000 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:56,782 basehttp 3164 22000 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:23:56,834 basehttp 3164 7780 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:56,846 basehttp 3164 22000 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:57,463 basehttp 3164 22000 - Broken pipe from ('127.0.0.1', 50184)
+INFO 2025-08-10 14:23:57,651 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:23:57,655 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:23:57,722 log 3164 7780 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:57,722 basehttp 3164 7780 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:23:57,732 log 3164 21036 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:57,733 basehttp 3164 21036 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:23:57,787 basehttp 3164 7780 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:57,905 basehttp 3164 21036 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:58,642 basehttp 3164 7780 - Broken pipe from ('127.0.0.1', 50183)
+WARNING 2025-08-10 14:23:58,885 log 3164 21796 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:58,886 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:23:58,896 log 3164 21036 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:23:58,896 basehttp 3164 21036 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:23:58,948 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:23:58,957 basehttp 3164 21036 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:24:03,068 basehttp 3164 21796 "GET /admin/store/watch/ HTTP/1.1" 200 25825
+INFO 2025-08-10 14:24:03,170 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+WARNING 2025-08-10 14:24:03,275 log 3164 21796 Not Found: /favicon.ico
+WARNING 2025-08-10 14:24:03,275 basehttp 3164 21796 "GET /favicon.ico HTTP/1.1" 404 16729
+INFO 2025-08-10 14:24:04,303 basehttp 3164 21796 "GET /admin/store/watch/1/change/ HTTP/1.1" 200 38651
+INFO 2025-08-10 14:24:04,393 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:04,434 basehttp 3164 21796 "GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 560
+INFO 2025-08-10 14:24:06,884 basehttp 3164 21796 "POST /admin/store/watch/1/change/ HTTP/1.1" 302 0
+INFO 2025-08-10 14:24:07,063 basehttp 3164 21796 "GET /admin/store/watch/ HTTP/1.1" 200 26053
+INFO 2025-08-10 14:24:07,151 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:07,164 basehttp 3164 21796 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-08-10 14:24:08,722 basehttp 3164 21796 "GET /admin/store/watch/2/change/ HTTP/1.1" 200 37031
+INFO 2025-08-10 14:24:08,810 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:11,890 basehttp 3164 21796 "POST /admin/store/watch/2/change/ HTTP/1.1" 302 0
+INFO 2025-08-10 14:24:11,965 basehttp 3164 21796 "GET /admin/store/watch/ HTTP/1.1" 200 26048
+INFO 2025-08-10 14:24:12,061 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:13,047 basehttp 3164 21796 "GET /admin/store/watch/4/change/ HTTP/1.1" 200 33867
+INFO 2025-08-10 14:24:13,135 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:15,290 basehttp 3164 21796 "POST /admin/store/watch/4/change/ HTTP/1.1" 302 0
+INFO 2025-08-10 14:24:15,367 basehttp 3164 21796 "GET /admin/store/watch/ HTTP/1.1" 200 26043
+INFO 2025-08-10 14:24:15,563 basehttp 3164 21796 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:24:16,095 basehttp 3164 21036 - Broken pipe from ('127.0.0.1', 50185)
+INFO 2025-08-10 14:24:17,199 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:24:17,200 basehttp 3164 5940 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:24:17,271 log 3164 21796 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:24:17,271 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:24:17,323 log 3164 21796 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:24:17,323 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:24:17,374 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:24:17,437 basehttp 3164 21796 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:24:17,912 basehttp 3164 21796 - Broken pipe from ('127.0.0.1', 50186)
+INFO 2025-08-10 14:24:18,095 basehttp 3164 5940 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:24:18,095 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:24:18,167 log 3164 21560 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:24:18,167 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:24:18,182 log 3164 16832 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:24:18,183 basehttp 3164 16832 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:24:18,238 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:24:18,246 basehttp 3164 16832 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:24:18,550 basehttp 3164 16832 "GET /media/store/F%26W/watch1-wide-4.webm HTTP/1.1" 200 4961707
+INFO 2025-08-10 14:25:48,498 basehttp 3164 12988 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:25:48,499 basehttp 3164 5940 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:25:48,576 log 3164 21560 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:25:48,576 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:25:48,640 log 3164 21560 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:25:48,640 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:25:48,698 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:25:48,767 basehttp 3164 21560 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:25:49,034 basehttp 3164 21560 "GET /media/store/F%26W/watch1-wide-4.webm HTTP/1.1" 200 4961707
+INFO 2025-08-10 14:25:59,477 basehttp 3164 13120 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:25:59,477 basehttp 3164 2568 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:25:59,805 log 3164 10124 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:25:59,809 log 3164 11400 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:25:59,810 basehttp 3164 10124 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:25:59,810 basehttp 3164 11400 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:26:07,531 basehttp 3164 2568 "OPTIONS /auth/jwt/create/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:07,912 basehttp 3164 11400 "POST /auth/jwt/create/ HTTP/1.1" 200 483
+INFO 2025-08-10 14:26:07,938 basehttp 3164 2568 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:07,938 basehttp 3164 13120 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:08,004 basehttp 3164 11400 "GET /store/watches/ HTTP/1.1" 200 1887
+INFO 2025-08-10 14:26:08,052 basehttp 3164 20444 "GET /media/store/F%26W/watch1-wide-2.png HTTP/1.1" 200 147388
+INFO 2025-08-10 14:26:08,053 basehttp 3164 10124 "GET /media/store/F%26W/watch1-wide-1.png HTTP/1.1" 200 426831
+INFO 2025-08-10 14:26:08,077 basehttp 3164 10124 "GET /media/store/F%26W/watch2-wide-1.png HTTP/1.1" 200 48629
+INFO 2025-08-10 14:26:08,078 basehttp 3164 20444 "GET /media/store/F%26W/watch1-wide-3.png HTTP/1.1" 200 39573
+INFO 2025-08-10 14:26:08,104 basehttp 3164 10124 "GET /media/store/F%26W/watch2-wide-3.png HTTP/1.1" 200 44759
+INFO 2025-08-10 14:26:08,105 basehttp 3164 20444 "GET /media/store/F%26W/watch2-wide-2.png HTTP/1.1" 200 94995
+INFO 2025-08-10 14:26:08,137 basehttp 3164 10124 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 200 1623272
+INFO 2025-08-10 14:26:22,960 basehttp 3164 13120 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:23,004 views 3164 10124 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 14:26:23,006 views 3164 10124 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 14:26:23,233 basehttp 3164 11400 - Broken pipe from ('127.0.0.1', 50313)
+INFO 2025-08-10 14:26:23,766 views 3164 10124 Session Stripe créée: cs_test_a1is4H9qjJusVU4Szux3PvTdyBXwJfVeTq0q7USsIkcLQcNpX6Gmp0noVk
+INFO 2025-08-10 14:26:23,780 basehttp 3164 10124 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+WARNING 2025-08-10 14:26:35,294 log 3164 20444 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:26:35,296 log 3164 10124 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:26:35,296 basehttp 3164 10124 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:26:35,297 basehttp 3164 20444 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:26:35,323 basehttp 3164 20444 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:26:35,327 basehttp 3164 10124 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:26:35,366 basehttp 3164 13120 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:35,368 basehttp 3164 2568 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:26:35,437 views 3164 10124 Request data: {'session_id': 'cs_test_a1is4H9qjJusVU4Szux3PvTdyBXwJfVeTq0q7USsIkcLQcNpX6Gmp0noVk'}
+INFO 2025-08-10 14:26:35,438 views 3164 10124 Vérification paiement: cs_test_a1is4H9qjJusVU4Szux3PvTdyBXwJfVeTq0q7USsIkcLQcNpX6Gmp0noVk
+INFO 2025-08-10 14:26:35,448 views 3164 20444 Request data: {'session_id': 'cs_test_a1is4H9qjJusVU4Szux3PvTdyBXwJfVeTq0q7USsIkcLQcNpX6Gmp0noVk'}
+INFO 2025-08-10 14:26:35,448 views 3164 20444 Vérification paiement: cs_test_a1is4H9qjJusVU4Szux3PvTdyBXwJfVeTq0q7USsIkcLQcNpX6Gmp0noVk
+INFO 2025-08-10 14:26:35,673 views 3164 10124 Session récupérée - Status: paid, Amount: 8500.0€
+INFO 2025-08-10 14:26:35,673 views 3164 10124 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:26:35,675 views 3164 10124 Utilisateur récupéré: 2
+INFO 2025-08-10 14:26:35,677 views 3164 10124 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:26:35,679 views 3164 10124 Montre trouvée: Hoolis Chronograph Sport - 8500.00€
+INFO 2025-08-10 14:26:35,689 views 3164 10124 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:26:35,689 views 3164 10124 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:26:35,689 views 3164 10124 Type de paiement: watch_purchase
+INFO 2025-08-10 14:26:35,690 views 3164 10124 Order ID: 35
+INFO 2025-08-10 14:26:35,690 views 3164 10124 Contexte email préparé pour F&W
+INFO 2025-08-10 14:26:35,691 views 3164 10124 Template email généré, envoi en cours...
+INFO 2025-08-10 14:26:35,981 views 3164 20444 Session récupérée - Status: paid, Amount: 8500.0€
+INFO 2025-08-10 14:26:35,981 views 3164 20444 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:26:35,983 views 3164 20444 Utilisateur récupéré: 2
+INFO 2025-08-10 14:26:35,985 views 3164 20444 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:26:35,987 views 3164 20444 Montre trouvée: Hoolis Chronograph Sport - 8500.00€
+INFO 2025-08-10 14:26:35,994 views 3164 20444 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:26:35,994 views 3164 20444 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:26:35,994 views 3164 20444 Type de paiement: watch_purchase
+INFO 2025-08-10 14:26:35,995 views 3164 20444 Order ID: 36
+INFO 2025-08-10 14:26:35,995 views 3164 20444 Contexte email préparé pour F&W
+INFO 2025-08-10 14:26:35,996 views 3164 20444 Template email généré, envoi en cours...
+ERROR 2025-08-10 14:26:37,289 views 3164 10124 Erreur envoi email Django: (554, b'5.2.252 SendAsDenied; youenn.wilson@fwa.eu not allowed to send as noreply@hoolis.com; STOREDRV.Submission.Exception:SendAsDeniedException.MapiExceptionSendAsDenied; Failed to process message due to a permanent exception with message [BeginDiagnosticData]Cannot submit message. 1.84300:0A000000, 1.84300:0A000000, 1.84300:0E000000, 1.84300:32000000, 1.73948:00000000, 1.108572:00000000, 0.117068:0B000000, 1.79180:0A000000, 1.79180:0A000000, 1.79180:0E000000, 1.79180:32000000, 1.79180:FA000000, 255.73100:07000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC1F1F572B, 0.38698:1F1F572B, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 0.37692:792E0080, 0.37948:86000000, 5.33852:00000000534D545000736F66, 7.36354:010000000000010965727665, 1.46439:0A000000, 1.115228:00000000, 0.104668:66696753, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B20626520, 7.57132:0000000000000000792E0000, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A201000000, 0.104348:01000000, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:03F7B82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E313800000000, 0.39570:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:9F000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.79500:00000000, 0.100684:00000000, 255.66700:00000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC1F1F572B, 0.38698:1F1F572B, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 0.37692:792E0080, 0.37948:86000000, 5.33852:00000000534D545000736F66, 7.36354:010000000000010965727665, 1.46439:0A000000, 1.115228:00000000, 0.104668:66696753, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B20626520, 7.57132:0000000000000000792E0000, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A201000000, 0.104348:01000000, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:03F7B82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E313800000000, 0.39570:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:9F000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.97900:00000000, 4.120460:DC040000, 1.52466:02000000, 1.52466:02000000, 1.42738:05000000, 0.37698:07000000, 0.37698:01000000, 1.42738:05000000, 0.37698:55000000, 0.37698:02000000, 1.52466:01000000, 0.60402:02000000, 1.52466:01000000[EndDiagnosticData] [Hostname=PAXPR05MB9459.eurprd05.prod.outlook.com]')
+ERROR 2025-08-10 14:26:37,290 views 3164 20444 Erreur envoi email Django: (554, b'5.2.252 SendAsDenied; youenn.wilson@fwa.eu not allowed to send as noreply@hoolis.com; STOREDRV.Submission.Exception:SendAsDeniedException.MapiExceptionSendAsDenied; Failed to process message due to a permanent exception with message [BeginDiagnosticData]Cannot submit message. ..., 1.84300:0E000000, 1.84300:32000000, 1.73948:00000000, 1.108572:00000000, 0.117068:56000000, 1.79180:0A000000, 1.79180:0A000000, 1.79180:0E000000, 1.79180:32000000, 1.79180:FA000000, 255.73100:07000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC626D53D5, 0.38698:626D53D5, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 1.125148:00000000, 7.100572:000000000000000001000000, 0.37692:74207365, 0.37948:0A000000, 5.33852:00000000534D5450006F7220, 7.36354:01000000000001096F736F66, 1.46439:0A000000, 1.115228:00000000, 0.104668:6F726167, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B74207365, 7.57132:000000000000000020626520, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A200000000, 0.104348:6368616E, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:9BCDB82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E3138006D6F6E, 0.39570:66696753, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:FE000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.79500:00000000, 0.100684:00000000, 255.66700:00000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC626D53D5, 0.38698:626D53D5, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 1.125148:00000000, 7.100572:000000000000000001000000, 0.37692:74207365, 0.37948:0A000000, 5.33852:00000000534D5450006F7220, 7.36354:01000000000001096F736F66, 1.46439:0A000000, 1.115228:00000000, 0.104668:6F726167, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B74207365, 7.57132:000000000000000020626520, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A200000000, 0.104348:6368616E, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:9BCDB82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E3138006D6F6E, 0.39570:66696753, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:FE000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.97900:0A000000, 4.120460:DC040000, 1.52466:02000000, 1.52466:02000000, 1.42738:05000000, 0.37698:81000000, 0.37698:01000000, 1.42738:05000000, 0.37698:0A000000, 0.37698:02000000, 1.52466:01000000, 0.60402:02000000, 1.52466:01000000[EndDiagnosticData] [Hostname=PAXPR05MB9459.eurprd05.prod.outlook.com]')
+ERROR 2025-08-10 14:26:37,293 views 3164 20444 Traceback complet: Traceback (most recent call last):
+  File "C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py", line 886, in verify_payment
+    send_mail(
+    ~~~~~~~~~^
+        subject=email_subject,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        fail_silently=False,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\__init__.py", line 87, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\message.py", line 299, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 134, in send_messages
+    sent = self._send(message)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 152, in _send
+    self.connection.sendmail(
+    ~~~~~~~~~~~~~~~~~~~~~~~~^
+        from_email, recipients, message.as_bytes(linesep="\r\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 897, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (554, b'5.2.252 SendAsDenied; youenn.wilson@fwa.eu not allowed to send as noreply@hoolis.com; STOREDRV.Submission.Exception:SendAsDeniedException.MapiExceptionSendAsDenied; Failed to process message due to a permanent exception with message [BeginDiagnosticData]Cannot submit message. ..., 1.84300:0E000000, 1.84300:32000000, 1.73948:00000000, 1.108572:00000000, 0.117068:56000000, 1.79180:0A000000, 1.79180:0A000000, 1.79180:0E000000, 1.79180:32000000, 1.79180:FA000000, 255.73100:07000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC626D53D5, 0.38698:626D53D5, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 1.125148:00000000, 7.100572:000000000000000001000000, 0.37692:74207365, 0.37948:0A000000, 5.33852:00000000534D5450006F7220, 7.36354:01000000000001096F736F66, 1.46439:0A000000, 1.115228:00000000, 0.104668:6F726167, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B74207365, 7.57132:000000000000000020626520, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A200000000, 0.104348:6368616E, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:9BCDB82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E3138006D6F6E, 0.39570:66696753, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:FE000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.79500:00000000, 0.100684:00000000, 255.66700:00000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC626D53D5, 0.38698:626D53D5, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 1.125148:00000000, 7.100572:000000000000000001000000, 0.37692:74207365, 0.37948:0A000000, 5.33852:00000000534D5450006F7220, 7.36354:01000000000001096F736F66, 1.46439:0A000000, 1.115228:00000000, 0.104668:6F726167, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B74207365, 7.57132:000000000000000020626520, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A200000000, 0.104348:6368616E, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:9BCDB82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E3138006D6F6E, 0.39570:66696753, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:56000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:FE000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.97900:0A000000, 4.120460:DC040000, 1.52466:02000000, 1.52466:02000000, 1.42738:05000000, 0.37698:81000000, 0.37698:01000000, 1.42738:05000000, 0.37698:0A000000, 0.37698:02000000, 1.52466:01000000, 0.60402:02000000, 1.52466:01000000[EndDiagnosticData] [Hostname=PAXPR05MB9459.eurprd05.prod.outlook.com]')
+
+ERROR 2025-08-10 14:26:37,293 views 3164 10124 Traceback complet: Traceback (most recent call last):
+  File "C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py", line 886, in verify_payment
+    send_mail(
+    ~~~~~~~~~^
+        subject=email_subject,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        fail_silently=False,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\__init__.py", line 87, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\message.py", line 299, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 134, in send_messages
+    sent = self._send(message)
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 152, in _send
+    self.connection.sendmail(
+    ~~~~~~~~~~~~~~~~~~~~~~~~^
+        from_email, recipients, message.as_bytes(linesep="\r\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 897, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (554, b'5.2.252 SendAsDenied; youenn.wilson@fwa.eu not allowed to send as noreply@hoolis.com; STOREDRV.Submission.Exception:SendAsDeniedException.MapiExceptionSendAsDenied; Failed to process message due to a permanent exception with message [BeginDiagnosticData]Cannot submit message. 1.84300:0A000000, 1.84300:0A000000, 1.84300:0E000000, 1.84300:32000000, 1.73948:00000000, 1.108572:00000000, 0.117068:0B000000, 1.79180:0A000000, 1.79180:0A000000, 1.79180:0E000000, 1.79180:32000000, 1.79180:FA000000, 255.73100:07000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC1F1F572B, 0.38698:1F1F572B, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 0.37692:792E0080, 0.37948:86000000, 5.33852:00000000534D545000736F66, 7.36354:010000000000010965727665, 1.46439:0A000000, 1.115228:00000000, 0.104668:66696753, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B20626520, 7.57132:0000000000000000792E0000, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A201000000, 0.104348:01000000, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:03F7B82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E313800000000, 0.39570:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:9F000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.79500:00000000, 0.100684:00000000, 255.66700:00000000, 5.95292:67000000446F526F70730072, 8.111356:9552F9FE86593ECC1F1F572B2F8F6BAC1F1F572B, 0.38698:1F1F572B, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0053, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:86000000, 5.74908:000000004D6963726F736F66742E45786368616E67652E5365727665722E53746F726167652E436F6D6D6F6E2E436F6E66696753636F7065526F7000, 5.92636:00000000496E707574207365676D656E742063616E6E6F74206265206E756C6C206F7220656D7074792E0020, 1.41134:46000000, 0.37692:792E0080, 0.37948:86000000, 5.33852:00000000534D545000736F66, 7.36354:010000000000010965727665, 1.46439:0A000000, 1.115228:00000000, 0.104668:66696753, 1.44903:25000000, 1.115228:00000000, 4.56248:DC040000, 7.40748:010000000000010B20626520, 7.57132:0000000000000000792E0000, 4.39640:DC040000, 1.63016:32000000, 8.45434:BB23BFA4A3B4684FA26F0FA5C024F0A201000000, 0.104348:01000000, 5.46798:040000004D61696C4974656D5375626D697373696F6E00100F010480, 7.51330:03F7B82609D8DD080F010480, 5.10786:0000000031352E32302E393030392E3030393A504158505230354D42393435393A39666464623531642D623462302D346535352D393863662D6239376536646432396334313A3230303933323A2E4E455420382E302E313800000000, 0.39570:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:9F000000, 1.56562:00000000, 1.55954:0A000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.33010:0A000000, 2.54258:00000000, 0.40002:00000000, 1.56562:00000000, 1.64146:0E000000, 1.33010:0E000000, 2.54258:00000000, 1.33010:0E000000, 2.54258:00000000, 1.64146:32000000, 1.33010:32000000, 2.54258:DC040000, 1.33010:32000000, 2.54258:DC040000, 255.97900:00000000, 4.120460:DC040000, 1.52466:02000000, 1.52466:02000000, 1.42738:05000000, 0.37698:07000000, 0.37698:01000000, 1.42738:05000000, 0.37698:55000000, 0.37698:02000000, 1.52466:01000000, 0.60402:02000000, 1.52466:01000000[EndDiagnosticData] [Hostname=PAXPR05MB9459.eurprd05.prod.outlook.com]')
+
+INFO 2025-08-10 14:26:37,295 views 3164 20444 Paiement traité avec succès - Order #36 - 8500.0€
+INFO 2025-08-10 14:26:37,296 views 3164 10124 Paiement traité avec succès - Order #35 - 8500.0€
+INFO 2025-08-10 14:26:37,330 basehttp 3164 20444 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:26:37,333 basehttp 3164 10124 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:26:54,289 basehttp 3164 20392 - Broken pipe from ('127.0.0.1', 50321)
+INFO 2025-08-10 14:28:01,619 autoreload 3164 18468 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:28:03,216 autoreload 21328 1328 Watching for file changes with StatReloader
+INFO 2025-08-10 14:28:09,290 autoreload 21328 1328 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:28:10,933 autoreload 10532 21532 Watching for file changes with StatReloader
+INFO 2025-08-10 14:28:49,595 autoreload 10532 21532 C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py changed, reloading.
+INFO 2025-08-10 14:28:51,009 autoreload 19668 21408 Watching for file changes with StatReloader
+INFO 2025-08-10 14:31:57,833 autoreload 17904 5124 Watching for file changes with StatReloader
+INFO 2025-08-10 14:32:11,074 basehttp 17904 10684 "GET /admin/store/watch/ HTTP/1.1" 200 25826
+INFO 2025-08-10 14:32:11,088 basehttp 17904 6776 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:11,094 basehttp 17904 6768 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:32:11,210 log 17904 10684 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:32:11,212 basehttp 17904 10684 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:32:11,349 log 17904 10684 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:32:11,350 basehttp 17904 10684 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:32:11,437 basehttp 17904 10684 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:32:11,493 basehttp 17904 6768 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:11,493 basehttp 17904 6776 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:11,530 basehttp 17904 21952 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+WARNING 2025-08-10 14:32:11,558 log 17904 10684 Not Found: /favicon.ico
+WARNING 2025-08-10 14:32:11,559 basehttp 17904 10684 "GET /favicon.ico HTTP/1.1" 404 16730
+INFO 2025-08-10 14:32:11,676 basehttp 17904 22056 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:32:25,237 basehttp 17904 21836 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:25,238 basehttp 17904 10684 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:32:25,565 log 17904 19096 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:32:25,568 log 17904 13820 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:32:25,569 basehttp 17904 19096 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:32:25,569 basehttp 17904 13820 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:32:32,103 basehttp 17904 10684 "OPTIONS /auth/jwt/create/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:32:32,385 log 17904 13820 Unauthorized: /auth/jwt/create/
+WARNING 2025-08-10 14:32:32,386 basehttp 17904 13820 "POST /auth/jwt/create/ HTTP/1.1" 401 63
+INFO 2025-08-10 14:32:36,300 basehttp 17904 13820 "POST /auth/jwt/create/ HTTP/1.1" 200 483
+INFO 2025-08-10 14:32:36,328 basehttp 17904 21836 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:36,329 basehttp 17904 10684 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:36,389 basehttp 17904 13820 "GET /store/watches/ HTTP/1.1" 200 1888
+INFO 2025-08-10 14:32:36,439 basehttp 17904 19096 "GET /media/store/F%26W/watch2-wide-1.png HTTP/1.1" 200 48629
+INFO 2025-08-10 14:32:36,442 basehttp 17904 21872 "GET /media/store/F%26W/watch2-wide-2.png HTTP/1.1" 200 94995
+INFO 2025-08-10 14:32:36,472 basehttp 17904 21872 "GET /media/store/F%26W/watch2-wide-3.png HTTP/1.1" 200 44759
+INFO 2025-08-10 14:32:36,473 basehttp 17904 19096 "GET /media/store/F%26W/watch1-wide-2.png HTTP/1.1" 200 147388
+INFO 2025-08-10 14:32:36,501 basehttp 17904 21872 "GET /media/store/F%26W/watch1-wide-3.png HTTP/1.1" 200 39573
+INFO 2025-08-10 14:32:36,506 basehttp 17904 13820 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 200 1623272
+INFO 2025-08-10 14:32:36,510 basehttp 17904 19096 "GET /media/store/F%26W/watch1-wide-1.png HTTP/1.1" 200 426831
+INFO 2025-08-10 14:32:51,580 basehttp 17904 21872 - Broken pipe from ('127.0.0.1', 49987)
+INFO 2025-08-10 14:32:55,426 basehttp 17904 10684 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:32:55,471 views 17904 19096 User récupéré: youenn.wilson.19@neoma-bs.com
+ERROR 2025-08-10 14:32:55,487 views 17904 19096 ERREUR création utilisateur/customer: une valeur NULL viole la contrainte NOT NULL de la colonne « has_ordered » dans la relation « customers »
+DETAIL:  La ligne en échec contient (Sewa Wilson, \x80000000006898917793879ee93adbb75dfb98f87b71ce564dceb33f4b5558..., \x800000000068989177ded08c2dce6affd2c446b39d359f90812ae8a6856f8a..., \x8000000000689891779733289f560f41b80280d324c5979679619b564971cf..., 2025-08-10 12:32:55.479633+00, 3, null, f).
+ERROR 2025-08-10 14:32:55,507 log 17904 19096 Internal Server Error: /store/create-stripe-session/
+ERROR 2025-08-10 14:32:55,507 basehttp 17904 19096 "POST /store/create-stripe-session/ HTTP/1.1" 500 40
+INFO 2025-08-10 14:33:17,706 views 17904 19096 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 14:33:17,709 views 17904 19096 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 14:33:18,446 views 17904 19096 Session Stripe créée: cs_test_a1We07oMx6SEaDSfoELcfDDmwoxTjZO71bxie5KXl2Jnhp4QGBlGYlm9YL
+INFO 2025-08-10 14:33:18,464 basehttp 17904 19096 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+WARNING 2025-08-10 14:33:31,362 log 17904 13820 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:33:31,366 log 17904 19096 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:33:31,367 basehttp 17904 13820 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:33:31,367 basehttp 17904 19096 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:33:31,393 basehttp 17904 19096 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:33:31,394 basehttp 17904 13820 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:33:31,418 basehttp 17904 10684 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:33:31,419 basehttp 17904 21836 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:33:31,495 views 17904 13820 Request data: {'session_id': 'cs_test_a1We07oMx6SEaDSfoELcfDDmwoxTjZO71bxie5KXl2Jnhp4QGBlGYlm9YL'}
+INFO 2025-08-10 14:33:31,503 views 17904 19096 Request data: {'session_id': 'cs_test_a1We07oMx6SEaDSfoELcfDDmwoxTjZO71bxie5KXl2Jnhp4QGBlGYlm9YL'}
+INFO 2025-08-10 14:33:31,503 views 17904 13820 Vérification paiement: cs_test_a1We07oMx6SEaDSfoELcfDDmwoxTjZO71bxie5KXl2Jnhp4QGBlGYlm9YL
+INFO 2025-08-10 14:33:31,503 views 17904 19096 Vérification paiement: cs_test_a1We07oMx6SEaDSfoELcfDDmwoxTjZO71bxie5KXl2Jnhp4QGBlGYlm9YL
+INFO 2025-08-10 14:33:31,728 views 17904 19096 Session récupérée - Status: paid, Amount: 28000.0€
+INFO 2025-08-10 14:33:31,729 views 17904 19096 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:33:31,731 views 17904 19096 Utilisateur récupéré: 2
+INFO 2025-08-10 14:33:31,733 views 17904 19096 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:33:31,735 views 17904 19096 Montre trouvée: Royal Oak Jumbo - 28000.00€
+INFO 2025-08-10 14:33:31,766 views 17904 19096 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:33:31,767 views 17904 19096 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:33:31,767 views 17904 19096 Type de paiement: watch_purchase
+INFO 2025-08-10 14:33:31,767 views 17904 19096 Order ID: 37
+INFO 2025-08-10 14:33:31,767 views 17904 19096 Contexte email préparé pour F&W
+INFO 2025-08-10 14:33:31,768 views 17904 19096 Template email généré, envoi en cours...
+INFO 2025-08-10 14:33:32,048 views 17904 13820 Session récupérée - Status: paid, Amount: 28000.0€
+INFO 2025-08-10 14:33:32,049 views 17904 13820 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:33:32,051 views 17904 13820 Utilisateur récupéré: 2
+INFO 2025-08-10 14:33:32,052 views 17904 13820 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:33:32,054 views 17904 13820 Montre trouvée: Royal Oak Jumbo - 28000.00€
+INFO 2025-08-10 14:33:32,062 views 17904 13820 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:33:32,062 views 17904 13820 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:33:32,062 views 17904 13820 Type de paiement: watch_purchase
+INFO 2025-08-10 14:33:32,062 views 17904 13820 Order ID: 38
+INFO 2025-08-10 14:33:32,062 views 17904 13820 Contexte email préparé pour F&W
+INFO 2025-08-10 14:33:32,063 views 17904 13820 Template email généré, envoi en cours...
+INFO 2025-08-10 14:33:32,624 views 17904 19096 Email envoyé avec succès via Django
+INFO 2025-08-10 14:33:32,625 views 17904 19096 Paiement traité avec succès - Order #37 - 28000.0€
+INFO 2025-08-10 14:33:32,649 basehttp 17904 19096 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:33:32,651 views 17904 13820 Email envoyé avec succès via Django
+INFO 2025-08-10 14:33:32,652 views 17904 13820 Paiement traité avec succès - Order #38 - 28000.0€
+INFO 2025-08-10 14:33:32,674 basehttp 17904 13820 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:33:50,287 basehttp 17904 21864 - Broken pipe from ('127.0.0.1', 50065)
+INFO 2025-08-10 14:34:25,485 autoreload 17904 5124 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:34:26,958 autoreload 21896 2904 Watching for file changes with StatReloader
+INFO 2025-08-10 14:34:32,952 autoreload 21896 2904 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:42:10,999 autoreload 11068 3556 Watching for file changes with StatReloader
+INFO 2025-08-10 14:42:23,647 basehttp 11068 12724 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:23,649 basehttp 11068 10784 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:23,973 basehttp 11068 8172 "GET /admin/store/watch/ HTTP/1.1" 200 25827
+WARNING 2025-08-10 14:42:24,079 log 11068 21644 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:42:24,081 basehttp 11068 21644 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:42:24,191 basehttp 11068 21644 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+WARNING 2025-08-10 14:42:24,203 log 11068 21648 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:42:24,205 basehttp 11068 21648 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:42:24,255 basehttp 11068 10784 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:24,256 basehttp 11068 12724 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:42:24,323 log 11068 21648 Not Found: /favicon.ico
+WARNING 2025-08-10 14:42:24,324 basehttp 11068 21648 "GET /favicon.ico HTTP/1.1" 404 16730
+INFO 2025-08-10 14:42:24,378 basehttp 11068 21644 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:42:24,408 basehttp 11068 8172 "GET /store/watches/ HTTP/1.1" 200 1889
+INFO 2025-08-10 14:42:29,766 basehttp 11068 14872 "GET /admin/store/watch/ HTTP/1.1" 200 25825
+WARNING 2025-08-10 14:42:30,221 log 11068 14872 Not Found: /favicon.ico
+WARNING 2025-08-10 14:42:30,222 basehttp 11068 14872 "GET /favicon.ico HTTP/1.1" 404 16729
+INFO 2025-08-10 14:42:30,589 basehttp 11068 11056 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:30,589 basehttp 11068 3216 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:42:30,671 log 11068 14872 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:42:30,672 basehttp 11068 14872 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:42:30,740 log 11068 14872 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:42:30,741 basehttp 11068 14872 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:42:30,912 basehttp 11068 14872 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:42:30,974 basehttp 11068 3216 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:30,974 basehttp 11068 11056 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:42:30,982 basehttp 11068 12960 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:42:32,525 basehttp 11068 5936 "GET /admin/store/watch/1/change/ HTTP/1.1" 200 38652
+INFO 2025-08-10 14:42:32,748 basehttp 11068 5936 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:42:35,460 basehttp 11068 5936 "POST /admin/store/watch/1/change/ HTTP/1.1" 302 0
+INFO 2025-08-10 14:42:35,540 basehttp 11068 5936 "GET /admin/store/watch/ HTTP/1.1" 200 26052
+INFO 2025-08-10 14:42:35,639 basehttp 11068 5936 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:42:36,995 basehttp 11068 5936 "GET /admin/store/watch/2/change/ HTTP/1.1" 200 37039
+INFO 2025-08-10 14:42:37,099 basehttp 11068 5936 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:42:39,208 basehttp 11068 5936 "GET /admin/store/watch/ HTTP/1.1" 200 25824
+INFO 2025-08-10 14:42:40,343 basehttp 11068 5936 "GET /admin/store/watch/4/change/ HTTP/1.1" 200 33867
+INFO 2025-08-10 14:42:40,437 basehttp 11068 5936 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:42:42,993 basehttp 11068 5936 "POST /admin/store/watch/4/change/ HTTP/1.1" 302 0
+INFO 2025-08-10 14:42:43,081 basehttp 11068 5936 "GET /admin/store/watch/ HTTP/1.1" 200 26043
+INFO 2025-08-10 14:42:43,174 basehttp 11068 5936 "GET /admin/jsi18n/ HTTP/1.1" 200 8621
+INFO 2025-08-10 14:44:48,984 basehttp 11068 4664 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:44:48,984 basehttp 11068 20220 "OPTIONS /auth/jwt/verify/ HTTP/1.1" 200 0
+WARNING 2025-08-10 14:44:49,312 log 11068 16756 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:44:49,314 log 11068 12672 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:44:49,315 basehttp 11068 16756 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:44:49,315 basehttp 11068 12672 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:44:58,182 basehttp 11068 20220 "OPTIONS /auth/jwt/create/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:44:58,456 basehttp 11068 12672 "POST /auth/jwt/create/ HTTP/1.1" 200 483
+INFO 2025-08-10 14:45:24,733 basehttp 11068 20220 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:45:24,733 basehttp 11068 4664 "OPTIONS /store/products/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:45:24,831 basehttp 11068 12672 "GET /store/products/ HTTP/1.1" 200 5692
+INFO 2025-08-10 14:45:24,895 basehttp 11068 17380 "GET /media/store/Shop/Articles/top-2-0.jpg HTTP/1.1" 200 1717320
+INFO 2025-08-10 14:45:24,897 basehttp 11068 12672 "GET /media/store/Shop/Articles/top-1-0.jpg HTTP/1.1" 200 1797073
+INFO 2025-08-10 14:45:24,910 basehttp 11068 16756 "GET /media/store/Shop/Articles/top-1-1.jpg HTTP/1.1" 200 1898634
+INFO 2025-08-10 14:45:24,959 basehttp 11068 12672 "GET /media/store/Shop/Articles/pants-2-0.jpg HTTP/1.1" 200 675541
+INFO 2025-08-10 14:45:24,976 basehttp 11068 16756 "GET /media/store/Shop/Articles/pants-3-0.jpg HTTP/1.1" 200 929229
+INFO 2025-08-10 14:45:25,014 basehttp 11068 12672 "GET /media/store/Shop/Articles/pants-4-0.jpg HTTP/1.1" 200 1088788
+INFO 2025-08-10 14:45:25,019 basehttp 11068 17380 "GET /media/store/Shop/Articles/pants-1-0.jpg HTTP/1.1" 200 2503585
+INFO 2025-08-10 14:45:25,066 basehttp 11068 16756 "GET /media/store/Shop/Articles/top-5-0.jpg HTTP/1.1" 200 2648661
+INFO 2025-08-10 14:45:25,069 basehttp 11068 12672 "GET /media/store/Shop/Articles/top-2-1.jpg HTTP/1.1" 200 1620170
+INFO 2025-08-10 14:45:25,090 basehttp 11068 17380 "GET /media/store/Shop/Articles/top-3-0.jpg HTTP/1.1" 200 2824170
+INFO 2025-08-10 14:45:25,094 basehttp 11068 16756 "GET /media/store/Shop/Articles/top-4-0.jpg HTTP/1.1" 200 1376139
+INFO 2025-08-10 14:45:33,280 basehttp 11068 4664 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:45:33,280 basehttp 11068 20220 "OPTIONS /store/watches/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:45:33,342 basehttp 11068 16756 "GET /store/watches/ HTTP/1.1" 200 1889
+INFO 2025-08-10 14:45:33,428 basehttp 11068 16204 "GET /media/store/F%26W/watch2-wide-2.png HTTP/1.1" 200 94995
+INFO 2025-08-10 14:45:33,430 basehttp 11068 7080 "GET /media/store/F%26W/watch2-wide-3.png HTTP/1.1" 200 44759
+INFO 2025-08-10 14:45:33,433 basehttp 11068 12672 "GET /media/store/F%26W/watch2-wide-1.png HTTP/1.1" 200 48629
+INFO 2025-08-10 14:45:33,441 basehttp 11068 21704 "GET /media/store/F%26W/watch1-wide-1.png HTTP/1.1" 200 426831
+INFO 2025-08-10 14:45:33,461 basehttp 11068 16204 "GET /media/store/F%26W/watch1-wide-3.png HTTP/1.1" 200 39573
+INFO 2025-08-10 14:45:33,462 basehttp 11068 7080 "GET /media/store/F%26W/watch1-wide-2.png HTTP/1.1" 200 147388
+INFO 2025-08-10 14:45:33,466 basehttp 11068 16756 "GET /media/store/F%26W/watch2-wide-4.webm HTTP/1.1" 200 1623272
+INFO 2025-08-10 14:45:50,521 basehttp 11068 4664 "OPTIONS /store/create-stripe-session/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:45:50,564 views 11068 16756 User récupéré: youson91@hotmail.fr
+INFO 2025-08-10 14:45:50,570 views 11068 16756 Customer récupéré: Sewa Wilson (has_payed: True)
+INFO 2025-08-10 14:45:51,045 basehttp 11068 17380 - Broken pipe from ('127.0.0.1', 50290)
+INFO 2025-08-10 14:45:51,301 views 11068 16756 Session Stripe créée: cs_test_a1ciUPNPmnCrbqGPeNNq9uTC1Fd14S7GcHfCbGKVHA8gw6p2F3MkLrDdqc
+INFO 2025-08-10 14:45:51,317 basehttp 11068 16756 "POST /store/create-stripe-session/ HTTP/1.1" 200 460
+WARNING 2025-08-10 14:46:02,261 log 11068 16756 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:46:02,262 basehttp 11068 16756 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+WARNING 2025-08-10 14:46:02,266 log 11068 7080 Unauthorized: /auth/jwt/verify/
+WARNING 2025-08-10 14:46:02,266 basehttp 11068 7080 "POST /auth/jwt/verify/ HTTP/1.1" 401 54
+INFO 2025-08-10 14:46:02,287 basehttp 11068 16756 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:46:02,291 basehttp 11068 7080 "POST /auth/jwt/verify/ HTTP/1.1" 200 2
+INFO 2025-08-10 14:46:02,316 basehttp 11068 4664 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:46:02,316 basehttp 11068 20220 "OPTIONS /store/verify-payment/ HTTP/1.1" 200 0
+INFO 2025-08-10 14:46:02,396 views 11068 7080 Request data: {'session_id': 'cs_test_a1ciUPNPmnCrbqGPeNNq9uTC1Fd14S7GcHfCbGKVHA8gw6p2F3MkLrDdqc'}
+INFO 2025-08-10 14:46:02,402 views 11068 16756 Request data: {'session_id': 'cs_test_a1ciUPNPmnCrbqGPeNNq9uTC1Fd14S7GcHfCbGKVHA8gw6p2F3MkLrDdqc'}
+INFO 2025-08-10 14:46:02,402 views 11068 7080 Vérification paiement: cs_test_a1ciUPNPmnCrbqGPeNNq9uTC1Fd14S7GcHfCbGKVHA8gw6p2F3MkLrDdqc
+INFO 2025-08-10 14:46:02,403 views 11068 16756 Vérification paiement: cs_test_a1ciUPNPmnCrbqGPeNNq9uTC1Fd14S7GcHfCbGKVHA8gw6p2F3MkLrDdqc
+INFO 2025-08-10 14:46:02,627 views 11068 16756 Session récupérée - Status: paid, Amount: 15800.0€
+INFO 2025-08-10 14:46:02,628 views 11068 16756 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:46:02,629 views 11068 16756 Utilisateur récupéré: 2
+INFO 2025-08-10 14:46:02,632 views 11068 16756 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:46:02,634 views 11068 16756 Montre trouvée: Heritage Dress Watch - 15800.00€
+INFO 2025-08-10 14:46:02,650 views 11068 16756 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:46:02,650 views 11068 16756 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:46:02,651 views 11068 16756 Type de paiement: watch_purchase
+INFO 2025-08-10 14:46:02,651 views 11068 16756 Order ID: 39
+INFO 2025-08-10 14:46:02,651 views 11068 16756 Contexte email préparé pour F&W
+INFO 2025-08-10 14:46:02,652 views 11068 16756 Template email généré, envoi en cours...
+INFO 2025-08-10 14:46:02,919 views 11068 7080 Session récupérée - Status: paid, Amount: 15800.0€
+INFO 2025-08-10 14:46:02,920 views 11068 7080 === DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===
+INFO 2025-08-10 14:46:02,921 views 11068 7080 Utilisateur récupéré: 2
+INFO 2025-08-10 14:46:02,924 views 11068 7080 Customer déjà payé: Sewa Wilson
+INFO 2025-08-10 14:46:02,926 views 11068 7080 Montre trouvée: Heritage Dress Watch - 15800.00€
+INFO 2025-08-10 14:46:02,936 views 11068 7080 === DÉBUT ENVOI EMAIL DJANGO ===
+INFO 2025-08-10 14:46:02,936 views 11068 7080 Email destinataire: youson91@hotmail.fr
+INFO 2025-08-10 14:46:02,936 views 11068 7080 Type de paiement: watch_purchase
+INFO 2025-08-10 14:46:02,937 views 11068 7080 Order ID: 40
+INFO 2025-08-10 14:46:02,937 views 11068 7080 Contexte email préparé pour F&W
+INFO 2025-08-10 14:46:02,938 views 11068 7080 Template email généré, envoi en cours...
+ERROR 2025-08-10 14:46:07,777 views 11068 16756 Erreur envoi email Django: (535, b'5.7.3 Authentication unsuccessful [PA7P264CA0148.FRAP264.PROD.OUTLOOK.COM 2025-08-10T12:46:07.918Z 08DDD7B7387208E7]')
+ERROR 2025-08-10 14:46:07,781 views 11068 16756 Traceback complet: Traceback (most recent call last):
+  File "C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py", line 886, in verify_payment
+    send_mail(
+    ~~~~~~~~~^
+        subject=email_subject,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        fail_silently=False,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\__init__.py", line 87, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\message.py", line 299, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 127, in send_messages
+    new_conn_created = self.open()
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 94, in open
+    self.connection.login(self.username, self.password)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 750, in login
+    raise last_exception
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 739, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 662, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.3 Authentication unsuccessful [PA7P264CA0148.FRAP264.PROD.OUTLOOK.COM 2025-08-10T12:46:07.918Z 08DDD7B7387208E7]')
+
+INFO 2025-08-10 14:46:07,781 views 11068 16756 Paiement traité avec succès - Order #39 - 15800.0€
+INFO 2025-08-10 14:46:07,802 basehttp 11068 16756 "POST /store/verify-payment/ HTTP/1.1" 200 87
+ERROR 2025-08-10 14:46:08,058 views 11068 7080 Erreur envoi email Django: (535, b'5.7.3 Authentication unsuccessful [PA7P264CA0144.FRAP264.PROD.OUTLOOK.COM 2025-08-10T12:46:08.202Z 08DDD75999A8FE54]')
+ERROR 2025-08-10 14:46:08,060 views 11068 7080 Traceback complet: Traceback (most recent call last):
+  File "C:\Users\youso\Documents\react-tuto\Hoolis\backend\store\views.py", line 886, in verify_payment
+    send_mail(
+    ~~~~~~~~~^
+        subject=email_subject,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        fail_silently=False,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\__init__.py", line 87, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\message.py", line 299, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 127, in send_messages
+    new_conn_created = self.open()
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 94, in open
+    self.connection.login(self.username, self.password)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 750, in login
+    raise last_exception
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 739, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\youso\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 662, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.3 Authentication unsuccessful [PA7P264CA0144.FRAP264.PROD.OUTLOOK.COM 2025-08-10T12:46:08.202Z 08DDD75999A8FE54]')
+
+INFO 2025-08-10 14:46:08,061 views 11068 7080 Paiement traité avec succès - Order #40 - 15800.0€
+INFO 2025-08-10 14:46:08,079 basehttp 11068 7080 "POST /store/verify-payment/ HTTP/1.1" 200 87
+INFO 2025-08-10 14:46:17,591 basehttp 11068 16204 - Broken pipe from ('127.0.0.1', 50308)
+INFO 2025-08-10 14:47:51,402 autoreload 11068 3556 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:47:53,082 autoreload 22688 22692 Watching for file changes with StatReloader
+INFO 2025-08-10 14:48:00,235 autoreload 22688 22692 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:48:01,942 autoreload 10648 20940 Watching for file changes with StatReloader
+INFO 2025-08-10 14:55:08,716 autoreload 10648 20940 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:55:10,287 autoreload 17596 3888 Watching for file changes with StatReloader
+INFO 2025-08-10 14:55:16,300 autoreload 17596 3888 C:\Users\youso\Documents\react-tuto\Hoolis\backend\mysite\settings.py changed, reloading.
+INFO 2025-08-10 14:55:17,786 autoreload 23320 2820 Watching for file changes with StatReloader

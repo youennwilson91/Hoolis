@@ -92,7 +92,7 @@ export default function Landing() {
                             className="landing-menu-item" 
                             ref={menuRef1}
                         >
-                            <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" />
+                            <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" loading="lazy" />
                         </div>
                     </div>
                     {buttonsVisible && <MenuButtons screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
@@ -101,7 +101,7 @@ export default function Landing() {
 
             <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing"> 
-                    <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" />
+                    <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="Maison Hoolis" loading="lazy" />
                     <svg version="1.0" className="crown-svg"
                             viewBox="0 0 300 241.000000"
                             preserveAspectRatio="xMidYMid meet"

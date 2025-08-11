@@ -419,9 +419,14 @@ export default function Shop() {
           <h1 className="close-cart" onClick={handleCloseCart}>FERMER</h1>
           <hr />
           <div className="cart-items">
+            {addToCart.length === 0 && (
+              <div className="cart-item">
+                <h2 className="cart-item-title">Votre panier est vide</h2>
+              </div>
+            )}
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
-                <img src={item.images[0].image} alt={item.title} />
+                <img src={item.images[0].image} alt={item.title} loading="lazy" />
                 <h2 className="cart-item-title">{item.title}</h2>
                 <div className="cart-item-details">
                   <p>{item.price}€</p>

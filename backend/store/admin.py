@@ -41,6 +41,15 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['payment_status', 'shipping_status']
     search_fields = ['customer__name', 'customer__email']
 
+class OrderInline(admin.TabularInline):
+    model = Order
+    extra = 0
+
+class CustomerAdmin(admin.ModelAdmin):
+    inlines = [OrderInline]
+    list_display = ['name', 'email', 'phone', 'address']
+    search_fields = ['name', 'email', 'phone', 'address']
+
 
 class CartItemInline(admin.TabularInline):
     model = CartItem
@@ -50,11 +59,13 @@ class CartAdmin(admin.ModelAdmin):
     inlines = [CartItemInline]
     list_display = ['id', 'total_price']
 
+
+
 # Register your models here.
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Collection)
 # admin.site.register(models.Promotion)
-admin.site.register(models.Customer)
+admin.site.register(models.Customer, CustomerAdmin)
 admin.site.register(models.Cart, CartAdmin)
 #admin.site.register(models.CartItem)
 admin.site.register(models.Order, OrderAdmin)
