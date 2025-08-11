@@ -10,15 +10,16 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Configuration de l'environnement : local/dev/prod
-ENVIRONMENT = os.environ.get('DJANGO_ENVIRONMENT', 'local').lower()
 
-# Configuration DEBUG basée sur l'environnement
-DEBUG = False if ENVIRONMENT == 'prod' else True
+# Configuration DEBUG classique
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in ['true', '1', 'yes']
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
-    raise ValueError("DJANGO_SECRET_KEY must be set in production!")
+    if DEBUG:
+        SECRET_KEY = 'dev-key-not-for-production'
+    else:
+        raise ValueError("DJANGO_SECRET_KEY must be set in production!")
         
 
 INSTALLED_APPS = [
