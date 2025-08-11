@@ -10,7 +10,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get('DJANGO_DEBUG')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ['true', '1', 'yes']
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
@@ -161,6 +161,7 @@ if DEBUG:
         "http://localhost:5173", 
         "http://127.0.0.1:8000",
         "http://127.0.0.1:5173",
+        "http://192.168.1.184:5173",  # Adresse réseau local si nécessaire
     ]
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
