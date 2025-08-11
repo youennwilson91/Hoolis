@@ -62,8 +62,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR.parent / 'frontend' / 'dist',  # Chemin vers le build React
-            BASE_DIR / 'templates',  # Templates Django (fallback)
+            BASE_DIR / 'templates',  # Templates Django (emails, etc.)
         ],
         'APP_DIRS': True,
         'OPTIONS': {
