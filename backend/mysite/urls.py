@@ -8,12 +8,11 @@ from . import views
 import os
 
 urlpatterns = [
-    # API Routes - DOIVENT être avant le catch-all
-    path('', views.api_home, name='api_home'),  # Page d'accueil API sur /
-    path('api/', views.api_home, name='api_home_alt'),  # Alternative sur /api/
+    # API Routes - Toutes sous /api/ ou chemins spécifiques
+    path('api/', views.api_home, name='api_home'),
     path('admin/', admin.site.urls),
-    path('store/', include('store.urls')),
-    path('auth/', include('djoser.urls')),
+    path('store/', include('store.urls')),  # API store
+    path('auth/', include('djoser.urls')),   # API auth
     path('auth/', include('djoser.urls.jwt')),
 ]
 
@@ -44,12 +43,7 @@ if settings.DEBUG:
         path('__debug__/', include('debug_toolbar.urls')),
     ]
 
-# Catch-all pour React Router - Décommentez si vous voulez que Django serve React
-# urlpatterns += [
-#     re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='react_app'),
-# ]
-
-# React servi sur /app/ uniquement
+# CATCH-ALL pour React Router - DOIT être en dernier
 urlpatterns += [
-    path('app/', TemplateView.as_view(template_name='index.html'), name='react_app'),
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='react_app'),
 ]
