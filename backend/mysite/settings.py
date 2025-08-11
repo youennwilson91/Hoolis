@@ -255,7 +255,6 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
-
 # Configuration Email
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -266,3 +265,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@hoolis.com')
+
+# URL du frontend pour les redirections Stripe
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
