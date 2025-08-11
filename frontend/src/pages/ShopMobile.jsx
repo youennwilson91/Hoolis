@@ -309,7 +309,7 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
       </div>
 
       {/* Icône du panier fixe - en dehors du conteneur scrollable */}
-      <div className="cart-icon" onClick={handleOpenMobileCart}>
+      <div className="cart-icon" onClick={cartVisible ? handleCloseMobileCart : handleOpenMobileCart}>
         <h1 className="cart-quantity">{addToCart.length}</h1>
         <svg viewBox="0 0 32 32">
           <title/>
@@ -325,11 +325,15 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
       {cartVisible && 
         <div className="cart-container" ref={mobileCartRef} style={{ opacity: 0 }}>
           <div className="bg-cart"></div>
-          <button className="close-cart" onClick={handleCloseMobileCart}>FERMER</button>
           <div className="cart-items">
+            {addToCart.length === 0 && (
+              <div className="cart-item">
+                <h2 className="cart-item-title">Votre panier est vide</h2>
+              </div>
+            )}
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
-                <img src={item.images[0].image} alt={item.title} />
+                <img src={item.images[0].image} alt={item.title} loading="lazy" />
                 <h2 className="cart-item-title">{item.title}</h2>
                 <div className="cart-item-details">
                   <p>{item.price} €</p>
