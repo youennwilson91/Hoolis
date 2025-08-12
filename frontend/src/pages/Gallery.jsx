@@ -52,9 +52,21 @@ export default function Gallery() {
       <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
       <MenuButtons screenRef={screenRef} />
       <div className="hoolis-images-container">
-        <img src="/hoolis-img/mouth-tee-thomas.jpg" alt="T-shirt Mouth Tee" />
-        <img src="/hoolis-img/mouth-tee-back.jpg" alt="Vue arrière du T-shirt Mouth Tee" />
-        <img src="/hoolis-img/coquillage-tee-polito.jpg" alt="T-shirt Coquillage" />
+        <img 
+          src="/hoolis-img/mouth-tee-thomas.jpg" 
+          alt="T-shirt Mouth Tee Hoolis - Collection Exclusive - Vue Portée Face" 
+          loading="lazy" 
+        />
+        <img 
+          src="/hoolis-img/mouth-tee-back.jpg" 
+          alt="T-shirt Mouth Tee Hoolis - Collection Exclusive - Vue Portée Dos" 
+          loading="lazy" 
+        />
+        <img 
+          src="/hoolis-img/coquillage-tee-polito.jpg" 
+          alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Détaillée" 
+          loading="lazy" 
+        />
       </div>
     </div>
     <SupportButton />

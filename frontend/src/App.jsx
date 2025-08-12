@@ -5,6 +5,7 @@ import useStore from './utils/store'
 import { useEffect } from 'react'
 import { loadFont } from './utils/fontLoader'
 import PasswordProtect from './components/PasswordProtect'
+import Footer from './components/Footer'
 
 // Simple touch events polyfill for better cross-platform support
 const enableTouchSupport = () => {
@@ -51,6 +52,7 @@ function App() {
     <PasswordProtect>
       <div className="app-container" style={{backgroundColor: bgColor}}>
         <RouterProvider router={router} />
+        <Footer />
       </div>
     </PasswordProtect>
   );
