@@ -13,6 +13,7 @@ function BookingCalendar({ type }) {
   const [slots, setSlots] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [selectedWatch, setSelectedWatch] = useState("");
   const [availableWatches, setAvailableWatches] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -72,32 +73,6 @@ function BookingCalendar({ type }) {
     }
   }, [isSuccess]);
 
-  // Fonction pour envoyer l'email de notification
-  const sendEmailNotification = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('phone', phone);
-      formData.append('watch', selectedWatch);
-      formData.append('date', formattedDate.split('-').reverse().join('/'));
-      formData.append('start_time', selectedSlot?.start_time || '');
-      formData.append('end_time', selectedSlot?.end_time || '');
-      formData.append('_subject', `Nouvelle réservation - ${selectedWatch}`);
-      formData.append('_captcha', 'false');
-      formData.append('_template', 'table');
-
-      console.log('Envoi de l\'email de notification...');
-      await fetch('https://formsubmit.co/youson91@hotmail.fr', {
-        method: 'POST',
-        body: formData
-      });
-      console.log('Email de notification envoyé avec succès');
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email:', error);
-      // L'erreur d'email ne doit pas affecter l'expérience utilisateur
-    }
-  };
-
   // Quand la date est modifiée, on formate et on stocke
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -137,8 +112,13 @@ function BookingCalendar({ type }) {
 
     // Envoyer le code de vérification
     apiClient.post(API_ENDPOINTS.sendConfirmationCode, {
+      email: email,
+      name: name,
+      type: type, 
       phone: internationalPhone,
-      type: type
+      date: formattedDate,
+      start_time: slot.start_time,
+      end_time: slot.end_time
     }).then(response => {
       console.log('Code SMS envoyé:', response.data);
       setVerificationStep('verify');
@@ -161,50 +141,34 @@ function BookingCalendar({ type }) {
   // Étape 2 : Vérifier le code et faire la réservation
   function handleVerifyAndBook() {
     if (!verificationCode || verificationCode.length < 4) {
-      showError("Entrez le code à 4 chiffres reçu par SMS");
+      showError("Entrez le code à 4 chiffres reçu par email");
       return;
     }
     
-    // Formater le numéro au format international (même logique que dans handleSendVerification)
-    const internationalPhone = phone.startsWith('0') ? `+33${phone.substring(1)}` : phone;
-
     // Vérifier le code SMS avec votre endpoint
     apiClient.post(API_ENDPOINTS.verifyConfirmationCode, {
       code: verificationCode,
-      request_id: requestId
-    }).then(response => {
-      console.log(response.data);
-      
-      // Si le code est valide, procéder à la réservation
-      return apiClient.post(apiBookings, {
-        name: sanitizeText(name), // Sanitiser le nom
-        phone: internationalPhone,
-        watch: sanitizeText(selectedWatch), // Sanitiser la sélection
-        date: formattedDate,
-        start_time: selectedSlot.start_time,
-        end_time: selectedSlot.end_time
-      });
+      email: email,
+      date: formattedDate,
+      start_time: selectedSlot.start_time,
+      end_time: selectedSlot.end_time,
+      name: name,
+      type: type,
+      phone: phone,
+      watch: selectedWatch
     })
     .then(() => {
       setIsSuccess(true);
       setVerificationStep('success');
       setSlots(slots.filter(s => s.start_time !== selectedSlot.start_time));
       setErrorMessage(""); // Effacer les erreurs
-      
-      // Envoyer l'email de notification
-      sendEmailNotification();
+
     })
     .catch(err => {
       console.error("Erreur lors de la vérification ou réservation:", err);
       const statusCode = err.response?.status;
       let errorText = err.response?.data?.detail || err.response?.data?.error || err.message;
       showError(errorText, statusCode);
-    });
-  }
-
-  function cancelVerification() {
-    apiClient.post(API_ENDPOINTS.cancelVerification, {
-      request_id: requestId
     });
   }
 
@@ -227,6 +191,14 @@ function BookingCalendar({ type }) {
             placeholder="Votre nom"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="form-input"
+            maxLength="50" // Limiter la longueur
+          />
+          <input
+            type="email"
+            placeholder="Votre email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="form-input"
             maxLength="50" // Limiter la longueur
           />
@@ -305,8 +277,8 @@ function BookingCalendar({ type }) {
       {/* Vérification du code SMS */}
       {verificationStep === 'verify' && (
         <div className="verification-step">
-          <h3>Vérification SMS</h3>
-          <p>Nous avons envoyé un code à 4 chiffres au {sanitizeText(phone)}</p>
+          <h3>Vérification</h3>
+          <p>Nous avons envoyé un code à 4 chiffres à {sanitizeText(email)}</p>
           <input
             type="text"
             placeholder="Code de vérification"
@@ -322,7 +294,7 @@ function BookingCalendar({ type }) {
             Vérifier
           </button>
           <button 
-            onClick={() => setVerificationStep('form') && cancelVerification()}
+            onClick={() => setVerificationStep('form')}
             className="back-button"
           >
             Retour
@@ -333,8 +305,9 @@ function BookingCalendar({ type }) {
       {/* Étape 3: Succès */}
       {verificationStep === 'success' && 
         <div className="success-message">
-          <p>Réservation confirmée !</p>
-          <p>Vous recevrez une confirmation par SMS.</p>
+          <p>Réservation confirmée pour le {formattedDate} à {selectedSlot.start_time.slice(0, 5)} - {selectedSlot.end_time.slice(0, 5)}</p>
+          <p>Vous recevrez une confirmation par email.</p>
+          <p>Vous pouvez fermer cette fenêtre.</p>
         </div>
       }
       

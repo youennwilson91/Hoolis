@@ -342,3 +342,8 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['payment_status', 'shipping_status']
+
+class EmailConfirmationCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailConfirmationCode
+        fields = ['email', 'code', 'verified']
