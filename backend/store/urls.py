@@ -35,7 +35,6 @@ urlpatterns = [
     path('available-slots-products/', views.SlotsProductViewSet.as_view({'get': 'list'})),
     path('send-confirmation-code/', views.send_confirmation_code),
     path('verify-confirmation-code/', views.verify_confirmation_code),
-    path('cancel-verification/', views.cancel_verification),
     path('create-stripe-session/', views.create_stripe_session, name='create-stripe-session'),
     path('verify-payment/', views.verify_payment, name='verify-payment'),
 
