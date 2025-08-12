@@ -8,19 +8,22 @@ export default function PaymentReturn() {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [hasProcessed, setHasProcessed] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const paymentParam = searchParams.get('payment');
     const sessionId = searchParams.get('session_id');
 
-    if (paymentParam === 'success' && sessionId) {
+    if (paymentParam === 'success' && sessionId && !hasProcessed) {
+      setHasProcessed(true);
       verifyPayment(sessionId);
-    } else if (paymentParam === 'cancelled') {
+    } else if (paymentParam === 'cancelled' && !hasProcessed) {
+      setHasProcessed(true);
       setPaymentStatus('cancelled');
       setMessage('Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.');
     }
-  }, [location]);
+  }, [location, hasProcessed]);
 
   const verifyPayment = async (sessionId) => {
     setIsLoading(true);
@@ -50,11 +53,11 @@ export default function PaymentReturn() {
     } finally {
       setIsLoading(false);
       
-      // Nettoyer l'URL après 3 secondes
       setTimeout(() => {
         window.history.replaceState({}, document.title, window.location.pathname);
         setPaymentStatus(null);
         setMessage('');
+        setHasProcessed(false);
       }, 5000);
     }
   };
