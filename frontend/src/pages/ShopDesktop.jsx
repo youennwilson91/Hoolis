@@ -8,7 +8,7 @@ import Article from "../components/Article.jsx";
 import "./Shop.scss";
 import "../components/Buttons/GalleryButtons.scss";
 import BookingCalendar from "../components/Calendar.jsx";
-import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig.js";
 import { BarLoader } from "react-spinners";
 import OrderForm from "../components/OrderForm.jsx";
 
@@ -361,7 +361,14 @@ export default function Shop() {
 
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
-        <video src="/shop-img/bg-vid-shop.mp4" autoPlay muted loop />
+        <video 
+          src="/shop-img/bg-vid-shop.mp4" 
+          autoPlay 
+          muted 
+          loop 
+          preload="auto"
+          aria-label="Vidéo d'ambiance de la boutique Hoolis"
+        />
         <div ref={galleryRef} className="shop-gallery">
           <ShopButtons/>
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
@@ -426,7 +433,11 @@ export default function Shop() {
             )}
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
-                <img src={item.images[0].image} alt={item.title} loading="lazy" />
+                <img 
+                  src={item.images[0].image} 
+                  alt={`${item.title} - Article de luxe Hoolis dans le panier`} 
+                  loading="lazy" 
+                />
                 <h2 className="cart-item-title">{item.title}</h2>
                 <div className="cart-item-details">
                   <p>{item.price}€</p>

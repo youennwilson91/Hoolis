@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import "./Shop.scss";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
-import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig.js";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText } from "../utils/sanitizer";
 import OrderForm from "../components/OrderForm.jsx";
 
@@ -333,7 +333,13 @@ export default function ShopMobile({ labelRef, handleAddToCart, handleRemoveItem
             )}
             {addToCart.map((item) => (
               <div key={item.cartid} className="cart-item">
-                <img src={item.images[0].image} alt={item.title} loading="lazy" />
+                <img 
+                  src={sanitizeImageUrl(item.images[0].image)} 
+                  alt={sanitizeAltText(`${item.title} - Article de luxe Hoolis dans le panier`)} 
+                  loading="lazy"
+                  decoding="async"
+                  style={{ backgroundColor: '#f0f0f0' }}
+                />
                 <h2 className="cart-item-title">{item.title}</h2>
                 <div className="cart-item-details">
                   <p>{item.price} €</p>

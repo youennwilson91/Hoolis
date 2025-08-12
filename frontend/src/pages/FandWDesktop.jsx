@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./FandW.scss";
 import BookingCalendar from "../components/Calendar";
-import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig.js";
 import { BarLoader } from "react-spinners";
 import Watch from "../components/Watch";
 
@@ -243,7 +243,14 @@ export default function FandW() {
     <>
       <div ref={screenRef} className="fandw-container">
         <div className="fandw-landing">
-          <video src="/fandw-img/bg.webm" autoPlay muted loop />
+          <video 
+            src="/fandw-img/bg.webm" 
+            autoPlay 
+            muted 
+            loop 
+            preload="auto"
+            aria-label="Vidéo d'ambiance Frank & Watch - Collection de montres de luxe"
+          />
         </div>
         <div className="fandw-gallery-articles" ref={collectionRef}> 
           {loading && 
