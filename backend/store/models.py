@@ -214,3 +214,8 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.title}"
+
+class EmailConfirmationCode(models.Model):
+    email = models.EmailField(max_length=200)
+    code = models.CharField(max_length=6)
+    verified = models.BooleanField(default=False)

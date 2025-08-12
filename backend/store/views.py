@@ -1,4 +1,5 @@
 import os
+import random
 from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view
@@ -183,6 +184,7 @@ class SlotsWatchViewSet(ModelViewSet):
         return SlotsWatch.objects.filter(is_available=True).filter(date=selected_date)
 
 
+
 # Pas de cache pour BookingWatchViewSet car il contient des opérations POST/DELETE
 class BookingWatchViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
@@ -315,174 +317,195 @@ class OrderItemViewSet(ModelViewSet):
 
 @api_view(['POST'])
 def send_confirmation_code(request):
+    """
+    Envoyer un code de vérification par SMS
+    """
     try:
+        # Récupérer les données de la requête
         phone = request.data.get('phone')
-        type_reservation = request.data.get('type')
+        email = request.data.get('email')   
+        type = request.data.get('type')
+        date = request.data.get('date')
+        start_time = request.data.get('start_time')
+        end_time = request.data.get('end_time')
+        name = request.data.get('name')
         
-        # ✅ NÉCESSAIRE - Validation des données utilisateur
-        if not phone:
-            return SafeErrorHandler.get_safe_error_response(
-                'PHONE_MISSING', 
-                status_code=status.HTTP_400_BAD_REQUEST
+        # Valider les données
+        if not phone or not type:
+            return Response(
+                {"error": "Numéro de téléphone et type requis"}, 
+                status=status.HTTP_400_BAD_REQUEST
             )
         
-        # ✅ NÉCESSAIRE - Sanitiser le numéro de téléphone (données utilisateur)
-        sanitized_phone = sanitize_phone_number(phone)
-        if not sanitized_phone:
-            return SafeErrorHandler.get_safe_error_response(
-                'VALIDATION_ERROR',
-                f"Invalid phone format: {phone}",
-                status.HTTP_400_BAD_REQUEST
+        if not email:
+            return Response(
+                {"error": "Email requis"}, 
+                status=status.HTTP_400_BAD_REQUEST
             )
         
-        # ✅ NÉCESSAIRE - Sanitiser le type (données utilisateur)
-        sanitized_type = sanitize_text_input(type_reservation, 50)
-        
-        # Logger l'activité (sans données sensibles)
-        logger.info(f"SMS verification requested for type: {sanitized_type}")
-        
-        # Vérifier si le numéro de téléphone existe déjà en base
-        # On ne peut pas utiliser filter() directement sur un champ chiffré
-        phone_exists_product = False
-        for booking in BookingProduct.objects.filter(is_canceled=False):
-            if booking.phone == sanitized_phone:  # django-cryptography déchiffre automatiquement
-                phone_exists_product = True
-                break
-        
-        phone_exists_watch = False
-        if not phone_exists_product:  # Optimisation : on check seulement si pas trouvé dans products
-            for booking in BookingWatch.objects.filter(is_canceled=False):
-                if booking.phone == sanitized_phone:  # django-cryptography déchiffre automatiquement
-                    phone_exists_watch = True
-                    break
-        
-        if phone_exists_product or phone_exists_watch:
-            log_security_event("DUPLICATE_PHONE_ATTEMPT", f"Phone already in use", request)
-            return SafeErrorHandler.get_safe_error_response(
-                'PHONE_EXISTS',
-                status_code=status.HTTP_409_CONFLICT
+        if not name: 
+            return Response(
+                {"error": "Nom requis"}, 
+                status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Utiliser les variables d'environnement pour Vonage
-        vonage_key = os.environ.get('VONAGE_API_KEY')
-        vonage_secret = os.environ.get('VONAGE_API_SECRET')
+        logger.info(f"=== DÉBUT ENVOI EMAIL DJANGO ===")
+        logger.info(f"Email destinataire: {email}")
+        logger.info(f"Type de paiement: {type}")
+        logger.info(f"Date: {date}")
+        logger.info(f"Heure de début: {start_time}")
+        logger.info(f"Heure de fin: {end_time}")
+        logger.info(f"Nom: {name}")
+
+        code = random.randint(0000, 9999)
+        serializer = EmailConfirmationCodeSerializer(data={'email': email, 'code': code})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        email_context = {
+            'email': email,
+            'name': name,
+            'date': date,
+            'start_time': start_time,
+            'end_time': end_time,
+            'code': code,
+        }
         
-        if not vonage_key or not vonage_secret:
-            logger.error("Missing Vonage credentials in environment variables")
-            return SafeErrorHandler.get_safe_error_response(
-                'API_ERROR',
-                "Missing API credentials",
-                status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        logger.info(f"Contexte email préparé pour {type}")
         
-        # Initialiser le client Vonage de manière sécurisée
-        client = vonage.Client(key=vonage_key, secret=vonage_secret)
-        verify = vonage.Verify(client)
-        response = verify.start_verification(number=sanitized_phone, brand="Hoolis - F&W")
+        # Générer le contenu HTML et texte
+        html_message = render_to_string('emails/code_confirmation.html', email_context)
+        plain_message = strip_tags(html_message)
         
-        logger.info(f"Vonage response status: {response.get('status')}")
+        logger.info("Template email généré, envoi en cours...")
+        logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
+        logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
+        logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
+        logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
+        logger.info(f"Recipients: {[email, settings.DEFAULT_FROM_EMAIL]}")
         
-        if response.get("status") == "0":
-            return Response({
-                "message": "Code envoyé", 
-                "request_id": response.get("request_id")  # ❌ PAS de sanitisation - données internes Vonage
-            })
-        else:
-            logger.warning(f"Vonage error: {response.get('error_text')}")
-            return SafeErrorHandler.get_safe_error_response(
-                'VONAGE_ERROR',
-                f"Vonage error: {response.get('error_text')}",  # ✅ Loggé mais pas exposé
-                status.HTTP_400_BAD_REQUEST
-            )
-    
+        # Envoyer l'email
+        send_mail(
+            subject=f"Code de confirmation - Maison Hoolis - Franck & Watch",
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
+            html_message=html_message,
+            fail_silently=False,
+        )
+        
+        logger.info("Email envoyé avec succès via Django")
+        
+        return Response(
+            {"message": "Code de confirmation envoyé avec succès"}, 
+            status=status.HTTP_200_OK
+        )
+        
     except Exception as e:
-        return SafeErrorHandler.handle_exception(e, "send_confirmation_code")
+        return Response(
+            {"error": f"Erreur lors de l'envoi de l'email de confirmation. {e}"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['POST'])
 def verify_confirmation_code(request):
+    """
+    Vérifier le code de confirmation
+    """
     try:
-        request_id = request.data.get('request_id')
         code = request.data.get('code')
-        
-        # ✅ NÉCESSAIRE - Validation des données utilisateur
-        if not request_id or not code:
-            return SafeErrorHandler.get_safe_error_response(
-                'MISSING_FIELDS',
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
-        
-        # ✅ NÉCESSAIRE - Sanitiser les entrées utilisateur
-        sanitized_request_id = sanitize_text_input(request_id, 100)  # Données utilisateur
-        sanitized_code = sanitize_text_input(code, 10)  # Données utilisateur
-        
-        # Utiliser les variables d'environnement
-        vonage_key = os.environ.get('VONAGE_API_KEY')
-        vonage_secret = os.environ.get('VONAGE_API_SECRET')
-        
-        if not vonage_key or not vonage_secret:
-            logger.error("Missing Vonage credentials in environment variables")
-            return SafeErrorHandler.get_safe_error_response(
-                'API_ERROR',
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-        
-        client = vonage.Client(key=vonage_key, secret=vonage_secret)
-        verify = client.verify
-        response = verify.check(request_id=sanitized_request_id, code=sanitized_code)
+        email = request.data.get('email')
+        date = request.data.get('date')
+        start_time = request.data.get('start_time')
+        end_time = request.data.get('end_time')
+        name = request.data.get('name')
+        phone = request.data.get('phone')
+        watch = request.data.get('watch')
+        type = request.data.get('type')
+        print(type)
 
-        if response.get("status") == "0":
-            logger.info("SMS verification successful")
-            return Response({
-                "message": "Code de vérification valide", 
-                "event_id": response.get("event_id")  # ❌ PAS de sanitisation - données internes Vonage
-            })
+        confirmation = EmailConfirmationCode.objects.get(email=email, code=code)
+        if not confirmation:
+            return Response(
+                {"error": "Code de confirmation invalide"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        confirmation.verified = True
+        confirmation.save()
+
+        if type == 'watch':
+            slot = SlotsWatch.objects.get(date=date, start_time=start_time, end_time=end_time)
+            slot.is_available = False
+            slot.save()
         else:
-            log_security_event("INVALID_VERIFICATION_CODE", f"Failed verification attempt", request)
-            return SafeErrorHandler.get_safe_error_response(
-                'INVALID_CODE',
-                f"Verification failed: {response.get('error_text')}",  # ✅ Loggé mais pas exposé
-                status.HTTP_400_BAD_REQUEST
-            )
-    
-    except Exception as e:
-        return SafeErrorHandler.handle_exception(e, "verify_confirmation_code")
+            slot = SlotsProduct.objects.get(date=date, start_time=start_time, end_time=end_time)
+            slot.is_available = False
+            slot.save()
 
+        if type == 'watch':
+            BookingWatch.objects.create(
+            date=date,
+            start_time=start_time,
+            end_time=end_time,
+            name=name,
+            phone=phone,
+            watch=watch
+        )
+        else:
+            BookingProduct.objects.create(
+                date=date,
+                start_time=start_time,
+                end_time=end_time,
+                name=name,
+                phone=phone,
+                product=watch
+            )
 
-@api_view(['POST'])
-def cancel_verification(request):
-    try:
-        request_id = request.data.get('request_id')
+        email_context = {
+            'email': email,
+            'name': name,
+            'date': date,
+            'start_time': start_time,
+            'end_time': end_time,
+            'code': code,
+        }
         
-        if not request_id:
-            return SafeErrorHandler.get_safe_error_response(
-                'MISSING_FIELDS',
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
+        logger.info(f"Contexte email préparé pour {type}")
         
-        # ✅ NÉCESSAIRE - Sanitiser les données utilisateur
-        sanitized_request_id = sanitize_text_input(request_id, 100)
+        # Générer le contenu HTML et texte
+        html_message = render_to_string('emails/reservation_confirmation.html', email_context)
+        plain_message = strip_tags(html_message)
         
-        # Utiliser les variables d'environnement
-        vonage_key = os.environ.get('VONAGE_API_KEY')
-        vonage_secret = os.environ.get('VONAGE_API_SECRET')
+        logger.info("Template email généré, envoi en cours...")
+        logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
+        logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
+        logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
+        logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
+        logger.info(f"Recipients: {[email, settings.DEFAULT_FROM_EMAIL]}")
         
-        if not vonage_key or not vonage_secret:
-            logger.error("Missing Vonage credentials in environment variables")
-            return SafeErrorHandler.get_safe_error_response(
-                'API_ERROR',
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        # Envoyer l'email
+        send_mail(
+            subject=f"Confirmation de réservation - Maison Hoolis - Franck & Watch",
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
+            html_message=html_message,
+            fail_silently=False,
+        )
         
-        client = vonage.Client(key=vonage_key, secret=vonage_secret)
-        verify = client.verify
-        response = verify.cancel(REQUEST_ID=sanitized_request_id)
+        logger.info("Email envoyé avec succès via Django")
         
-        logger.info("SMS verification cancelled")
-        return Response({"message": "Vérification annulée"})
-    
+        return Response(
+            {"message": "Confirmation de réservation envoyée avec succès"}, 
+            status=status.HTTP_200_OK
+        )
+
     except Exception as e:
-        return SafeErrorHandler.handle_exception(e, "cancel_verification")
+        return Response(
+            {"error": f"Erreur lors de la vérification du code de confirmation. {e}"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['POST'])
@@ -848,7 +871,7 @@ def verify_payment(request):
                 # Préparer les données pour le template
                 from datetime import datetime
                 
-                brand_name = "F&W" if payment_type == 'watch_purchase' else "Hoolis"
+                brand_name = "Franck & Watch" if payment_type == 'watch_purchase' else "Maison Hoolis"
                 
                 email_context = {
                     'brand_name': brand_name,
@@ -877,14 +900,14 @@ def verify_payment(request):
                 logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
                 logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
                 logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
-                logger.info(f"Recipients: {[customer_email, 'youson91@hotmail.fr']}")
+                logger.info(f"Recipients: {[customer_email, settings.DEFAULT_FROM_EMAIL]}")
                 
                 # Envoyer l'email
                 send_mail(
                     subject=email_subject,
                     message=plain_message,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[customer_email, 'youson91@hotmail.fr'],  # Copie pour vous
+                    recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
                     html_message=html_message,
                     fail_silently=False,
                 )

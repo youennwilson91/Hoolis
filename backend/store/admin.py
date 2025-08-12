@@ -59,6 +59,12 @@ class CartAdmin(admin.ModelAdmin):
     inlines = [CartItemInline]
     list_display = ['id', 'total_price']
 
+class EmailConfirmationCodeAdmin(admin.ModelAdmin):
+    model = models.EmailConfirmationCode
+    list_display = ['email', 'code', 'verified']
+    search_fields = ['email', 'code', 'verified']
+    list_filter = ['verified']
+
 
 
 # Register your models here.
@@ -75,3 +81,4 @@ admin.site.register(models.SlotsProduct)
 admin.site.register(models.Watch, WatchAdmin)
 admin.site.register(models.BookingWatch)
 admin.site.register(models.SlotsWatch)
+admin.site.register(models.EmailConfirmationCode)
