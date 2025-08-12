@@ -84,6 +84,86 @@ const useStore = create(
     // Mobile Landing Page
     mobileButtonsVisible: true,
   }),
+
+  // États pour le paiement
+  paymentStatus: null,
+  paymentMessage: '',
+  paymentLoading: false,
+  paymentProcessed: false,
+
+  // Actions pour le paiement
+  setPaymentStatus: (status) => set({ paymentStatus: status }),
+  setPaymentMessage: (message) => set({ paymentMessage: message }),
+  setPaymentLoading: (loading) => set({ paymentLoading: loading }),
+  setPaymentProcessed: (processed) => set({ paymentProcessed: processed }),
+  
+  // Reset du paiement
+  resetPayment: () => set({ 
+    paymentStatus: null, 
+    paymentMessage: '', 
+    paymentLoading: false, 
+    paymentProcessed: false 
+  }),
+
+  // Action complète pour traiter un paiement
+  processPayment: async (sessionId) => {
+    set({ paymentLoading: true, paymentProcessed: true });
+    
+    try {
+      const { apiClient } = await import('../utils/axiosConfig');
+      
+      console.log('=== DÉBUT VERIFY_PAYMENT GLOBAL ===');
+      console.log('Vérification du paiement...', sessionId);
+      
+      const response = await apiClient.post('/store/verify-payment/', {
+        session_id: sessionId
+      });
+
+      console.log('Résultat de la vérification:', response.data);
+      console.log('Status reçu:', response.data.status);
+
+      if (response.data.status === 'success') {
+        console.log('✅ Paiement réussi - Définition du statut success');
+        set({ 
+          paymentStatus: 'success',
+          paymentMessage: '🎉 Paiement confirmé ! Un email de confirmation a été envoyé.'
+        });
+      } else if (response.data.status === 'pending') {
+        console.log('⏳ Paiement en attente');
+        set({ 
+          paymentStatus: 'pending',
+          paymentMessage: '⏳ Paiement en cours de traitement...'
+        });
+      } else {
+        console.log('❌ Paiement échoué - Status:', response.data.status);
+        set({ 
+          paymentStatus: 'failed',
+          paymentMessage: '❌ Échec du paiement. Veuillez réessayer.'
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification du paiement:', error);
+      set({ 
+        paymentStatus: 'error',
+        paymentMessage: '❌ Erreur lors de la vérification du paiement.'
+      });
+    } finally {
+      set({ paymentLoading: false });
+      console.log('=== FIN VERIFY_PAYMENT GLOBAL ===');
+      
+      // Nettoyer après 5 secondes
+      setTimeout(() => {
+        console.log('Nettoyage global du paiement');
+        set({ 
+          paymentStatus: null, 
+          paymentMessage: '', 
+          paymentLoading: false, 
+          paymentProcessed: false 
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 5000);
+    }
+  }
     }),
     {
       name: 'store',

@@ -1,75 +1,64 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { apiClient } from '../utils/axiosConfig';
+import useStore from '../utils/store';
 import './PaymentReturn.scss';
 
 export default function PaymentReturn() {
   const location = useLocation();
-  const [paymentStatus, setPaymentStatus] = useState(null);
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasProcessed, setHasProcessed] = useState(false);
+  const { 
+    paymentStatus, 
+    paymentMessage, 
+    paymentLoading, 
+    paymentProcessed,
+    setPaymentStatus,
+    setPaymentMessage,
+    setPaymentProcessed,
+    processPayment,
+    resetPayment
+  } = useStore();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const paymentParam = searchParams.get('payment');
     const sessionId = searchParams.get('session_id');
 
-    if (paymentParam === 'success' && sessionId && !hasProcessed) {
-      setHasProcessed(true);
-      verifyPayment(sessionId);
-    } else if (paymentParam === 'cancelled' && !hasProcessed) {
-      setHasProcessed(true);
-      setPaymentStatus('cancelled');
-      setMessage('Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.');
+    console.log('PaymentReturn useEffect - paymentParam:', paymentParam, 'sessionId:', sessionId, 'paymentProcessed:', paymentProcessed);
+
+    // Éviter les traitements multiples
+    if (paymentProcessed) {
+      console.log('Paiement déjà traité, sortie');
+      return;
     }
-  }, [location, hasProcessed]);
 
-  const verifyPayment = async (sessionId) => {
-    setIsLoading(true);
-    try {
-      console.log('Vérification du paiement...', sessionId);
+    if (paymentParam === 'success' && sessionId) {
+      console.log('Traitement du paiement réussi');
+      setPaymentProcessed(true);
+      processPayment(sessionId);
+    } else if (paymentParam === 'cancelled') {
+      console.log('Traitement du paiement annulé');
+      setPaymentProcessed(true);
+      setPaymentStatus('cancelled');
+      setPaymentMessage('Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.');
       
-      const response = await apiClient.post('/store/verify-payment/', {
-        session_id: sessionId
-      });
-
-      console.log('Résultat de la vérification:', response.data);
-
-      if (response.data.status === 'success') {
-        setPaymentStatus('success');
-        setMessage('🎉 Paiement confirmé ! Un email de confirmation a été envoyé.');
-      } else if (response.data.status === 'pending') {
-        setPaymentStatus('pending');
-        setMessage('⏳ Paiement en cours de traitement...');
-      } else {
-        setPaymentStatus('failed');
-        setMessage('❌ Échec du paiement. Veuillez réessayer.');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la vérification du paiement:', error);
-      setPaymentStatus('error');
-      setMessage('❌ Erreur lors de la vérification du paiement.');
-    } finally {
-      setIsLoading(false);
-      
+      // Nettoyer après 5 secondes
       setTimeout(() => {
         window.history.replaceState({}, document.title, window.location.pathname);
-        setPaymentStatus(null);
-        setMessage('');
-        setHasProcessed(false);
+        resetPayment();
       }, 5000);
     }
-  };
+  }, [location, paymentProcessed, setPaymentStatus, setPaymentMessage, setPaymentProcessed, processPayment, resetPayment]);
 
-  if (!paymentStatus && !isLoading) {
+  // Debug: Afficher l'état actuel
+  console.log('PaymentReturn render - paymentStatus:', paymentStatus, 'paymentMessage:', paymentMessage, 'paymentLoading:', paymentLoading);
+
+  if (!paymentStatus && !paymentLoading) {
     return null; // Ne rien afficher si pas de statut de paiement
   }
 
   return (
     <div className="payment-return-overlay">
       <div className="payment-return-popup">
-        {isLoading ? (
+        {paymentLoading ? (
           <div className="payment-loading">
             <div className="spinner"></div>
             <p>Vérification du paiement en cours...</p>
@@ -83,12 +72,12 @@ export default function PaymentReturn() {
               {paymentStatus === 'cancelled' && '🚫 Paiement annulé'}
               {paymentStatus === 'error' && '⚠️ Erreur'}
             </h3>
-            <p>{message}</p>
+            <p>{paymentMessage}</p>
             <button 
               onClick={() => {
+                console.log('Fermeture manuelle de la popup');
                 window.history.replaceState({}, document.title, window.location.pathname);
-                setPaymentStatus(null);
-                setMessage('');
+                resetPayment();
               }}
               className="close-payment-popup"
             >
