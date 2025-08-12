@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import useStore from "../utils/store";
 import "./FandW.scss";
-import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig";
+import { apiClient, API_ENDPOINTS } from "../utils/axiosConfig.js";
 import BookingCalendar from "../components/Calendar";
 import { BarLoader } from "react-spinners";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
