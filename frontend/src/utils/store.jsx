@@ -107,7 +107,10 @@ const useStore = create(
 
   // Action complète pour traiter un paiement
   processPayment: async (sessionId) => {
-    set({ paymentLoading: true, paymentProcessed: true });
+    const { setPaymentLoading, setPaymentStatus, setPaymentMessage, setPaymentProcessed } = set();
+    
+    setPaymentLoading(true);
+    setPaymentProcessed(true);
     
     try {
       const { apiClient } = await import('../utils/axiosConfig');
@@ -124,42 +127,29 @@ const useStore = create(
 
       if (response.data.status === 'success') {
         console.log('✅ Paiement réussi - Définition du statut success');
-        set({ 
-          paymentStatus: 'success',
-          paymentMessage: '🎉 Paiement confirmé ! Un email de confirmation a été envoyé.'
-        });
+        setPaymentStatus('success');
+        setPaymentMessage('🎉 Paiement confirmé ! Un email de confirmation a été envoyé.');
       } else if (response.data.status === 'pending') {
         console.log('⏳ Paiement en attente');
-        set({ 
-          paymentStatus: 'pending',
-          paymentMessage: '⏳ Paiement en cours de traitement...'
-        });
+        setPaymentStatus('pending');
+        setPaymentMessage('⏳ Paiement en cours de traitement...');
       } else {
         console.log('❌ Paiement échoué - Status:', response.data.status);
-        set({ 
-          paymentStatus: 'failed',
-          paymentMessage: '❌ Échec du paiement. Veuillez réessayer.'
-        });
+        setPaymentStatus('failed');
+        setPaymentMessage('❌ Échec du paiement. Veuillez réessayer.');
       }
     } catch (error) {
       console.error('Erreur lors de la vérification du paiement:', error);
-      set({ 
-        paymentStatus: 'error',
-        paymentMessage: '❌ Erreur lors de la vérification du paiement.'
-      });
+      setPaymentStatus('error');
+      setPaymentMessage('❌ Erreur lors de la vérification du paiement.');
     } finally {
-      set({ paymentLoading: false });
+      setPaymentLoading(false);
       console.log('=== FIN VERIFY_PAYMENT GLOBAL ===');
       
       // Nettoyer après 5 secondes
       setTimeout(() => {
         console.log('Nettoyage global du paiement');
-        set({ 
-          paymentStatus: null, 
-          paymentMessage: '', 
-          paymentLoading: false, 
-          paymentProcessed: false 
-        });
+        set().resetPayment();
         window.history.replaceState({}, document.title, window.location.pathname);
       }, 5000);
     }

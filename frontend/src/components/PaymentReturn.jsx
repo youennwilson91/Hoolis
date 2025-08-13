@@ -1,90 +1,67 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import useStore from '../utils/store';
+import { apiClient } from '../utils/axiosConfig';
 import './PaymentReturn.scss';
 
 export default function PaymentReturn() {
   const location = useLocation();
-  const { 
-    paymentStatus, 
-    paymentMessage, 
-    paymentLoading, 
-    paymentProcessed,
-    setPaymentStatus,
-    setPaymentMessage,
-    setPaymentProcessed,
-    processPayment,
-    resetPayment
-  } = useStore();
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const paymentParam = searchParams.get('payment');
-    const sessionId = searchParams.get('session_id');
+    const params = new URLSearchParams(location.search);
+    const payment = params.get('payment');
+    const sessionId = params.get('session_id');
 
-    console.log('PaymentReturn useEffect - paymentParam:', paymentParam, 'sessionId:', sessionId, 'paymentProcessed:', paymentProcessed);
-
-    // Éviter les traitements multiples
-    if (paymentProcessed) {
-      console.log('Paiement déjà traité, sortie');
-      return;
-    }
-
-    if (paymentParam === 'success' && sessionId) {
-      console.log('Traitement du paiement réussi');
-      setPaymentProcessed(true);
-      processPayment(sessionId);
-    } else if (paymentParam === 'cancelled') {
-      console.log('Traitement du paiement annulé');
-      setPaymentProcessed(true);
+    if (payment === 'success' && sessionId) {
+      verifyPayment(sessionId);
+    } else if (payment === 'cancelled') {
       setPaymentStatus('cancelled');
-      setPaymentMessage('Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.');
-      
-      // Nettoyer après 5 secondes
-      setTimeout(() => {
-        window.history.replaceState({}, document.title, window.location.pathname);
-        resetPayment();
-      }, 5000);
+      setMessage('Paiement annulé');
     }
-  }, [location, paymentProcessed, setPaymentStatus, setPaymentMessage, setPaymentProcessed, processPayment, resetPayment]);
+  }, []);
 
-  // Debug: Afficher l'état actuel
-  console.log('PaymentReturn render - paymentStatus:', paymentStatus, 'paymentMessage:', paymentMessage, 'paymentLoading:', paymentLoading);
+  const verifyPayment = async (sessionId) => {
+    try {
+      const response = await apiClient.post('/store/verify-payment/', {
+        session_id: sessionId
+      });
 
-  if (!paymentStatus && !paymentLoading) {
-    return null; // Ne rien afficher si pas de statut de paiement
-  }
+      if (response.data.status === 'success') {
+        setPaymentStatus('success');
+        setMessage('Paiement confirmé !');
+      } else {
+        setPaymentStatus('failed');
+        setMessage('Paiement échoué');
+      }
+    } catch (error) {
+      setPaymentStatus('failed');
+      setMessage('Erreur de vérification');
+    }
+  };
+
+  const closePopup = () => {
+    window.history.replaceState({}, document.title, window.location.pathname);
+    setPaymentStatus(null);
+    setMessage('');
+  };
+
+  if (!paymentStatus) return null;
 
   return (
     <div className="payment-return-overlay">
       <div className="payment-return-popup">
-        {paymentLoading ? (
-          <div className="payment-loading">
-            <div className="spinner"></div>
-            <p>Vérification du paiement en cours...</p>
-          </div>
-        ) : (
-          <div className={`payment-status payment-${paymentStatus}`}>
-            <h3>
-              {paymentStatus === 'success' && '✅ Paiement réussi'}
-              {paymentStatus === 'pending' && '⏳ Paiement en cours'}
-              {paymentStatus === 'failed' && '❌ Paiement échoué'}
-              {paymentStatus === 'cancelled' && '🚫 Paiement annulé'}
-              {paymentStatus === 'error' && '⚠️ Erreur'}
-            </h3>
-            <p>{paymentMessage}</p>
-            <button 
-              onClick={() => {
-                console.log('Fermeture manuelle de la popup');
-                window.history.replaceState({}, document.title, window.location.pathname);
-                resetPayment();
-              }}
-              className="close-payment-popup"
-            >
-              Fermer
-            </button>
-          </div>
-        )}
+        <div className={`payment-status payment-${paymentStatus}`}>
+          <h3>
+            {paymentStatus === 'success' && '✅ Paiement réussi'}
+            {paymentStatus === 'failed' && '❌ Paiement échoué'}
+            {paymentStatus === 'cancelled' && '🚫 Paiement annulé'}
+          </h3>
+          <p>{message}</p>
+          <button onClick={closePopup} className="close-payment-popup">
+            Fermer
+          </button>
+        </div>
       </div>
     </div>
   );
