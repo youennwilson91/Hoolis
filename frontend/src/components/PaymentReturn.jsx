@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { apiClient } from '../utils/axiosConfig';
+import useStore from '../utils/store';
 import './PaymentReturn.scss';
 
 export default function PaymentReturn() {
   const location = useLocation();
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [message, setMessage] = useState('');
+  const { setAddToCart } = useStore();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -30,6 +32,9 @@ export default function PaymentReturn() {
       if (response.data.status === 'success') {
         setPaymentStatus('success');
         setMessage('Paiement confirmé !');
+        
+        // Vider le panier frontend après paiement réussi
+        setAddToCart(() => []);
       } else {
         setPaymentStatus('failed');
         setMessage('Paiement échoué');

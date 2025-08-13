@@ -129,6 +129,10 @@ const useStore = create(
         console.log('✅ Paiement réussi - Définition du statut success');
         setPaymentStatus('success');
         setPaymentMessage('🎉 Paiement confirmé ! Un email de confirmation a été envoyé.');
+        
+        // Vider le panier frontend après paiement réussi
+        console.log('🛒 Vidage du panier frontend après paiement réussi');
+        set({ addToCart: [] });
       } else if (response.data.status === 'pending') {
         console.log('⏳ Paiement en attente');
         setPaymentStatus('pending');

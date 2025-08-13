@@ -5,6 +5,9 @@ from django.db import transaction
 from django.utils.html import escape
 from . import order_created
 from .utils import sanitize_text_input, sanitize_phone_number
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CollectionSerializer(serializers.ModelSerializer):
     products_count = serializers.IntegerField(read_only=True)
@@ -332,6 +335,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             OrderItem.objects.bulk_create(order_items)
 
             Cart.objects.filter(pk=cart_id).delete()
+            logger.info(f"Cart deleted: {cart_id}")
 
             order_created.send(sender=self.__class__, order=order)
             
