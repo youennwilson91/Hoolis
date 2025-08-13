@@ -827,6 +827,7 @@ def verify_payment(request):
                     }
                 )
                 
+                Cart.objects.filter(id=cart_id).delete()
                 OrderItem.objects.create(order=order, product=product, quantity=1)
                 
                 # Marquer montre indisponible
@@ -838,6 +839,12 @@ def verify_payment(request):
                 
             elif payment_type == 'cart_purchase':
                 cart_id = metadata.get('cart_id')
+                logger.info(f"Processing cart_purchase for cart_id: {cart_id}")
+                
+                # Vérifier si le cart existe avant la validation
+                from .models import Cart
+                cart_exists = Cart.objects.filter(pk=cart_id).exists()
+                logger.info(f"Cart exists: {cart_exists}")
                 
                 serializer = CreateOrderSerializer(
                     data={'cart_id': cart_id}, 
@@ -846,6 +853,13 @@ def verify_payment(request):
                 
                 if not serializer.is_valid():
                     logger.error(f"Serializer invalide: {serializer.errors}")
+                    # Si le cart n'existe plus, c'est peut-être déjà traité
+                    if 'No cart with the given ID was found' in str(serializer.errors):
+                        logger.warning(f"Cart {cart_id} already processed, returning success")
+                        return Response({
+                            'status': 'success',
+                            'message': 'Commande déjà traitée'
+                        })
                     return Response({
                         'status': 'error',
                         'message': 'Erreur création commande'
