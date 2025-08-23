@@ -7,10 +7,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "lighthouse": "unlighthouse --site http://localhost:5173",
-    "lighthouse:ci": "unlighthouse-ci --site http://localhost:5173",
-    "lighthouse:build": "npm run build && npm run preview & sleep 5 && unlighthouse --site http://localhost:4173 && kill %1"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -30,7 +27,10 @@
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+<<<<<<< HEAD
     "@unlighthouse/cli": "^0.17.2",
+=======
+>>>>>>> parent of 3394e9d (tst perf unlighthouse)
     "@vitejs/plugin-react": "^4.4.1",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "eslint": "^9.21.0",
