@@ -10,7 +10,7 @@ import Footer from './components/Footer'
 
 function App() {
   const bgColor = useStore((state) => state.bgColor);
-  const passwordProtect = import.meta.env.VITE_PASSWORD_PROTECT;
+  const passwordProtect = import.meta.env.VITE_PASSWORD_PROTECT === 'true';
   useEffect(() => {
     // Load custom fonts
     loadFont();
