@@ -1,0 +1,10 @@
+[33m7383baf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m revert changes - remove video from landing and shop
+[33ma21cf6b[m optimisation sur la landing page
+[33m79ef07b[m mdification des permissions pour test perf
+[33mc68c125[m update unlighthouse
+[33mb36ff72[m update unlighthouse
+[33m3394e9d[m tst perf unlighthouse
+[33me5da9e3[m ajout de la condition password protect
+[33mb48be56[m ajout de la condition pour le password protect
+[33m028fd2f[m ajout de la condition pour le password protect
+[33m63c2aad[m vidage du panier apres paiement
