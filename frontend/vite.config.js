@@ -23,7 +23,6 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
-    cssCodeSplit: true,
     // Configuration pour les assets
     assetsDir: 'assets',
     outDir: 'dist'
