@@ -51,7 +51,7 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
     pagination_class = PageNumberPagination
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         queryset = Product.objects.select_related('collection').prefetch_related('images').all()
@@ -83,7 +83,7 @@ class CollectionViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name']
     ordering_fields = ['name']
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
     
     def destroy(self, request, *args, **kwargs):
         collection = get_object_or_404(Collection, pk=kwargs['pk'])
@@ -95,7 +95,7 @@ class CollectionViewSet(ModelViewSet):
 @method_decorator(cache_page(60 * 10), name='retrieve')
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
     
     def get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
@@ -117,7 +117,7 @@ def process_order_view(request, order_id):
 class SlotsProductViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = SlotsProductSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         date_str = self.request.GET.get('date')
@@ -133,7 +133,7 @@ class SlotsProductViewSet(ModelViewSet):
 class BookingProductViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
     queryset = BookingProduct.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
     
     def get_serializer_context(self):
         return {
@@ -171,7 +171,7 @@ class BookingProductViewSet(ModelViewSet):
 class SlotsWatchViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = SlotsWatchSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         date_str = self.request.GET.get('date')
@@ -189,7 +189,7 @@ class SlotsWatchViewSet(ModelViewSet):
 class BookingWatchViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
     queryset = BookingWatch.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
     
     def get_serializer_context(self):
         return {
@@ -229,7 +229,7 @@ class BookingWatchViewSet(ModelViewSet):
 @method_decorator(vary_on_headers('User-Agent'), name='list')
 class WatchViewSet(ModelViewSet):
     serializer_class = WatchSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         return Watch.objects.prefetch_related('images')
