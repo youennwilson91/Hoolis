@@ -361,13 +361,10 @@ export default function Shop() {
 
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
-        <video 
-          src="/shop-img/bg-vid-shop.mp4" 
-          autoPlay 
-          muted 
-          loop 
-          preload="auto"
-          aria-label="Vidéo d'ambiance de la boutique Hoolis"
+        <img 
+            src="/hoolis-img/coquillage-tee-polito.jpg" 
+            alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
+            loading="lazy" 
         />
         <div ref={galleryRef} className="shop-gallery">
           <ShopButtons/>
