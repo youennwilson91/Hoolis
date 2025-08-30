@@ -19,6 +19,15 @@ urlpatterns = [
 # Servir les fichiers média
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# En production, ajouter explicitement la route pour les médias
+if not settings.DEBUG:
+    from django.views.static import serve
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]
+
 if settings.DEBUG:
     urlpatterns += [
         path('__debug__/', include('debug_toolbar.urls')),
