@@ -318,7 +318,7 @@ class OrderItemViewSet(ModelViewSet):
 @api_view(['POST'])
 def send_confirmation_code(request):
     """
-    Envoyer un code de vérification par SMS
+    Envoyer un code de vérification par email
     """
     try:
         # Récupérer les données de la requête
@@ -357,7 +357,7 @@ def send_confirmation_code(request):
         logger.info(f"Heure de fin: {end_time}")
         logger.info(f"Nom: {name}")
 
-        code = random.randint(0000, 9999)
+        code = random.randint(1000, 9999)
         serializer = EmailConfirmationCodeSerializer(data={'email': email, 'code': code})
         serializer.is_valid(raise_exception=True)
         serializer.save()
