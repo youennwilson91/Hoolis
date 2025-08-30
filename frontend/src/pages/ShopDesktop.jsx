@@ -362,7 +362,7 @@ export default function Shop() {
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img 
-            src="/hoolis-img/coquillage-tee-polito.jpg" 
+            src="/hoolis-img/mouth-tee-back.jpg" 
             alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
             loading="lazy" 
         />
