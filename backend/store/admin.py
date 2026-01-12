@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 
 from django.contrib import admin
-from .models import Watch, WatchMedia, Product, ProductImage, Cart, CartItem, Order, OrderItem
+from .models import Product, ProductImage, Cart, CartItem, Order, OrderItem
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -15,14 +15,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['collection', 'is_available']
     search_fields = ['title', 'description', 'collection__name']
 
-class WatchMediaInline(admin.TabularInline):
-    model = WatchMedia
-    extra = 1
-    
 
-class WatchAdmin(admin.ModelAdmin):
-    inlines = [WatchMediaInline]
-    search_fields = ['title', 'description', 'collection__name'] 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -78,7 +71,4 @@ admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.OrderItem)
 admin.site.register(models.BookingProduct)
 admin.site.register(models.SlotsProduct)
-admin.site.register(models.Watch, WatchAdmin)
-admin.site.register(models.BookingWatch)
-admin.site.register(models.SlotsWatch)
 admin.site.register(models.EmailConfirmationCode)

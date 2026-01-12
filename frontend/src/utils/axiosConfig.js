@@ -18,10 +18,7 @@ export const apiClient = axios.create({
 
 // Endpoints API centralisés
 export const API_ENDPOINTS = {
-  watches: '/store/watches/',
   products: '/store/products/',
-  availableSlots: '/store/available-slots-watches/',
-  bookings: '/store/bookings-watches/',
   availableSlotsProducts: '/store/available-slots-products/',
   bookingsProducts: '/store/bookings-products/',
   collections: '/store/collections/',

@@ -1,12 +1,10 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-// Création du store pour gérer l'état de la page Landing
-const useStore = create(
-  persist(
-    (set) => ({
+// ===== SLICES =====
 
-  // Landing Page
+// Slice pour l'état UI éphémère (non persisté)
+const createUISlice = (set) => ({
   bgColor: "#000000",
   label: "Maison Hoolis",
   labelColor: "#000000",
@@ -15,7 +13,17 @@ const useStore = create(
   isClicked: false,
   mainButtonHover: false,
   menuOpen: false,
-  
+  galleryVisible: false,
+  cartVisible: false,
+  articleIsClicked: false,
+  articleIsHovered: false,
+  selectedArticleId: null,
+  mobileButtonsVisible: false,
+  isMouseActive: false,
+  isBooking: false,
+  isMobile: false,
+  collectionChosen: null,
+
   setBgColor: (color) => set({ bgColor: color }),
   setLabel: (text) => set({ label: text }),
   setLabelColor: (color) => set({ labelColor: color }),
@@ -24,147 +32,90 @@ const useStore = create(
   setIsClicked: (visible) => set({ isClicked: visible }),
   setMainButtonHover: (visible) => set({ mainButtonHover: visible }),
   setMenuOpen: (visible) => set({ menuOpen: visible }),
-  // Shop Page
-  galleryVisible: false,
-  collectionChosen: null,
-  articleIsClicked: false,
-  addToCart: [],
-  cartVisible: false,
-  shopImages: [],
-  articleIsHovered: false,
-  selectedArticleId: null,
-  products: [],
-
-
   setGalleryVisible: (visible) => set({ galleryVisible: visible }),
-  setCollectionChosen: (collection) => set({ collectionChosen: collection }),
+  setCartVisible: (visible) => set({ cartVisible: visible }),
   setArticleIsClicked: (isClicked) => set({ articleIsClicked: isClicked }),
   setArticleIsHovered: (isHovered) => set({ articleIsHovered: isHovered }),
   setSelectedArticleId: (id) => set({ selectedArticleId: id }),
-  setCartVisible: (visible) => set({ cartVisible: visible }),
-  setAddToCart: (callback) => set((state) => ({ 
-    addToCart: callback(state.addToCart) 
-  })),
-  setProducts: (products) => set({ products: products }),
-  
-  // Mobile Landing Page
-  mobileButtonsVisible: false,
   setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
-
-  // FandW Page
-  isMouseActive: false,
-  isBooking: false,
-  watches: [],
-
   setIsMouseActive: (active) => set({ isMouseActive: active }),
   setIsBooking: (isBooking) => set({ isBooking: isBooking }),
-  setWatches: (watches) => set({ watches: watches }),
-
-  // Mobile state
-  isMobile: false,
   setIsMobile: (isMobile) => set({ isMobile: isMobile }),
+  setCollectionChosen: (collection) => set({ collectionChosen: collection }),
+});
 
-  // Action pour réinitialiser l'état
-  resetStore: () => set({
-    bgColor: "#000000",
-    label: "Maison Hoolis",
-    labelColor: "#000000",
-    crownVisible: true,
-    buttonsVisible: true,
-    isClicked: false,
-    collectionChosen: null,
-    articleIsClicked: null,
-    articleIsHovered: false,
-    selectedArticleId: null,
-    galleryVisible: false,
-    cartVisible: false,
-    addToCart: [],
-    mainButtonHover: false,
+// Slice pour le panier (persisté)
+const createCartSlice = (set) => ({
+  addToCart: [],
+  setAddToCart: (callback) => set((state) => ({
+    addToCart: callback(state.addToCart)
+  })),
+  clearCart: () => set({ addToCart: [] }),
+});
 
-    // Mobile Landing Page
-    mobileButtonsVisible: true,
-  }),
+// Slice pour les données (non persisté, géré par React Query idéalement)
+const createDataSlice = (set) => ({
+  products: [],
+  watches: [],
+  setProducts: (products) => set({ products }),
+  setWatches: (watches) => set({ watches }),
+});
 
-  // États pour le paiement
+// Slice pour le paiement (non persisté)
+const createPaymentSlice = (set) => ({
   paymentStatus: null,
   paymentMessage: '',
   paymentLoading: false,
   paymentProcessed: false,
 
-  // Actions pour le paiement
   setPaymentStatus: (status) => set({ paymentStatus: status }),
   setPaymentMessage: (message) => set({ paymentMessage: message }),
   setPaymentLoading: (loading) => set({ paymentLoading: loading }),
   setPaymentProcessed: (processed) => set({ paymentProcessed: processed }),
-  
-  // Reset du paiement
-  resetPayment: () => set({ 
-    paymentStatus: null, 
-    paymentMessage: '', 
-    paymentLoading: false, 
-    paymentProcessed: false 
+
+  resetPayment: () => set({
+    paymentStatus: null,
+    paymentMessage: '',
+    paymentLoading: false,
+    paymentProcessed: false
   }),
+});
 
-  // Action complète pour traiter un paiement
-  processPayment: async (sessionId) => {
-    const { setPaymentLoading, setPaymentStatus, setPaymentMessage, setPaymentProcessed } = set();
-    
-    setPaymentLoading(true);
-    setPaymentProcessed(true);
-    
-    try {
-      const { apiClient } = await import('../utils/axiosConfig');
-      
-      console.log('=== DÉBUT VERIFY_PAYMENT GLOBAL ===');
-      console.log('Vérification du paiement...', sessionId);
-      
-      const response = await apiClient.post('/store/verify-payment/', {
-        session_id: sessionId
-      });
+// ===== STORE PRINCIPAL =====
 
-      console.log('Résultat de la vérification:', response.data);
-      console.log('Status reçu:', response.data.status);
+const useStore = create(
+  persist(
+    (set, get) => ({
+      ...createUISlice(set),
+      ...createCartSlice(set),
+      ...createDataSlice(set),
+      ...createPaymentSlice(set),
 
-      if (response.data.status === 'success') {
-        console.log('✅ Paiement réussi - Définition du statut success');
-        setPaymentStatus('success');
-        setPaymentMessage('🎉 Paiement confirmé ! Un email de confirmation a été envoyé.');
-        
-        // Vider le panier frontend après paiement réussi
-        console.log('🛒 Vidage du panier frontend après paiement réussi');
-        set({ addToCart: [] });
-      } else if (response.data.status === 'pending') {
-        console.log('⏳ Paiement en attente');
-        setPaymentStatus('pending');
-        setPaymentMessage('⏳ Paiement en cours de traitement...');
-      } else {
-        console.log('❌ Paiement échoué - Status:', response.data.status);
-        setPaymentStatus('failed');
-        setPaymentMessage('❌ Échec du paiement. Veuillez réessayer.');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la vérification du paiement:', error);
-      setPaymentStatus('error');
-      setPaymentMessage('❌ Erreur lors de la vérification du paiement.');
-    } finally {
-      setPaymentLoading(false);
-      console.log('=== FIN VERIFY_PAYMENT GLOBAL ===');
-      
-      // Nettoyer après 5 secondes
-      setTimeout(() => {
-        console.log('Nettoyage global du paiement');
-        set().resetPayment();
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }, 5000);
-    }
-  }
+      // Action pour réinitialiser l'état UI
+      resetStore: () => set({
+        bgColor: "#000000",
+        label: "Maison Hoolis",
+        labelColor: "#000000",
+        crownVisible: true,
+        buttonsVisible: true,
+        isClicked: false,
+        collectionChosen: null,
+        articleIsClicked: null,
+        articleIsHovered: false,
+        selectedArticleId: null,
+        galleryVisible: false,
+        cartVisible: false,
+        mainButtonHover: false,
+        mobileButtonsVisible: true,
+      }),
     }),
     {
-      name: 'store',
+      name: 'hoolis-store',
       storage: createJSONStorage(() => localStorage),
+      // Persister UNIQUEMENT le panier
+      partialize: (state) => ({ addToCart: state.addToCart }),
     }
   )
 );
-
 
 export default useStore;

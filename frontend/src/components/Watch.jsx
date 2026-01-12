@@ -1,23 +1,26 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, memo } from "react";
 import { gsap } from "gsap";
 import useStore from "../utils/store";
 import { sanitizeImageUrl, sanitizeAltText, sanitizeText } from "../utils/sanitizer";
 import OrderForm from "./OrderForm";
 
-export default function Watch({ 
+export function Watch({ 
   watch, 
   index, 
   watchWidth,
   watchWidthHover,
-  watchIsClicked, 
   clickedWatchId, 
+  isClicked,
   handleWatchHover, 
   handleWatchClick, 
   handleWatchClose, 
   watchRefs,
   is_available
 }) {
-  const { isBooking, setIsBooking, setAddToCart } = useStore();
+
+  console.log(watch);
+
+  const setIsBooking = useStore(state => state.setIsBooking);
   const bookButtonRef = useRef(null);
   const [showDescription, setShowDescription] = useState(false);
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -40,20 +43,18 @@ export default function Watch({
         }
       }}
       key={sanitizedWatch.id} 
-      className={`watch ${watchIsClicked && clickedWatchId === sanitizedWatch.id ? 'watch-clicked' : ''} ${!is_available ? 'watch-unavailable' : ''}`}
-      onMouseEnter={() => handleWatchHover({
+      className={`watch ${clickedWatchId === sanitizedWatch.id ? 'watch-clicked' : ''} ${!is_available ? 'watch-unavailable' : ''}`}
+      onMouseEnter={() => !isClicked && handleWatchHover({
         width: watchWidthHover, 
         watchRef: watchRefs.current?.[index], 
         id: sanitizedWatch.id, 
-        isEntering: true
       })} 
-      onMouseLeave={() => handleWatchHover({
+      onMouseLeave={() => !isClicked && handleWatchHover({
         width: watchWidth, 
         watchRef: watchRefs.current?.[index], 
         id: sanitizedWatch.id, 
-        isEntering: false
       })} 
-      onClick={() => handleWatchClick(watchRefs.current?.[index], sanitizedWatch.id)}
+      onClick={() => !isClicked && handleWatchClick(watchRefs.current?.[index], sanitizedWatch.id)}
     >
       <div className="article-image-container">
         {sanitizedWatch.wide && sanitizedWatch.wide.map((media, mediaIndex) => (
@@ -76,12 +77,12 @@ export default function Watch({
           ) : null
         ))}
       </div>
-      {!watchIsClicked && 
+      {!clickedWatchId && 
       <div id={`description-${sanitizedWatch.id}`} className="watch-description" >
         <h1>{sanitizedWatch.name}</h1>
       </div>
       }
-      {watchIsClicked && clickedWatchId === sanitizedWatch.id && (
+      {clickedWatchId === sanitizedWatch.id && (
         <div className="watch-details">
           <h1 className="watch-title">{sanitizedWatch.name}</h1>
           <h1 className="article-price">{sanitizedWatch.price}€</h1>
@@ -136,3 +137,5 @@ export default function Watch({
     </div>
   );
 } 
+
+export default memo(Watch);

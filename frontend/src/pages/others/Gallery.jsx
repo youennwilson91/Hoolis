@@ -1,13 +1,13 @@
-import MenuButtons from "../components/Buttons/Menu.jsx";
-import SupportButton from "../components/Buttons/SupportButton.jsx";
-import useStore from "../utils/store";
+import MenuButtons from "../../components/Buttons/Menu.jsx";
+import SupportButton from "../../components/Buttons/SupportButton.jsx";
+import useStore from "../../utils/store.jsx";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import SEOHead from "../components/SEOHead";
-import StructuredData, { createOrganizationSchema } from "../components/StructuredData";
+import SEOHead from "../../components/SEOHead.jsx";
+import StructuredData, { createOrganizationSchema } from "../../components/StructuredData.jsx";
 import "./Gallery.scss";
-import "../index.css";
+import "../../index.css";
 
 export default function Gallery() {
   const screenRef = useRef(null);

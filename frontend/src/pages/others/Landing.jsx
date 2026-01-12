@@ -1,9 +1,9 @@
 import { useRef, useEffect } from "react";
-import MenuButtons from "../components/Buttons/Menu.jsx";
-import useStore from "../utils/store";
-import SEOHead from "../components/SEOHead";
-import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../components/StructuredData";
-import PaymentReturn from "../components/PaymentReturn";
+import MenuButtons from "../../components/Buttons/Menu.jsx";
+import useStore from "../../utils/store.jsx";
+import SEOHead from "../../components/SEOHead.jsx";
+import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../../components/StructuredData.jsx";
+import PaymentReturn from "../../components/PaymentReturn.jsx";
 import "./Landing.scss";
 
 export default function Landing() {
@@ -93,11 +93,12 @@ export default function Landing() {
                             className="landing-menu-item" 
                             ref={menuRef1}
                         >
-                            <img 
+                            {/*<img 
                                 src="/hoolis-img/coquillage-tee-polito.jpg" 
                                 alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
                                 loading="lazy" 
-                            />
+                            />*/}
+                            <video src="/hoolis-img/bg-vid-shop.mp4" autoPlay loop muted />
                         </div>
                     </div>
                     {buttonsVisible && <MenuButtons screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
@@ -106,11 +107,12 @@ export default function Landing() {
 
             <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing"> 
-                    <img 
+                    {/*<img 
                         src="/hoolis-img/coquillage-tee-polito.jpg" 
                         alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
                         loading="lazy" 
-                    />
+                    /> */}
+                    <video src="/hoolis-img/video.mp4" autoPlay loop muted />
                     <svg version="1.0" className="crown-svg"
                             viewBox="0 0 300 241.000000"
                             preserveAspectRatio="xMidYMid meet"

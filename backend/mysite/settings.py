@@ -6,15 +6,60 @@ import os
 import dj_database_url
 from pathlib import Path
 from datetime import timedelta
+import environ
+
+# Workaround pour djoser avec Django 4.0+
+# baseconv a été supprimé de django.utils dans Django 4.0
+try:
+    from django.utils import baseconv
+except ImportError:
+    import sys
+    from django.utils import encoding
+    
+    class BaseConverter:
+        def __init__(self, digits):
+            self.digits = digits
+            self.base = len(digits)
+        
+        def encode(self, num):
+            if num == 0:
+                return self.digits[0]
+            result = ''
+            while num:
+                num, remainder = divmod(num, self.base)
+                result = self.digits[remainder] + result
+            return result
+        
+        def decode(self, s):
+            num = 0
+            for char in s:
+                num = num * self.base + self.digits.index(char)
+            return num
+    
+    class BaseConvModule:
+        BASE36_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz'
+        BASE62_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        base36 = BaseConverter(BASE36_ALPHABET)
+        base62 = BaseConverter(BASE62_ALPHABET)
+    
+    import django.utils
+    django.utils.baseconv = BaseConvModule()
+    sys.modules['django.utils.baseconv'] = BaseConvModule()
+
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ['true', '1', 'yes']
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    raise ValueError("DJANGO_SECRET_KEY must be set in production!")
+SECRET_KEY="django-insecure-h-30p5e_5(a@)%@bjo7rmqs4*e=x=sjsaz(4l=n_y*hi^%1s^z"
+
+# Environment variables
+env = environ.Env(
+    LOG_LEVEL=(str, 'INFO'),
+    ALLOW_REGISTRATION=(bool, True)
+)
+environ.Env.read_env(BASE_DIR / '.env')
         
 
 INSTALLED_APPS = [
@@ -80,8 +125,15 @@ TEMPLATES = [
 
 
 DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    } 
+    'default': env.db('DATABASE_URL', default='mssql://sa:PateSaucisse91!@localhost:1433/hoolis_db')
+}
+
+# Options SQL Server (seulement si c'est mssql)
+if DATABASES['default'].get('ENGINE') == 'mssql' or 'mssql' in str(DATABASES['default'].get('ENGINE', '')):
+    DATABASES['default'].setdefault('OPTIONS', {}).update({
+        'driver': 'ODBC Driver 17 for SQL Server',
+        'extra_params': 'TrustServerCertificate=yes',
+    }) 
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -130,9 +182,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    #'DEFAULT_PERMISSION_CLASSES': [
+    #    'rest_framework.permissions.IsAuthenticated',
+    #],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
@@ -156,13 +208,7 @@ else:
 
 if DEBUG:
     # Configuration HTTP pour le développement  
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:8000",
-        "http://localhost:5173", 
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:5173",
-        "http://192.168.1.184:5173",  # Adresse réseau local si nécessaire
-    ]
+    CORS_ALLOW_ALL_ORIGINS = True  # Adresse réseau local si nécessaire
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False

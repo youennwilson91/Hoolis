@@ -14,16 +14,14 @@ function BookingCalendar({ type }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [selectedWatch, setSelectedWatch] = useState("");
-  const [availableWatches, setAvailableWatches] = useState([]);
+  const [selectedproduct, setSelectedproduct] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [verificationStep, setVerificationStep] = useState('form');
   const [verificationCode, setVerificationCode] = useState("");
-  const [requestId, setRequestId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedSlot, setSelectedSlot] = useState(null);
   
-  const { isBooking, setIsBooking, products, watches, medias } = useStore();
+  const { setIsBooking, products } = useStore();
 
   const location = useLocation();
 
@@ -68,7 +66,7 @@ function BookingCalendar({ type }) {
     if (isSuccess) {
       setName("");
       setPhone("");
-      setSelectedWatch("");
+      setSelectedproduct("");
       setVerificationCode("");
     }
   }, [isSuccess]);
@@ -102,7 +100,7 @@ function BookingCalendar({ type }) {
 
   // Étape 1 : Envoyer le code de vérification SMS
   function handleSendVerification(slot) {
-    if (!name || !phone || !selectedWatch) {
+    if (!name || !phone || !selectedproduct) {
       showError("Veuillez remplir tous les champs");
       return;
     }
@@ -155,7 +153,7 @@ function BookingCalendar({ type }) {
       name: name,
       type: type,
       phone: phone,
-      watch: selectedWatch
+      product: selectedproduct
     })
     .then(() => {
       setIsSuccess(true);
@@ -212,8 +210,8 @@ function BookingCalendar({ type }) {
           />
           {isShopPage ? (
             <select
-              value={selectedWatch || ""}
-              onChange={(e) => setSelectedWatch(e.target.value)}
+              value={selectedproduct || ""}
+              onChange={(e) => setSelectedproduct(e.target.value)}
               className="form-input"
             >
               <option value="">Sélectionnez un article</option>
@@ -229,14 +227,14 @@ function BookingCalendar({ type }) {
             </select>
           ) : (
             <select
-              value={selectedWatch || ""}
-              onChange={(e) => setSelectedWatch(e.target.value)}
+              value={selectedproduct || ""}
+              onChange={(e) => setSelectedproduct(e.target.value)}
               className="form-input"
             >
               <option value="">Sélectionnez un article</option>
-              {watches.map((watch) => (
-                <option key={watch.id} value={sanitizeText(watch.name)}>
-                  {sanitizeText(watch.name)}
+              {products.map((product) => (
+                <option key={product.id} value={sanitizeText(product.name)}>
+                  {sanitizeText(product.name)}
                 </option>
               ))}
             </select>

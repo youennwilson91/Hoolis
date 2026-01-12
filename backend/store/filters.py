@@ -8,5 +8,5 @@ class ProductFilter(FilterSet):
     
     class Meta:
         model = Product
-        fields = ['collection_id', 'is_available', 'min_price', 'max_price']
+        fields = ['collection_id', 'is_available', 'min_price', 'max_price', 'is_resell']
             

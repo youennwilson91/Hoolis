@@ -53,7 +53,7 @@ class APIEndpointsUser(HttpUser):
         self.client.get("/store/products/?page=1", headers=self.auth_headers)
         
         # Test avec recherche
-        search_terms = ["watch", "premium", "collection"]
+        search_terms = ["premium", "collection"]
         term = random.choice(search_terms)
         self.client.get(f"/store/products/?search={term}", headers=self.auth_headers)
         
@@ -88,10 +88,6 @@ class APIEndpointsUser(HttpUser):
                 # Produits de cette collection
                 self.client.get(f"/store/products/?collection_id={collection_id}", headers=self.auth_headers)
     
-    @task(6)
-    def test_watches_endpoints(self):
-        """Test des endpoints montres"""
-        self.client.get("/store/watches/", headers=self.auth_headers)
     
     @task(5)
     def test_slots_endpoints(self):
@@ -108,9 +104,6 @@ class APIEndpointsUser(HttpUser):
         self.client.get(f"/store/available-slots-products/?date={test_date}", 
                        headers=self.auth_headers)
         
-        # Créneaux pour montres
-        self.client.get(f"/store/available-slots-watches/?date={test_date}", 
-                       headers=self.auth_headers)
     
     @task(3)
     def test_bookings_endpoints_read(self):
@@ -121,7 +114,6 @@ class APIEndpointsUser(HttpUser):
         date_str = future_date.strftime("%Y-%m-%d")
         
         self.client.get(f"/store/slots-products/?date={date_str}", headers=self.auth_headers)
-        self.client.get(f"/store/slots-watches/?date={date_str}", headers=self.auth_headers)
     
     @task(2)
     def test_create_booking_product(self):
@@ -154,36 +146,7 @@ class APIEndpointsUser(HttpUser):
             except Exception:
                 pass
     
-    @task(2)
-    def test_create_booking_watch(self):
-        """Test de création de réservation montre"""
-        future_date = datetime.now() + timedelta(days=random.randint(1, 7))
-        date_str = future_date.strftime("%Y-%m-%d")
-        
-        # D'abord récupérer les créneaux
-        slots_response = self.client.get(f"/store/available-slots-watches/?date={date_str}", 
-                                       headers=self.auth_headers)
-        
-        if slots_response.status_code == 200:
-            try:
-                slots_data = slots_response.json()
-                slots = slots_data.get('results', []) if isinstance(slots_data, dict) else slots_data
-                
-                if slots:
-                    slot = random.choice(slots)
-                    booking_data = {
-                        "name": f"LoadTest{random.randint(1000, 9999)}",
-                        "watch": "Load Test Watch",
-                        "date": date_str,
-                        "start_time": slot.get("start_time", "14:00:00"),
-                        "end_time": slot.get("end_time", "15:00:00")
-                    }
-                    
-                    self.client.post("/store/bookings-watches/", 
-                                   json=booking_data, 
-                                   headers=self.auth_headers)
-            except Exception:
-                pass
+    
     
     @task(4)
     def test_filtering_and_pagination(self):
@@ -236,17 +199,8 @@ class LightweightAPIUser(HttpUser):
         """Navigation rapide des collections"""
         self.client.get("/store/collections/")
     
-    @task(8)
-    def quick_watches_browse(self):
-        """Navigation rapide des montres"""
-        self.client.get("/store/watches/")
+
     
-    @task(5)
-    def quick_search(self):
-        """Recherche rapide"""
-        terms = ["watch", "luxury", "premium"]
-        term = random.choice(terms)
-        self.client.get(f"/store/products/?search={term}")
     
     @task(2)
     def quick_api_home(self):
