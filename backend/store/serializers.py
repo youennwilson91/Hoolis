@@ -14,7 +14,7 @@ class CollectionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Collection
-        fields = ['id', 'name', 'products_count']
+        fields = ['id', 'name', 'products_count', 'is_resell']
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,7 +40,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'price', 'description', 'collection', 'is_available', 'total_price', 'images']
+        fields = ['id', 'title', 'price', 'description', 'collection', 'is_available', 'is_resell', 'total_price', 'images']
+
 
 class SimpleProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,90 +122,6 @@ class DeleteBookingProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class SlotsWatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SlotsWatch
-        fields = ['date', 'start_time', 'end_time', 'is_available']
-
-
-class CreateBookingWatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingWatch
-        fields = ['name', 'phone', 'watch', 'date', 'start_time', 'end_time']
-    
-    def validate_name(self, value):
-        if not value or len(value.strip()) == 0:
-            raise serializers.ValidationError("Le nom est requis")
-        
-        sanitized = sanitize_text_input(value, 100)
-        if len(sanitized) < 2:
-            raise serializers.ValidationError("Le nom doit contenir au moins 2 caractères")
-        
-        return sanitized
-    
-    def validate_phone(self, value):
-        sanitized = sanitize_phone_number(value)
-        if not sanitized:
-            raise serializers.ValidationError("Format de numéro de téléphone invalide")
-        
-        # Vérifier l'unicité en déchiffrant tous les numéros existants
-        existing_bookings = BookingWatch.objects.all()
-        for booking in existing_bookings:
-            if booking.phone == sanitized:  # django-cryptography déchiffre automatiquement
-                raise serializers.ValidationError("Ce numéro de téléphone est déjà utilisé pour une réservation montre")
-        
-        return sanitized
-    
-    def validate_watch(self, value):
-        if value:
-            return sanitize_text_input(value, 200)
-        return value
-    
-    def create(self, validated_data):
-        booking = BookingWatch.objects.create(**validated_data)
-        SlotsWatch.objects.filter(
-            date=validated_data['date'], 
-            start_time=validated_data['start_time'], 
-            end_time=validated_data['end_time']).update(is_available=False)
-        return booking
-
-class DeleteBookingWatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingWatch
-        fields = ['name', 'phone', 'date', 'start_time', 'end_time']
-
-    def update(self):
-        # Chercher le booking en déchiffrant tous les numéros de téléphone
-        bookings_candidates = BookingWatch.objects.filter(
-            name=self.context['name'],
-            start_time=self.context['start_time'],
-            end_time=self.context['end_time']
-        )
-        
-        instance = None
-        for booking in bookings_candidates:
-            if booking.phone == self.context['phone']:  # django-cryptography déchiffre automatiquement
-                instance = booking
-                break
-        
-        if not instance:
-            raise serializers.ValidationError("Aucune réservation trouvée avec ces informations")
-        
-        instance.is_canceled = True
-        instance.save()
-        return instance
-
-class WatchMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WatchMedia
-        fields = ['id', 'media', 'size', 'type']
-
-class WatchSerializer(serializers.ModelSerializer):
-    images = WatchMediaSerializer(many=True, read_only=True)
-    
-    class Meta:
-        model = Watch
-        fields = ['id', 'name', 'description', 'price', 'is_available', 'images']
 
 
 class AddCartItemSerializer(serializers.ModelSerializer):

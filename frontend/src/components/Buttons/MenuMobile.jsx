@@ -88,20 +88,34 @@ export default function MenuButtons({ screenRef }) {
             <MainButton />
             {menuOpen && (
               <div className="buttons-div">
-                <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
+                <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Franck & Watch"/>
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />
               </div>
             )}
           </>
-        ) : location.pathname.includes("/fw") ? (
+        ) : location.pathname.includes("/resell") ? (
           // Page Franck & Watch - afficher le menu spécifique FW
           <>
             <MainButton />
             {menuOpen && (
               <div className="buttons-div">
                 <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+                <VintedButton />
+                <InstagramButton />
+                <SupportButton />
+              </div>
+            )}
+          </>
+        ) : location.pathname.includes("/resell") ? (
+          // Page Resell - afficher le menu spécifique Resell
+          <>
+            <MainButton />
+            {menuOpen && (
+              <div className="buttons-div">
+                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Maison Hoolis"/>
+                <NavigationButtons screenRef={screenRef} homeTo="/fw" image="/fw-logo.png" label="Franck & Watch"/>
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />

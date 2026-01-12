@@ -16,6 +16,7 @@ class Product(models.Model):
     collection = models.ForeignKey('Collection', on_delete=models.PROTECT)
     #promotion = models.ForeignKey('Promotion', on_delete=models.PROTECT, null=True, blank=True)
     is_available = models.BooleanField(default=True)
+    is_resell = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
@@ -32,6 +33,7 @@ class Collection(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+    is_resell = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -72,61 +74,6 @@ class SlotsProduct(models.Model):
     def __str__(self):
         return f"{self.start_time} → {self.end_time}"
 
-class Watch(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=False, blank=False)
-    is_available = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return self.name
-
-
-class WatchMedia(models.Model):
-    watch = models.ForeignKey(Watch, on_delete=models.CASCADE, related_name='images')
-    media = models.FileField(upload_to='store/F&W/')
-    size = models.CharField(max_length=100, default='small', choices=[('small', 'Small'), ('wide', 'Wide')])
-    type = models.CharField(max_length=100, default='image', choices=[('image', 'Image'), ('video', 'Video')])
-
-    def __str__(self):
-        return f"{self.watch.name}"
-
-
-class BookingWatch(models.Model):
-    name = models.CharField(max_length=100)
-    phone = encrypt(models.CharField(max_length=100, default='0000000000'))
-    watch = models.CharField(max_length=100, default='watch')
-    date = models.DateField(default=datetime.now)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_canceled = models.BooleanField(default=False)
-
-    class Meta:
-        unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, montre et les mêmes heures
-        ordering = ['start_time']
-
-    def clean(self):
-        super().clean()
-        if self.phone:
-            # Vérifier l'unicité des numéros de téléphone pour l'admin Django
-            existing_bookings = BookingWatch.objects.exclude(pk=self.pk) if self.pk else BookingWatch.objects.all()
-            for booking in existing_bookings:
-                if booking.phone == self.phone:  # django-cryptography déchiffre automatiquement
-                    raise ValidationError({'phone': 'Ce numéro de téléphone est déjà utilisé pour une réservation montre'})
-
-    def __str__(self):
-        return f"{self.name} ({self.start_time} → {self.end_time})"
-
-
-class SlotsWatch(models.Model):
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    is_available = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"{self.start_time} → {self.end_time}"
 
 
 #class Promotion(models.Model):
