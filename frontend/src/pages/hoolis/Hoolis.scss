@@ -1,0 +1,1435 @@
+.shop-container * {
+  font-family: "Champagne Limousines", sans-serif !important;
+}
+
+/* .mobile-shop-container styles are handled in @media section */
+
+.mobile-shop-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: #000000 !important;
+    opacity: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 9999 !important;
+}
+
+.shop-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    z-index: 0;
+
+    .shop-landing {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .booking-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+
+        }
+    }
+    
+    .shop-gallery {
+        position: absolute;
+        top: 10vh;
+        width: 95%;
+        height: 85%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        hr {
+            position: absolute;
+            top: -40vh;
+            width: 10%;
+            height: 1px;
+            background-color: white;
+        }
+
+        
+
+        .shop-gallery-articles {
+            position: absolute;
+            width: 100%;
+            height: 90%;
+            top: 40px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            opacity: 0;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .loader {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.95);
+                z-index: 1000;
+            }
+
+            .article {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 7%;
+                height: 100%;
+                cursor: pointer;
+                padding: 2.5px;
+
+
+                .article-image-container {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    justify-content: start;
+                    overflow-x: auto;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    -webkit-overflow-scrolling: touch;
+                    
+                
+                    img {
+                        position: relative;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                
+                .article-description {
+                    position: absolute;
+                    width: fit-content;
+                    height: fit-content;
+                    opacity: 0;
+                    display: flex;
+                    flex-direction: column;
+                    pointer-events: none !important;
+
+                    h1 {
+                        font-size: 36px;
+                        color: white;
+                        text-align: center;
+                    }
+                }
+
+                .article-details {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    pointer-events: none !important;
+                    opacity: 0;
+                }
+
+                .article-title {
+                    position: absolute;
+                    top: 0%;
+                    left: 2%;
+                    font-size: 36px;
+                    color: white;
+                }
+
+                .article-price {
+                    position: absolute;
+                    top: 6%;
+                    left: 2%;
+                    font-size: 36px;
+                    color: white;
+                }
+
+                .article-buttons-container {
+                    position: absolute;
+                    bottom: 5%;
+                    left: 2%;
+                    width: 96%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    pointer-events: all !important;
+                    
+                    .add-to-cart {
+                        position: relative;
+                        top: auto;
+                        left: auto;
+                        margin: 0;
+                        border: 3px solid #888888;
+                        padding: 10px;
+                        border-radius: 10px;
+                        font-size: 22px;
+                        color: #333333;
+                        cursor: pointer;
+                        pointer-events: all !important;
+                        background-color: #d3d3d3;
+                        
+                        &:hover {
+                            cursor: pointer;
+                            color: #222222;
+                            border: 3px solid #666666;
+                            background-color: #e6e6e6;
+                        }
+                    }
+                    
+                    button.add-to-cart {
+                        font-family: "Champagne Limousines", sans-serif !important;
+                    }
+                }
+
+                .description-popup-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background-color: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 2000;
+                    pointer-events: all !important;
+                }
+
+                .description-popup {
+                    background: #f5f5f5;
+                    padding: 30px;
+                    border-radius: 10px;
+                    max-width: 500px;
+                    max-height: 70vh;
+                    overflow-y: auto;
+                    border: 3px solid #888888;
+                    
+                    h3 {
+                        margin-top: 0;
+                        font-size: 28px;
+                        color: #333333;
+                        text-align: center;
+                        font-family: "Champagne Limousines", sans-serif !important;
+                    }
+                    
+                    p {
+                        position: relative !important;
+                        font-size: 18px !important;
+                        line-height: 1.5 !important;
+                        color: #333333 !important;
+                        margin: 15px 0 !important;
+                        font-family: "Champagne Limousines", sans-serif !important;
+                        pointer-events: all !important;
+                        left: auto !important;
+                        bottom: auto !important;
+                        text-align: left;
+                    }
+                    
+                    .close-popup-btn {
+                        background-color: #d3d3d3;
+                        border: 3px solid #888888;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-size: 16px;
+                        color: #333333;
+                        cursor: pointer;
+                        display: block;
+                        margin: 15px auto 0;
+                        font-family: "Champagne Limousines", sans-serif !important;
+                        
+                        &:hover {
+                            background-color: #e6e6e6;
+                            color: #222222;
+                            border: 3px solid #666666;
+                        }
+                    }
+                }
+
+                > p {
+                    position: absolute;
+                    bottom: 0%;
+                    left: 2%;
+                    pointer-events: none !important;
+                    font-size: 26px;
+                }
+
+                .close-article {
+                    position: absolute;
+                    top: 0%;
+                    right: 2%;
+                    font-size: 36px;
+                    color: black;
+                    cursor: pointer;
+                    pointer-events: all !important;
+                }
+
+                .close-article:hover {
+                    cursor: pointer;
+                    color: white;
+                }
+            }
+        }
+        
+    }
+    
+    .cart-icon {
+        position: absolute;
+        top: 4vh;
+        right: 2%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        fill: white;
+
+        .cart-quantity {
+            position: absolute;
+            bottom: 80%;
+            right: 5%;
+            font-size: 20px;
+            color: white;
+        }
+    }
+
+    .cart-icon:hover {
+        cursor: pointer;
+        fill: black;
+    }
+
+    .cart-container {
+        position: absolute;
+        width: 55%;
+        height: 75%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        border-radius: 10px;
+        border: 5px solid black;
+        z-index: 100;
+
+
+        .bg-cart {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0.9;
+            border-radius: 10px;
+        }
+
+        .cart-title {
+            position: absolute;
+            top: -0%;
+            left: 2%;
+            color: black;
+        }
+
+        .close-cart {
+            position: absolute;
+            top: -0%;
+            right: 2%;
+            color: black;
+            cursor: pointer;
+        }
+
+        .close-cart:hover {
+            cursor: pointer;
+            color: white;
+        }
+
+        hr {
+            position: absolute;
+            width: 96%;
+            top: 6%;
+            height: 2px;
+            background-color: black;
+            font-size: 36px;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            position: absolute;
+            top: 12%;
+            width: 100%;
+            height: 85%;
+            display: flex;
+            justify-content: start;
+            flex-direction: column; 
+            gap: 5px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .cart-item {
+                position: relative;
+                width: 100%;
+                height: 120px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;    
+                align-items: center;
+
+                img {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .cart-item-title {
+                    position: absolute;
+                    font-size: 46px;
+                    color: white;
+                    text-shadow: 0px 0px 10px black;
+                }
+
+                .cart-item-details {
+                    position: relative;
+                    width: 15%;
+                    height: 10%;
+                    left: 40%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    font-size: 26px;
+                    color: white;
+                    text-shadow: 0px 0px 10px black;
+
+
+                    p {
+                        text-align: center;
+                        padding: 0px;
+                        margin: 0px;
+                        font-size: 30px;
+                        font-weight: 600;
+                        text-shadow: 0px 0px 10px black;
+                    }   
+
+                    .remove-item {
+                        font-size: 30px;
+                        cursor: pointer;
+                        border-radius: 10px;
+                        padding: 0px;
+                        margin: 0px;
+                        text-align: center;
+                        text-shadow: 0px 0px 10px black;
+                    }
+
+                    .remove-item:hover {
+                        cursor: pointer;
+                        color: black;
+                    }
+                    
+                }
+                
+
+            }
+        }
+
+        .checkout-button {
+            position: absolute;
+            bottom: 2%;
+            width: 90%;
+            height: 60px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #EFEC8F 0%, #d4d16a 100%);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: "Champagne Limousines", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(239, 236, 143, 0.3);
+
+            &:hover {
+                box-shadow: 0 2px 2px rgba(0,0,0, 0.3);
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 10px rgba(239, 236, 143, 0.2);
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------- MOBILE -------------------------------------------*/
+
+@media (max-width: 1300px) {
+    .shop-container {
+        display: none;
+    }
+
+    .mobile-shop-container, .mobile-hoolis-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000000;
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+
+        .loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        .booking-container {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            opacity: 0;
+        }
+
+        .mobile-hoolis-gallery {
+            position: absolute;
+            top: 10vh;
+            width: 100%;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+
+            > * {
+                pointer-events: auto;
+            }
+
+            .gallery-buttons-open-container {
+                position: relative;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                flex-wrap: wrap;
+
+                .gallery-buttons-open {
+                    font-size: 16px !important;
+                    padding: 8px !important;
+                    background-color: transparent !important;
+                    border: 2px solid white !important;
+                    border-radius: 5px !important;
+                    color: white !important;
+                    font-family: "Champagne Limousines", sans-serif !important;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1) !important;
+                    }
+                }
+            }
+
+            .mobile-hoolis-gallery-articles {
+                position: relative;
+                width: 95%;
+                height: calc(100% - 80px);
+                margin: 0 auto;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+                align-items: center;
+                overflow-y: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
+                gap: 2%;
+                opacity: 0;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .loader {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .article {
+                    position: relative;
+                    width: 48%;
+                    height: 45%;
+                    display: flex;
+                    flex-direction: column;
+                    cursor: pointer;
+
+                    .article-image-container {
+                        position: relative;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                        -ms-overflow-style: none;
+                        -webkit-overflow-scrolling: touch;
+
+                        &::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        img {
+                            min-width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            scroll-snap-align: start;
+                        }
+                    }
+
+                    .article-details {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        pointer-events: none !important;
+                        opacity: 0;
+                    }
+
+                    .article-title {
+                        position: absolute;
+                        top: 2%;
+                        left: 2%;
+                        font-size: 24px;
+                        color: white;
+                        text-shadow: 0px 0px 10px black;
+                    }
+
+                    .article-price {
+                        position: absolute;
+                        top: 8%;
+                        left: 2%;
+                        font-size: 24px;
+                        color: white;
+                        text-shadow: 0px 0px 10px black;
+                    }
+
+                    .article-buttons-container {
+                        display: none; // Caché en mobile
+                    }
+
+                    .mobile-article-action-buttons {
+                        position: absolute;
+                        bottom: 15px;
+                        right: 15px;
+                        display: flex;
+                        gap: 12px;
+                        pointer-events: all !important;
+                        z-index: 1001;
+
+                        .action-button {
+                            width: 60px;
+                            height: 60px;
+                            background: linear-gradient(135deg, #226D68, #1a5550);
+                            border: none;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            box-shadow: 0 8px 25px rgba(34, 109, 104, 0.4);
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            overflow: hidden;
+
+                            &:hover {
+                                transform: translateY(-3px) scale(1.05);
+                                box-shadow: 0 12px 35px rgba(9, 177, 160);
+                            }
+
+                            &:active {
+                                transform: translateY(-1px) scale(1.02);
+                            }
+
+                            .action-icon {
+                                width: 45px;
+                                height: 45px;
+                                fill: white;
+                                transition: all 0.3s ease;
+                            }
+                        }
+                    }
+
+                    .close-article {
+                        position: absolute;
+                        top: 2%;
+                        right: 2%;
+                        font-size: 28px;
+                        color: white;
+                        cursor: pointer;
+                        pointer-events: all !important;
+                        text-shadow: 0px 0px 10px black;
+                        background: rgba(0, 0, 0, 0.5);
+                        padding: 5px 15px;
+                        border-radius: 5px;
+
+                        &:hover {
+                            cursor: pointer;
+                            color: #EFEC8F;
+                            background: rgba(0, 0, 0, 0.7);
+                        }
+                    }
+
+                    // Popup de description
+                    .description-popup-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background-color: rgba(0, 0, 0, 0.8);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 10000;
+                        pointer-events: all !important;
+                    }
+
+                    .description-popup {
+                        background: #f5f5f5;
+                        padding: 25px;
+                        border-radius: 15px;
+                        max-width: 85vw;
+                        max-height: 75vh;
+                        overflow-y: auto;
+                        text-align: left;
+                        position: relative;
+
+                        h3 {
+                            color: #226D68;
+                            font-size: 24px;
+                            margin-bottom: 15px;
+                        }
+
+                        p {
+                            color: #333;
+                            font-size: 16px;
+                            line-height: 1.6;
+                            margin-bottom: 20px;
+                        }
+
+                        .close-popup-btn {
+                            background-color: #226D68;
+                            color: white;
+                            border: none;
+                            padding: 10px 25px;
+                            border-radius: 8px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            font-family: "Champagne Limousines", sans-serif;
+
+                            &:hover {
+                                background-color: #1a5550;
+                                transform: scale(1.05);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .mobile-shop-articles {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            will-change: transform;
+            transform: translateZ(0);
+            scroll-behavior: smooth;
+            opacity: 1;
+            
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .mobile-shop-article-image-container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: start;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+
+                .mobile-shop-article-details {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    pointer-events: none !important;
+                    color: white;
+                    font-size: 20px;
+
+                    .add-to-cart {
+                        position: fixed;
+                        z-index: 1000;
+                    }
+
+                    .add-to-cart:hover {
+                        cursor: pointer;
+                        color: white;
+                        border: 3px solid white;
+                    }
+
+                    .article-buttons-container {
+                        position: fixed;
+                        bottom: 15vh;
+                        left: 5%;
+                        width: 90%;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-evenly;
+                        align-items: center;
+                        pointer-events: all !important;
+                        z-index: 1000;
+                        
+                        .add-to-cart {
+                            position: relative;
+                            top: auto;
+                            left: auto;
+                            margin: 0;
+                            border: 3px solid #b0b0b0;
+                            padding: 10px;
+                            border-radius: 10px;
+                            font-size: 22px;
+                            color: #333333;
+                            cursor: pointer;
+                            pointer-events: all !important;
+                            background-color: #d3d3d3;
+                            
+                            &:hover {
+                                color: #222222;
+                                border: 3px solid #888888;
+                                background-color: #e6e6e6;
+                            }
+                        }
+                        
+                        button.add-to-cart {
+                            font-family: "Champagne Limousines", sans-serif !important;
+                        }
+                    }
+
+                    .description-popup-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background-color: rgba(0, 0, 0, 0.8);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 2000;
+                        pointer-events: all !important;
+                    }
+
+                    .description-popup {
+                        background: #f5f5f5;
+                        padding: 20px;
+                        border-radius: 10px;
+                        max-width: 90vw;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        border: 3px solid #888888;
+                        margin: 0 10px;
+                        
+                        h3 {
+                            margin-top: 0;
+                            font-size: 24px;
+                            color: #333333;
+                            text-align: center;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                        }
+                        
+                        p {
+                            position: relative !important;
+                            font-size: 16px !important;
+                            line-height: 1.5 !important;
+                            color: #333333 !important;
+                            margin: 15px 0 !important;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                            pointer-events: all !important;
+                            left: auto !important;
+                            bottom: auto !important;
+                            text-align: left;
+                        }
+                        
+                        .close-popup-btn {
+                            background-color: #d3d3d3;
+                            border: 3px solid #888888;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            font-size: 16px;
+                            color: #333333;
+                            cursor: pointer;
+                            display: block;
+                            margin: 15px auto 0;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                            min-height: 48px;
+                            min-width: 48px;
+                            
+                            &:hover {
+                                background-color: #e6e6e6;
+                                color: #222222;
+                                border: 3px solid #666666;
+                            }
+                        }
+                    }
+
+                    h1 {
+                        margin: 0px;
+                    }
+
+                    .mobile-article-action-buttons {
+                        position: absolute;
+                        bottom: 15px;
+                        right: 15px;
+                        display: flex;
+                        gap: 12px;
+                        pointer-events: all !important;
+                        z-index: 1001;
+                        
+                        .action-button {
+                            width: 60px;
+                            height: 60px;
+                            background: linear-gradient(135deg, #226D68, #1a5550);
+                            border: none;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            box-shadow: 0 8px 25px rgba(34, 109, 104, 0.4);
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            overflow: hidden;
+                            
+                            &:hover {
+                                transform: translateY(-3px) scale(1.05);
+                                box-shadow: 0 12px 35px rgba(9, 177, 160);
+                            }
+                            
+                            &:active {
+                                transform: translateY(-1px) scale(1.02);
+                            }
+                            
+                            .action-icon {
+                                width: 45px;
+                                height: 45px;
+                                fill: white;
+                                transition: all 0.3s ease;
+                            }
+                        }
+                    }
+
+                    .description-popup-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background-color: rgba(0, 0, 0, 0.8);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 2000;
+                        pointer-events: all !important;
+                    }
+
+                    .description-popup {
+                        background: #f5f5f5;
+                        padding: 25px;
+                        border-radius: 15px;
+                        max-width: 90vw;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        border: 3px solid #888888;
+                        margin: 0 15px;
+                        
+                        h3 {
+                            margin-top: 0;
+                            font-size: 24px;
+                            color: #333333;
+                            text-align: center;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                        }
+                        
+                        p {
+                            position: relative !important;
+                            font-size: 16px !important;
+                            line-height: 1.5 !important;
+                            color: #333333 !important;
+                            margin: 15px 0 !important;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                            pointer-events: all !important;
+                            left: auto !important;
+                            bottom: auto !important;
+                            text-align: left;
+                        }
+                        
+                        .close-popup-btn {
+                            background-color: #d3d3d3;
+                            border: 3px solid #888888;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            font-size: 16px;
+                            color: #333333;
+                            cursor: pointer;
+                            display: block;
+                            margin: 20px auto 0;
+                            font-family: "Champagne Limousines", sans-serif !important;
+                            min-height: 48px;
+                            min-width: 48px;
+                            
+                            &:hover {
+                                background-color: #e6e6e6;
+                                color: #222222;
+                                border: 3px solid #666666;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            .mobile-shop-article-image-container img {
+                image-rendering: optimizeSpeed;
+                content-visibility: auto;
+                contain-intrinsic-size: 300px;
+            }
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            fill: white;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+    
+            .cart-quantity {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                font-size: 16px;
+                color: white;
+                background: #ff4444;
+                border-radius: 50%;
+                min-width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
+            
+            &:hover {
+                transform: scale(1.1);
+                background: rgba(0, 0, 0, 0.9);
+            }
+        }
+    
+        .cart-icon:hover {
+            cursor: pointer;
+            fill: black;
+        }
+    
+        .cart-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            border-radius: 10px;
+            border: 5px solid black;
+            z-index: 10000;
+    
+    
+            .bg-cart {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: white;
+                opacity: 0.9;
+                border-radius: 10px;
+            }
+    
+            .cart-title {
+                position: absolute;
+                width: 100%;
+                bottom: 0%;
+                font-size: 36px;
+                color: black;
+                text-align: center;
+            }
+    
+            .close-cart {
+                position: absolute;
+                top: -0%;
+                right: 2%;
+                color: black;
+                cursor: pointer;
+                background-color: transparent;
+                border: none;
+                width: 100%;
+                font-size: 36px;
+                font-family: "Champagne Limousines", sans-serif !important; 
+                font-weight: 600;
+            }
+    
+            .close-cart:hover {
+                cursor: pointer;
+                color: white;
+            }
+    
+            .cart-hr-top {
+                position: absolute;
+                width: 96%;
+                top: 10%;
+                height: 2px;
+                background-color: black;
+                font-size: 36px;
+                cursor: pointer;
+            }
+
+            .cart-hr-bottom {
+                position: absolute;
+                width: 96%;
+                bottom: 6%;
+                height: 2px;
+                background-color: black;
+                font-size: 36px;
+                cursor: pointer;
+            }
+    
+            .cart-items {
+                position: absolute;
+                top: 12%;
+                width: 100%;
+                height: 75%;
+                display: flex;
+                justify-content: start;
+                flex-direction: column; 
+                gap: 5px;
+                overflow-y: auto;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
+                
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+    
+    
+                .cart-item {
+                    position: relative;
+                    width: 100%;
+                    height: 120px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;    
+                    align-items: center;
+    
+                    img {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                    }
+    
+                    .cart-item-title {
+                        position: absolute;
+                        font-size: 36px;
+                        color: white;
+                        text-shadow: 0px 0px 10px black;
+                    }
+    
+                    .cart-item-details {
+                        position: relative;
+                        width: 15%;
+                        height: 10%;
+                        left: 40%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        font-size: 26px;
+                        color: white;
+                        text-shadow: 0px 0px 10px black;
+    
+    
+                        p {
+                            text-align: center;
+                            padding: 0px;
+                            margin: 0px;
+                            font-size: 26px;
+                            font-weight: 600;
+                        }   
+    
+                                                .remove-item {
+                            font-size: 26px;
+                            cursor: pointer;
+                            border-radius: 10px;
+                            padding: 5px;
+                            margin: 0px;
+                            text-shadow: 0px 0px 10px black;
+                        }
+
+                        .remove-item:hover {
+                            cursor: pointer;
+                            color: black;
+                        }
+
+                        .remove-item-btn {
+                            background: transparent;
+                            border: none;
+                            cursor: pointer;
+                            padding: 8px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.3s ease;
+                            min-height: 48px;
+                            min-width: 48px;
+                            color: white;
+                            
+                            .trash-icon {
+                                width: 32px;
+                                height: 32px;
+                                filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.8));
+                            }
+                            
+                            &:hover {
+                                transform: scale(1.1);
+                                color: #ff4444;
+                            }
+                            
+                            &:active {
+                                transform: scale(0.95);
+                            }
+                        }
+                        
+                    }
+                    
+    
+                }
+            }
+        }
+
+        .checkout-button {
+            position: absolute;
+            bottom: 0%;
+            width: 90%;
+            height: 60px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #EFEC8F 0%, #d4d16a 100%);
+            color: black;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: "Champagne Limousines", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 12px rgba(239, 236, 143, 0.3);
+
+            &:hover {
+                background: linear-gradient(135deg, #d4d16a 0%, #EFEC8F 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 15px rgba(239, 236, 143, 0.4);
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 8px rgba(239, 236, 143, 0.2);
+            }
+        }
+
+        .button-book {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.75);
+            border: none;
+            padding: 10px 10px;
+            border-radius: 25px;
+            font-size: 20px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            min-height: 48px;
+            min-width: 48px;
+            
+            &:active {
+                transform: translateX(-50%) scale(0.98);
+            }
+        }
+
+        // Popup de description mobile au niveau principal
+        .mobile-description-popup-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background-color: rgba(0, 0, 0, 0.85) !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 10000 !important; // Z-index très élevé
+            pointer-events: all !important;
+        }
+
+        .mobile-description-popup {
+            background: #f5f5f5 !important;
+            padding: 25px !important;
+            border-radius: 15px !important;
+            max-width: 85vw !important;
+            max-height: 75vh !important;
+            overflow-y: auto !important;
+            border: 3px solid #888888 !important;
+            margin: 0 15px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            
+            h3 {
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                color: #333333 !important;
+                text-align: center !important;
+                font-family: "Champagne Limousines", sans-serif !important;
+            }
+            
+            p {
+                position: relative !important;
+                font-size: 16px !important;
+                line-height: 1.5 !important;
+                color: #333333 !important;
+                margin: 15px 0 !important;
+                font-family: "Champagne Limousines", sans-serif !important;
+                pointer-events: all !important;
+                left: auto !important;
+                bottom: auto !important;
+                text-align: left !important;
+            }
+            
+            .mobile-close-popup-btn {
+                background-color: #d3d3d3 !important;
+                border: 3px solid #888888 !important;
+                padding: 12px 24px !important;
+                border-radius: 8px !important;
+                font-size: 16px !important;
+                color: #333333 !important;
+                cursor: pointer !important;
+                display: block !important;
+                margin: 20px auto 0 !important;
+                font-family: "Champagne Limousines", sans-serif !important;
+                min-height: 48px !important;
+                min-width: 48px !important;
+                
+                &:hover {
+                    background-color: #e6e6e6 !important;
+                    color: #222222 !important;
+                    border: 3px solid #666666 !important;
+                }
+            }
+        }
+    }
+    
+}
+
+
+

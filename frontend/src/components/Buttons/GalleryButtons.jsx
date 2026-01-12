@@ -5,15 +5,21 @@ import useStore from "../../utils/store";
 import {useRef, useState} from "react";
 import "../../index.css";
 
-export default function Button({ screenRef, labelRef, buttonsPosition }) {
+export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, type }) {
 
     const {isClicked, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked, displayCollection, collectionChosen} = useStore();
     const buttonRefs = useRef([]);
 
-    const buttons = [
-        {id: 1,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
-        {id: 2, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"}
-    ]
+    const buttons = type === "hoolis" 
+        ? [
+            {id: 1,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
+            {id: 2, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"}
+        ]
+        : [
+            {id: 1,  label: "SACS", upscale: 1.7, navigate: "/resell/sacs"},
+            {id: 2,  label: "MONTRES", upscale: 1.7, navigate: "/resell/montres"},
+            {id: 3, label: "ACCESSOIRES", upscale: 1.7, navigate: "/resell/accessoires"}
+        ];
 
 
     useGSAP(() => {
@@ -23,7 +29,7 @@ export default function Button({ screenRef, labelRef, buttonsPosition }) {
                 if (ref) {
                     timeline.to(ref, {
                         opacity: 1,
-                        duration: 1.5,
+                        duration: 1,
                         ease: "power3.inOut"
                     }, index * 0.1);
                 }

@@ -28,19 +28,19 @@ function App() {
   }, []);
   
   return (
-    passwordProtect ? (      
-      <PasswordProtect>
-        <div className="app-container" style={{backgroundColor: bgColor}}>
-          <RouterProvider router={router} />
-          <Footer />
-        </div>
-      </PasswordProtect>
-    ) : (
+    //passwordProtect ? (      
+    //  <PasswordProtect>
+    //    <div className="app-container" style={{backgroundColor: bgColor}}>
+    //      <RouterProvider router={router} />
+    //      <Footer />
+    //    </div>
+    //  </PasswordProtect>
+    //) : (
           <div className="app-container" style={{backgroundColor: bgColor}}>
             <RouterProvider router={router} />
             <Footer />
           </div>
-    )
+    //)
   )
 }
 

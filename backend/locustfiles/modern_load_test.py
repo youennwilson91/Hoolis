@@ -63,10 +63,6 @@ class ModernHoolisUser(HttpUser):
                     # Produits de cette collection
                     self.client.get(f"/store/products/?collection_id={collection_id}", headers=self.auth_headers)
     
-    @task(6)
-    def browse_watches(self):
-        """Consultation des montres"""
-        self.client.get("/store/watches/", headers=self.auth_headers)
     
     @task(3)
     def check_product_slots(self):
@@ -77,14 +73,6 @@ class ModernHoolisUser(HttpUser):
         
         self.client.get(f"/store/available-slots-products/?date={date_str}", headers=self.auth_headers)
     
-    @task(3)
-    def check_watch_slots(self):
-        """Vérification des créneaux disponibles pour les montres"""
-        # Utiliser une date proche (aujourd'hui + 1 à 7 jours)
-        future_date = datetime.now() + timedelta(days=random.randint(1, 7))
-        date_str = future_date.strftime("%Y-%m-%d")
-        
-        self.client.get(f"/store/available-slots-watches/?date={date_str}", headers=self.auth_headers)
     
     @task(2)
     def book_product_appointment(self):
@@ -111,32 +99,7 @@ class ModernHoolisUser(HttpUser):
                 self.client.post("/store/bookings-products/", 
                                json=booking_data, 
                                headers=self.auth_headers)
-    
-    @task(2)
-    def book_watch_appointment(self):
-        """Tentative de réservation pour une montre"""
-        # D'abord récupérer les créneaux disponibles
-        future_date = datetime.now() + timedelta(days=random.randint(1, 7))
-        date_str = future_date.strftime("%Y-%m-%d")
-        
-        slots_response = self.client.get(f"/store/available-slots-watches/?date={date_str}", headers=self.auth_headers)
-        
-        if slots_response.status_code == 200:
-            slots = slots_response.json().get('results', [])
-            if slots:
-                slot = random.choice(slots)
-                
-                booking_data = {
-                    "name": f"TestUser{random.randint(1000, 9999)}",
-                    "watch": "Test Watch",
-                    "date": date_str,
-                    "start_time": slot.get("start_time"),
-                    "end_time": slot.get("end_time")
-                }
-                
-                self.client.post("/store/bookings-watches/", 
-                               json=booking_data, 
-                               headers=self.auth_headers)
+
     
     @task(4)
     def search_products(self):
@@ -179,11 +142,6 @@ class ReadOnlyUser(HttpUser):
     def browse_collections_readonly(self):
         """Navigation collections sans authentification"""
         self.client.get("/store/collections/")
-    
-    @task(3)
-    def browse_watches_readonly(self):
-        """Navigation montres sans authentification"""
-        self.client.get("/store/watches/")
 
 
 class ProgressiveLoadShape(LoadTestShape):

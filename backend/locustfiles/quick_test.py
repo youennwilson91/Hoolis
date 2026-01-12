@@ -23,15 +23,7 @@ class QuickValidationUser(HttpUser):
             print(f"❌ Collections - Status: {response.status_code}")
         else:
             print("✅ Collections - OK")
-    
-    @task(10)
-    def test_watches_basic(self):
-        """Test basique des montres"""
-        response = self.client.get("/store/watches/")
-        if response.status_code != 200:
-            print(f"❌ Montres - Status: {response.status_code}")
-        else:
-            print("✅ Montres - OK")
+
     
     @task(8)
     def test_slots_basic(self):
@@ -48,12 +40,7 @@ class QuickValidationUser(HttpUser):
         else:
             print("✅ Créneaux produits - OK")
         
-        # Créneaux montres
-        response = self.client.get(f"/store/available-slots-watches/?date={future_date}")
-        if response.status_code not in [200, 400]:  # 400 peut être normal si pas de créneaux
-            print(f"❌ Créneaux montres - Status: {response.status_code}")
-        else:
-            print("✅ Créneaux montres - OK")
+
     
     @task(5)
     def test_search_basic(self):
@@ -98,7 +85,6 @@ class HealthCheckUser(HttpUser):
             "/",
             "/store/products/",
             "/store/collections/",
-            "/store/watches/"
         ]
         
         for endpoint in endpoints_to_check:

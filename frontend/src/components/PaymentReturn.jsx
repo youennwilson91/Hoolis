@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { apiClient } from '../utils/axiosConfig';
 import useStore from '../utils/store';
@@ -8,20 +8,21 @@ export default function PaymentReturn() {
   const location = useLocation();
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [message, setMessage] = useState('');
-  const { setAddToCart } = useStore();
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const payment = params.get('payment');
     const sessionId = params.get('session_id');
 
-    if (payment === 'success' && sessionId) {
+    if (payment === 'success' && sessionId && !hasProcessed.current) {
+      hasProcessed.current = true;
       verifyPayment(sessionId);
     } else if (payment === 'cancelled') {
       setPaymentStatus('cancelled');
       setMessage('Paiement annulé');
     }
-  }, []);
+  }, [location.search]);
 
   const verifyPayment = async (sessionId) => {
     try {
@@ -32,9 +33,8 @@ export default function PaymentReturn() {
       if (response.data.status === 'success') {
         setPaymentStatus('success');
         setMessage('Paiement confirmé !');
-        
-        // Vider le panier frontend après paiement réussi
-        setAddToCart(() => []);
+        // Vider le panier via setState direct
+        useStore.setState({ addToCart: [] });
       } else {
         setPaymentStatus('failed');
         setMessage('Paiement échoué');

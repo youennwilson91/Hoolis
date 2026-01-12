@@ -1,4 +1,4 @@
-import BookingCalendar from "../components/Calendar";
+import BookingCalendar from "../../components/Calendar";
 
 export default function About() {
   return (

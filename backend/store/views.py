@@ -51,10 +51,10 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
     pagination_class = PageNumberPagination
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
 
     def get_queryset(self):
-        queryset = Product.objects.select_related('collection').prefetch_related('images').all()
+        queryset = Product.objects.select_related('collection').prefetch_related('images')
         collection_id = self.request.query_params.get('collection_id')
         if collection_id is not None:
             queryset = queryset.filter(collection_id=collection_id)
@@ -83,7 +83,7 @@ class CollectionViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name']
     ordering_fields = ['name']
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
     
     def destroy(self, request, *args, **kwargs):
         collection = get_object_or_404(Collection, pk=kwargs['pk'])
@@ -95,7 +95,7 @@ class CollectionViewSet(ModelViewSet):
 @method_decorator(cache_page(60 * 10), name='retrieve')
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
     
     def get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
@@ -117,7 +117,7 @@ def process_order_view(request, order_id):
 class SlotsProductViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = SlotsProductSerializer
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         date_str = self.request.GET.get('date')
@@ -133,7 +133,7 @@ class SlotsProductViewSet(ModelViewSet):
 class BookingProductViewSet(ModelViewSet):
     http_method_names = ['post', 'delete', 'head', 'options']
     queryset = BookingProduct.objects.all()
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
     
     def get_serializer_context(self):
         return {
@@ -168,81 +168,15 @@ class BookingProductViewSet(ModelViewSet):
             raise
 
 
-class SlotsWatchViewSet(ModelViewSet):
-    http_method_names = ['get']
-    serializer_class = SlotsWatchSerializer
-    permission_classes = [IsAdminUser]
-
-    def get_queryset(self):
-        date_str = self.request.GET.get('date')
-        if not date_str:
-            return Response({"error": "Missing 'date' parameter (YYYY-MM-DD)"}, status=400)
-        try:
-            selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-        except ValueError:
-            return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
-        return SlotsWatch.objects.filter(is_available=True).filter(date=selected_date)
-
-
-
-# Pas de cache pour BookingWatchViewSet car il contient des opérations POST/DELETE
-class BookingWatchViewSet(ModelViewSet):
-    http_method_names = ['post', 'delete', 'head', 'options']
-    queryset = BookingWatch.objects.all()
-    permission_classes = [IsAdminUser]
-    
-    def get_serializer_context(self):
-        return {
-            'date': self.request.data.get('date'),
-            'watch': self.request.data.get('watch'),
-            'name': self.request.data.get('name'),
-            'phone': self.request.data.get('phone'),
-            'start_time': self.request.data.get('start_time'), 
-            'end_time': self.request.data.get('end_time')
-            }
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreateBookingWatchSerializer
-        elif self.request.method == 'DELETE':
-            return DeleteBookingWatchSerializer
-
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except IntegrityError as e:
-            # Vérifier si c'est une erreur de contrainte d'unicité sur le téléphone
-            if 'phone' in str(e).lower():
-                return Response(
-                    {
-                        'error': 'Ce numéro de téléphone est déjà utilisé.',
-                        'detail': 'Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou annuler votre réservation existante.'
-                    },
-                    status=status.HTTP_409_CONFLICT
-                )
-            # Pour les autres erreurs d'intégrité, on relance l'exception
-            raise
-            
-
-@method_decorator(cache_page(60 * 10), name='list')
-@method_decorator(cache_page(60 * 10), name='retrieve')
-@method_decorator(vary_on_headers('User-Agent'), name='list')
-class WatchViewSet(ModelViewSet):
-    serializer_class = WatchSerializer
-    permission_classes = []
-
-    def get_queryset(self):
-        return Watch.objects.prefetch_related('images')
-
 
 class CartViewSet(ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.prefetch_related('items__product').all()
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
 
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
@@ -310,7 +244,7 @@ class OrderViewSet(ModelViewSet):
 class OrderItemViewSet(ModelViewSet):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
-    permission_classes = [IsAdminUser]
+    #permission_classes = [IsAdminUser]
 
 
     ###### SMS ######
@@ -386,7 +320,7 @@ def send_confirmation_code(request):
         
         # Envoyer l'email
         send_mail(
-            subject=f"Code de confirmation - Maison Hoolis - Franck & Watch",
+            subject=f"Code de confirmation - Maison Hoolis",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
@@ -421,7 +355,7 @@ def verify_confirmation_code(request):
         end_time = request.data.get('end_time')
         name = request.data.get('name')
         phone = request.data.get('phone')
-        watch = request.data.get('watch')
+        product = request.data.get('product')
         type = request.data.get('type')
         print(type)
 
@@ -434,33 +368,19 @@ def verify_confirmation_code(request):
         confirmation.verified = True
         confirmation.save()
 
-        if type == 'watch':
-            slot = SlotsWatch.objects.get(date=date, start_time=start_time, end_time=end_time)
-            slot.is_available = False
-            slot.save()
-        else:
-            slot = SlotsProduct.objects.get(date=date, start_time=start_time, end_time=end_time)
-            slot.is_available = False
-            slot.save()
 
-        if type == 'watch':
-            BookingWatch.objects.create(
+        slot = SlotsProduct.objects.get(date=date, start_time=start_time, end_time=end_time)
+        slot.is_available = False
+        slot.save()
+
+        BookingProduct.objects.create(
             date=date,
             start_time=start_time,
             end_time=end_time,
             name=name,
             phone=phone,
-            watch=watch
+            product=product
         )
-        else:
-            BookingProduct.objects.create(
-                date=date,
-                start_time=start_time,
-                end_time=end_time,
-                name=name,
-                phone=phone,
-                product=watch
-            )
 
         email_context = {
             'email': email,
@@ -486,7 +406,7 @@ def verify_confirmation_code(request):
         
         # Envoyer l'email
         send_mail(
-            subject=f"Confirmation de réservation - Maison Hoolis - Franck & Watch",
+            subject=f"Confirmation de réservation - Maison Hoolis",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
@@ -511,7 +431,7 @@ def verify_confirmation_code(request):
 @api_view(['POST'])
 def create_stripe_session(request):
     """
-    Créer session Stripe pour watch_id ou cart_id
+    Créer session Stripe pour  cart_id
     """
     try:
         stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -524,7 +444,6 @@ def create_stripe_session(request):
         
         data = request.data
         customer_data = data.get('customer', {})
-        watch_id = data.get('watch_id')
         cart_id = data.get('cart_id')
         
         if not customer_data.get('email'):
@@ -571,51 +490,8 @@ def create_stripe_session(request):
                 {"error": "Erreur création utilisateur"}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
-        if watch_id:
-            try:
-                watch = Watch.objects.get(id=watch_id)
-            except Watch.DoesNotExist:
-                return Response(
-                    {"error": "Montre non trouvée"}, 
-                    status=status.HTTP_404_NOT_FOUND
-                )
             
-            if watch.price <= 0:
-                return Response(
-                    {"error": "Prix invalide"}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            
-            line_items = [{
-                'price_data': {
-                    'currency': 'eur',
-                    'product_data': {
-                        'name': sanitize_text_input(watch.name),
-                        'description': sanitize_text_input(watch.description[:100]),
-                    },
-                    'unit_amount': int(watch.price * 100),
-                },
-                'quantity': 1,
-            }]
-            
-            success_url = f"{settings.FRONTEND_URL}/fw?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
-            cancel_url = f"{settings.FRONTEND_URL}/fw?payment=cancelled"
-            
-            metadata = {
-                'type': 'watch_purchase',
-                'watch_id': str(watch_id),
-                'watch_name': sanitize_text_input(watch.name),
-                'customer_first_name': sanitize_text_input(customer_data.get('firstName', '')),
-                'customer_last_name': sanitize_text_input(customer_data.get('lastName', '')),
-                'customer_phone': sanitize_text_input(customer_data.get('phone', '')),
-                'customer_address': sanitize_text_input(customer_data.get('address', '')),
-                'customer_city': sanitize_text_input(customer_data.get('city', '')),
-                'customer_postal_code': sanitize_text_input(customer_data.get('postalCode', '')),
-                'customer_country': sanitize_text_input(customer_data.get('country', '')),
-            }
-            
-        elif cart_id:
+        if cart_id:
             try:
                 cart = Cart.objects.prefetch_related('items__product').get(id=cart_id)
             except Cart.DoesNotExist:
@@ -673,7 +549,7 @@ def create_stripe_session(request):
             
         else:
             return Response(
-                {"error": "watch_id ou cart_id requis"}, 
+                {"error": "cart_id requis"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
         
@@ -791,89 +667,43 @@ def verify_payment(request):
                     'message': 'Customer non trouvé'
                 }, status=status.HTTP_404_NOT_FOUND)
             
-            if payment_type == 'watch_purchase':
-                watch_id = metadata.get('watch_id')
-                
-                try:
-                    watch = Watch.objects.get(id=watch_id)
-                    logger.info(f"Montre trouvée: {watch.name} - {watch.price}€")
-                except Watch.DoesNotExist:
-                    logger.error(f"Montre non trouvée - ID: {watch_id}")
-                    return Response({
-                        'status': 'error',
-                        'message': 'Montre non trouvée'
-                    }, status=status.HTTP_404_NOT_FOUND)
 
-                # Création commande
-                order = Order.objects.create(
-                    customer=customer,
-                    quantity=1,
-                    total_price=session.amount_total / 100,
-                    payment_status=Order.PAYMENT_COMPLETED
-                )
-                
-                # Créer produit générique et order item
-                default_collection = Collection.objects.first()
-                if not default_collection:
-                    default_collection = Collection.objects.create(name='Défaut', description='Collection par défaut')
-                
-                product, created = Product.objects.get_or_create(
-                    title=watch.name,
-                    defaults={
-                        'price': watch.price,
-                        'description': watch.description,
-                        'collection': default_collection,
-                        'is_available': True
-                    }
-                )
-                
-                Cart.objects.filter(id=cart_id).delete()
-                OrderItem.objects.create(order=order, product=product, quantity=1)
-                
-                # Marquer montre indisponible
-                watch.is_available = False
-                watch.save()
-                
-                email_subject = f'Commande confirmée #{order.id} - F&W'
-                products_details = [f"1x {watch.name} - {watch.price}€"]
-                
-            elif payment_type == 'cart_purchase':
-                cart_id = metadata.get('cart_id')
-                logger.info(f"Processing cart_purchase for cart_id: {cart_id}")
-                
-                # Vérifier si le cart existe avant la validation
-                from .models import Cart
-                cart_exists = Cart.objects.filter(pk=cart_id).exists()
-                logger.info(f"Cart exists: {cart_exists}")
-                
-                serializer = CreateOrderSerializer(
-                    data={'cart_id': cart_id}, 
-                    context={'user_id': user.id}
-                )
-                
-                if not serializer.is_valid():
-                    logger.error(f"Serializer invalide: {serializer.errors}")
-                    # Si le cart n'existe plus, c'est peut-être déjà traité
-                    if 'No cart with the given ID was found' in str(serializer.errors):
-                        logger.warning(f"Cart {cart_id} already processed, returning success")
-                        return Response({
-                            'status': 'success',
-                            'message': 'Commande déjà traitée'
-                        })
+            cart_id = metadata.get('cart_id')
+            logger.info(f"Processing cart_purchase for cart_id: {cart_id}")
+            
+            # Vérifier si le cart existe avant la validation
+            from .models import Cart
+            cart_exists = Cart.objects.filter(pk=cart_id).exists()
+            logger.info(f"Cart exists: {cart_exists}")
+            
+            serializer = CreateOrderSerializer(
+                data={'cart_id': cart_id}, 
+                context={'user_id': user.id}
+            )
+            
+            if not serializer.is_valid():
+                logger.error(f"Serializer invalide: {serializer.errors}")
+                # Si le cart n'existe plus, c'est peut-être déjà traité
+                if 'No cart with the given ID was found' in str(serializer.errors):
+                    logger.warning(f"Cart {cart_id} already processed, returning success")
                     return Response({
-                        'status': 'error',
-                        'message': 'Erreur création commande'
+                        'status': 'success',
+                        'message': 'Commande déjà traitée'
                     })
-                
-                order = serializer.save()
-                order.payment_status = Order.PAYMENT_COMPLETED
-                order.total_price = session.amount_total / 100
-                order.save()
-                
-                email_subject = f'Commande confirmée #{order.id} - Hoolis'
-                products_details = []
-                for item in order.order_items.all():
-                    products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
+                return Response({
+                    'status': 'error',
+                    'message': 'Erreur création commande'
+                })
+            
+            order = serializer.save()
+            order.payment_status = Order.PAYMENT_COMPLETED
+            order.total_price = session.amount_total / 100
+            order.save()
+            
+            email_subject = f'Commande confirmée #{order.id} - Hoolis'
+            products_details = []
+            for item in order.order_items.all():
+                products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
             
             # Envoi email de confirmation avec Django
             try:
@@ -885,7 +715,7 @@ def verify_payment(request):
                 # Préparer les données pour le template
                 from datetime import datetime
                 
-                brand_name = "Franck & Watch" if payment_type == 'watch_purchase' else "Maison Hoolis"
+                brand_name = "Maison Hoolis"
                 
                 email_context = {
                     'brand_name': brand_name,

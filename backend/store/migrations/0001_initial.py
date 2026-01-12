@@ -37,23 +37,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='BookingWatch',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('phone', django_cryptography.fields.encrypt(models.CharField(default='0000000000', max_length=100))),
-                ('watch', models.CharField(default='watch', max_length=100)),
-                ('date', models.DateField(default=datetime.datetime.now)),
-                ('start_time', models.TimeField()),
-                ('end_time', models.TimeField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('is_canceled', models.BooleanField(default=False)),
-            ],
-            options={
-                'ordering': ['start_time'],
-            },
-        ),
-        migrations.CreateModel(
             name='Cart',
             fields=[
                 ('id', models.CharField(default=uuid.uuid4, max_length=36, primary_key=True, serialize=False)),
@@ -125,36 +108,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='SlotsWatch',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('start_time', models.TimeField()),
-                ('end_time', models.TimeField()),
-                ('is_available', models.BooleanField(default=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Watch',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('price', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('is_available', models.BooleanField(default=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='WatchMedia',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media', models.FileField(upload_to='store/F&W/')),
-                ('size', models.CharField(choices=[('small', 'Small'), ('wide', 'Wide')], default='small', max_length=100)),
-                ('type', models.CharField(choices=[('image', 'Image'), ('video', 'Video')], default='image', max_length=100)),
-                ('watch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='store.watch')),
-            ],
-        ),
-        migrations.CreateModel(
             name='ProductImage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -190,10 +143,6 @@ class Migration(migrations.Migration):
             model_name='cartitem',
             name='product',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='store.product'),
-        ),
-        migrations.AlterUniqueTogether(
-            name='bookingwatch',
-            unique_together={('date', 'start_time', 'end_time')},
         ),
         migrations.AlterUniqueTogether(
             name='bookingproduct',
