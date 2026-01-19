@@ -166,7 +166,7 @@ export default function HoolisMobile({ labelRef }) {
         duration: 0.5,
         ease: "power3.inOut",
         width: "100%",
-        height: "100%"
+        height: "85%"
       })
       .call(() => {
         const detailsElement = clickedArticleElement.querySelector('.article-details');
