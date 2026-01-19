@@ -394,13 +394,14 @@
             .mobile-hoolis-gallery-articles {
                 position: relative;
                 width: 95%;
-                height: calc(85vh - 80px);
+                height: calc(100% - 80px);
+                min-height: 0;
+                flex-shrink: 0;
                 margin: 0 auto;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-evenly;
-                align-content: flex-start;
-                align-items: flex-start;
+                align-items: center;
                 overflow-y: auto;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
