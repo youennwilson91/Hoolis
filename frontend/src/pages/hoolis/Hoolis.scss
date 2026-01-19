@@ -4,7 +4,7 @@
 
 /* .mobile-shop-container styles are handled in @media section */
 
-.mobile-shop-container {
+.mobile-shop-container, .mobile-hoolis-container {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -15,6 +15,7 @@
     display: flex !important;
     flex-direction: column !important;
     z-index: 9999 !important;
+    overflow: hidden !important;
 }
 
 .shop-container {
