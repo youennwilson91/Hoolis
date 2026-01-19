@@ -55,9 +55,11 @@ const createCartSlice = (set) => ({
 
 // Slice pour les données (non persisté, géré par React Query idéalement)
 const createDataSlice = (set) => ({
-  products: [],
+  hoolisProducts: [],
+  resellProducts: [],
   watches: [],
-  setProducts: (products) => set({ products }),
+  setHoolisProducts: (products) => set({ hoolisProducts: products }),
+  setResellProducts: (products) => set({ resellProducts: products }),
   setWatches: (watches) => set({ watches }),
 });
 
