@@ -187,7 +187,7 @@ export default function ResellMobile({ labelRef }) {
         top: 0,
         left: 0,
         width: "100%",
-        height: "100%"
+        height: "85%"
       }, 0)
       .call(() => {
         const detailsElement = clickedArticleElement.querySelector('.article-details');

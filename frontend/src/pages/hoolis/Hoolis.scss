@@ -396,8 +396,6 @@
                 position: relative;
                 width: 95%;
                 height: calc(100% - 80px);
-                min-height: 0;
-                flex-shrink: 0;
                 margin: 0 auto;
                 display: flex;
                 flex-wrap: wrap;
@@ -407,6 +405,8 @@
                 scrollbar-width: none;
                 -ms-overflow-style: none;
                 -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+                pointer-events: auto;
                 gap: 2%;
                 opacity: 0;
 
