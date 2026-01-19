@@ -1,0 +1,64 @@
+.cart-icon {
+    position: absolute;
+    top: 4vh;
+    right: 2%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    fill: white;
+    z-index: 200;
+
+    .cart-quantity {
+        position: absolute;
+        bottom: 80%;
+        right: 5%;
+        font-size: 20px;
+        color: white;
+    }
+}
+
+.cart-icon:hover {
+    cursor: pointer;
+    fill: white;
+    opacity: 0.8;
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+    .cart-icon {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        z-index: 10001;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        padding: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        fill: white;
+
+        .cart-quantity {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 16px;
+            color: white;
+            background: #ff4444;
+            border-radius: 50%;
+            min-width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    .cart-icon:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
