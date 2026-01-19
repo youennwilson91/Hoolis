@@ -1,5 +1,5 @@
 import useStore from "../../utils/store";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import SEOHead from "../../components/SEOHead";
@@ -21,7 +21,6 @@ export default function Hoolis() {
   const setLabelColor = useStore(state => state.setLabelColor);
   const bgColor = useStore(state => state.bgColor);
   const setIsClicked = useStore(state => state.setIsClicked);
-  const setAddToCart = useStore(state => state.setAddToCart);
 
   useEffect(() => {
     setIsClicked(false);
@@ -41,24 +40,6 @@ export default function Hoolis() {
     };
   }, [bgColor, setIsClicked, setLabel, setLabelColor]);
 
-  // Fonctions pour gérer le panier - mémoïsées car passées en props
-  const handleAddToCart = useCallback((article, e) => {
-    e.stopPropagation();
-    console.log("Adding to cart:", article);
-    setAddToCart(prevCart => {
-      const newCart = [...prevCart, {...article, cartid: Date.now() + Math.random()}];
-      console.log("Cart updated:", newCart);
-      return newCart;
-    });
-    alert("Article ajouté au panier");
-  }, [setAddToCart]);
-
-  const handleRemoveItem = useCallback((item) => {
-    console.log("Removing from cart:", item);
-    setAddToCart(prevCart => prevCart.filter(
-      cartItem => cartItem.cartid !== item.cartid
-    ));
-  }, [setAddToCart]);
 
   useGSAP(() => {
     // Only animate screenRef if we're not in mobile mode and screenRef exists
@@ -83,11 +64,7 @@ export default function Hoolis() {
       <StructuredData data={createOrganizationSchema()} />
       
       {isMobile ? (
-        <HoolisMobile 
-          labelRef={labelRef} 
-          handleAddToCart={handleAddToCart}
-          handleRemoveItem={handleRemoveItem}
-        />
+        <HoolisMobile labelRef={labelRef} />
       ) : (
         <HoolisDesktop screenRef={screenRef} labelRef={labelRef} />
       )}

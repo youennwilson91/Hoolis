@@ -12,8 +12,9 @@ export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, t
 
     const buttons = type === "hoolis" 
         ? [
-            {id: 1,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
-            {id: 2, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"}
+            
+            {id: 1, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"},
+            {id: 2,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
         ]
         : [
             {id: 1,  label: "SACS", upscale: 1.7, navigate: "/resell/sacs"},

@@ -7,8 +7,9 @@ import { apiClient, API_ENDPOINTS } from '../utils/axiosConfig';
  * @param {boolean} isResell - true pour produits resell, false pour produits hoolis
  */
 export function useProducts(isResell) {
-  const products = useStore(state => state.products);
-  const setProducts = useStore(state => state.setProducts);
+  // Utiliser le cache approprié selon isResell
+  const products = useStore(state => isResell ? state.resellProducts : state.hoolisProducts);
+  const setProducts = useStore(state => isResell ? state.setResellProducts : state.setHoolisProducts);
 
   // Ref pour éviter setState après unmount
   const isMountedRef = useRef(true);
@@ -18,13 +19,12 @@ export function useProducts(isResell) {
     const abortController = new AbortController();
 
     // Vérifier si les produits en cache correspondent au type demandé
-    const isCacheValid = products?.length > 0 &&
-      products.every(p => p.is_resell === isResell);
+    const isCacheValid = products?.length > 0;
 
     console.log(`🔍 Cache validation (is_resell: ${isResell}):`, {
+      cacheType: isResell ? 'resellProducts' : 'hoolisProducts',
       productsInCache: products?.length || 0,
-      isCacheValid,
-      cacheProducts: products?.slice(0, 2) // Montrer les 2 premiers
+      isCacheValid
     });
 
     if (!isCacheValid) {
@@ -64,8 +64,7 @@ export function useProducts(isResell) {
               console.log(`📦 First product sample:`, productsData[0]);
               console.log(`📦 Collections found:`, [...new Set(productsData.map(p => p.collection?.name))].filter(Boolean));
               console.log(`📦 Availability check:`, {
-                allAvailable: productsData.every(p => p.is_available === true),
-                allResell: productsData.every(p => p.is_resell === isResell)
+                allAvailable: productsData.every(p => p.is_available === true)
               });
             }
 
@@ -95,7 +94,7 @@ export function useProducts(isResell) {
 
       fetchProducts();
     } else {
-      console.log(`✅ Produits déjà en cache (is_resell: ${isResell}):`, {
+      console.log(`✅ Produits déjà en cache (${isResell ? 'resellProducts' : 'hoolisProducts'}):`, {
         count: products.length,
         collections: [...new Set(products.map(p => p.collection?.name))].filter(Boolean)
       });
