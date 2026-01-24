@@ -3,7 +3,7 @@ import uuid
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.conf import settings
-from .validators import validate_file_size
+from .validators import validate_image_file
 from datetime import datetime
 from django_cryptography.fields import encrypt
 
@@ -23,7 +23,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='store/Shop/Articles/', validators=[validate_file_size])
+    image = models.ImageField(upload_to='store/Shop/Articles/', validators=[validate_image_file])
     
 
     def __str__(self):
@@ -38,41 +38,42 @@ class Collection(models.Model):
     def __str__(self):
         return self.name
 
-class BookingProduct(models.Model):
-    name = models.CharField(max_length=100)
-    phone = encrypt(models.CharField(max_length=100, default='0000000000'))
-    product = models.CharField(max_length=100, default='product')
-    date = models.DateField(default=datetime.now)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_canceled = models.BooleanField(default=False)
+# BOOKING DISABLED
+# class BookingProduct(models.Model):
+#     name = models.CharField(max_length=100)
+#     phone = encrypt(models.CharField(max_length=100, default='0000000000'))
+#     product = models.CharField(max_length=100, default='product')
+#     date = models.DateField(default=datetime.now)
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     is_canceled = models.BooleanField(default=False)
 
-    class Meta:
-        unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, et les mêmes heures
-        ordering = ['start_time']
+#     class Meta:
+#         unique_together = ('date', 'start_time', 'end_time')  # évite les doublons pour la même date, et les mêmes heures
+#         ordering = ['start_time']
 
-    def clean(self):
-        super().clean()
-        if self.phone:
-            # Vérifier l'unicité des numéros de téléphone pour l'admin Django
-            existing_bookings = BookingProduct.objects.exclude(pk=self.pk) if self.pk else BookingProduct.objects.all()
-            for booking in existing_bookings:
-                if booking.phone == self.phone:  # django-cryptography déchiffre automatiquement
-                    raise ValidationError({'phone': 'Ce numéro de téléphone est déjà utilisé pour une réservation produit'})
+#     def clean(self):
+#         super().clean()
+#         if self.phone:
+#             # Vérifier l'unicité des numéros de téléphone pour l'admin Django
+#             existing_bookings = BookingProduct.objects.exclude(pk=self.pk) if self.pk else BookingProduct.objects.all()
+#             for booking in existing_bookings:
+#                 if booking.phone == self.phone:  # django-cryptography déchiffre automatiquement
+#                     raise ValidationError({'phone': 'Ce numéro de téléphone est déjà utilisé pour une réservation produit'})
 
-    def __str__(self):
-        return f"{self.name} ({self.start_time} → {self.end_time})"
+#     def __str__(self):
+#         return f"{self.name} ({self.start_time} → {self.end_time})"
 
 
-class SlotsProduct(models.Model):
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    is_available = models.BooleanField(default=True)
+# class SlotsProduct(models.Model):
+#     date = models.DateField()
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     is_available = models.BooleanField(default=True)
 
-    def __str__(self):
-        return f"{self.start_time} → {self.end_time}"
+#     def __str__(self):
+#         return f"{self.start_time} → {self.end_time}"
 
 
 
@@ -162,7 +163,16 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.title}"
 
-class EmailConfirmationCode(models.Model):
-    email = models.EmailField(max_length=200)
-    code = models.CharField(max_length=6)
-    verified = models.BooleanField(default=False)
+# BOOKING DISABLED
+# class EmailConfirmationCode(models.Model):
+#     email = models.EmailField(max_length=200)
+#     code = models.CharField(max_length=6)
+#     verified = models.BooleanField(default=False)
+#     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+#     def is_expired(self, minutes=15):
+#         """Code expire après 15 minutes par défaut"""
+#         from django.utils import timezone
+#         if not self.created_at:
+#             return True  # Codes sans date sont considérés expirés
+#         return (timezone.now() - self.created_at).total_seconds() > minutes * 60

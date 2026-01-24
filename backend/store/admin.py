@@ -52,11 +52,12 @@ class CartAdmin(admin.ModelAdmin):
     inlines = [CartItemInline]
     list_display = ['id', 'total_price']
 
-class EmailConfirmationCodeAdmin(admin.ModelAdmin):
-    model = models.EmailConfirmationCode
-    list_display = ['email', 'code', 'verified']
-    search_fields = ['email', 'code', 'verified']
-    list_filter = ['verified']
+# BOOKING DISABLED
+# class EmailConfirmationCodeAdmin(admin.ModelAdmin):
+#     model = models.EmailConfirmationCode
+#     list_display = ['email', 'code', 'verified']
+#     search_fields = ['email', 'code', 'verified']
+#     list_filter = ['verified']
 
 
 
@@ -69,6 +70,7 @@ admin.site.register(models.Cart, CartAdmin)
 admin.site.register(models.CartItem)
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.OrderItem)
-admin.site.register(models.BookingProduct)
-admin.site.register(models.SlotsProduct)
-admin.site.register(models.EmailConfirmationCode)
+# BOOKING DISABLED
+# admin.site.register(models.BookingProduct)
+# admin.site.register(models.SlotsProduct)
+# admin.site.register(models.EmailConfirmationCode)

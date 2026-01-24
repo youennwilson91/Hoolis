@@ -1,0 +1,413 @@
+// ============================================
+// ARTICLE COMPONENT STYLES
+// ============================================
+
+// Desktop styles
+.article {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 2.5px;
+
+    .article-image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: start;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        img {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .article-description {
+        position: absolute;
+        width: fit-content;
+        height: fit-content;
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        pointer-events: none !important;
+
+        h1 {
+            font-size: 36px;
+            color: white;
+            text-align: center;
+        }
+    }
+
+    .article-details {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none !important;
+        opacity: 0;
+    }
+
+    .article-title {
+        position: absolute;
+        top: 2%;
+        left: 2%;
+        font-size: 36px;
+        color: black;
+    }
+
+    .article-price {
+        position: absolute;
+        top: 9%;
+        left: 2%;
+        font-size: 36px;
+        color: black;
+    }
+
+    .article-buttons-container {
+        position: absolute;
+        top: 17%;
+        left: 2%;
+        width: 96%;
+        display: flex;
+        flex-direction: row;
+        pointer-events: all !important;
+
+        .add-to-cart {
+            position: relative;
+            top: auto;
+            left: auto;
+            margin: 0;
+            border: 3px solid #888888;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 22px;
+            color: #333333;
+            cursor: pointer;
+            pointer-events: all !important;
+            background-color: #d3d3d3;
+
+            &:hover {
+                cursor: pointer;
+                color: #222222;
+                border: 3px solid #666666;
+                background-color: #e6e6e6;
+            }
+        }
+
+        button.add-to-cart {
+            font-family: "Champagne Limousines", sans-serif !important;
+        }
+    }
+
+    .mobile-article-action-buttons {
+        display: none; // Caché en desktop
+    }
+
+    .description-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        pointer-events: all !important;
+    }
+
+    .description-popup {
+        background: #f5f5f5;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 500px;
+        max-height: 70vh;
+        overflow-y: auto;
+        border: 3px solid #888888;
+
+        h3 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #333333;
+            text-align: center;
+            font-family: "Champagne Limousines", sans-serif !important;
+        }
+
+        p {
+            position: relative !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            color: #333333 !important;
+            margin: 15px 0 !important;
+            font-family: "Champagne Limousines", sans-serif !important;
+            pointer-events: all !important;
+            left: auto !important;
+            bottom: auto !important;
+            text-align: left;
+        }
+
+        .close-popup-btn {
+            background-color: #d3d3d3;
+            border: 3px solid #888888;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333333;
+            cursor: pointer;
+            display: block;
+            margin: 15px auto 0;
+            font-family: "Champagne Limousines", sans-serif !important;
+
+            &:hover {
+                background-color: #e6e6e6;
+                color: #222222;
+                border: 3px solid #666666;
+            }
+        }
+    }
+
+    > p {
+        position: absolute;
+        bottom: 0%;
+        left: 2%;
+        pointer-events: none !important;
+        font-size: 26px;
+    }
+
+    .close-article {
+        position: absolute;
+        top: 2%;
+        right: 2%;
+        font-size: 36px;
+        color: black;
+        cursor: pointer;
+        pointer-events: all !important;
+
+        &:hover {
+            cursor: pointer;
+            color: white;
+        }
+    }
+}
+
+// ============================================
+// MOBILE STYLES
+// ============================================
+
+@media (max-width: 1300px) {
+    .article {
+        position: relative;
+        width: 48%;
+        height: 45%;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 0;
+
+        .article-image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            img {
+                min-width: 100%;
+                height: 100%;
+                object-fit: cover;
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+        }
+
+        .article-details {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none !important;
+            opacity: 0;
+        }
+
+        .article-title {
+            position: absolute;
+            top: 2%;
+            left: 2%;
+            font-size: 24px;
+            color: white;
+            text-shadow: 0px 0px 10px black;
+        }
+
+        .article-price {
+            position: absolute;
+            top: 8%;
+            left: 2%;
+            font-size: 24px;
+            color: white;
+            text-shadow: 0px 0px 10px black;
+        }
+
+        .article-buttons-container {
+            display: none; // Caché en mobile
+        }
+
+        .mobile-article-action-buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 12px;
+            pointer-events: all !important;
+            z-index: 1001;
+
+            .action-button {
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, #226D68, #1a5550);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                box-shadow: 0 8px 25px rgba(34, 109, 104, 0.4);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow: hidden;
+
+                &:hover {
+                    transform: translateY(-3px) scale(1.05);
+                    box-shadow: 0 12px 35px rgba(9, 177, 160);
+                }
+
+                &:active {
+                    transform: translateY(-1px) scale(1.02);
+                }
+
+                .action-icon {
+                    width: 45px;
+                    height: 45px;
+                    fill: white;
+                    transition: all 0.3s ease;
+                }
+            }
+        }
+
+        .close-article {
+            position: absolute;
+            top: 2%;
+            right: 2%;
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            pointer-events: all !important;
+            text-shadow: 0px 0px 10px black;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 5px;
+
+            &:hover {
+                cursor: pointer;
+                color: #EFEC8F;
+                background: rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        .description-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            pointer-events: all !important;
+        }
+
+        .description-popup {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 85vw;
+            max-height: 75vh;
+            overflow-y: auto;
+            border: 3px solid #888888;
+            margin: 0 15px;
+
+            h3 {
+                margin-top: 0;
+                font-size: 22px;
+                color: #333333;
+                text-align: center;
+                font-family: "Champagne Limousines", sans-serif !important;
+            }
+
+            p {
+                position: relative !important;
+                font-size: 16px !important;
+                line-height: 1.5 !important;
+                color: #333333 !important;
+                margin: 15px 0 !important;
+                font-family: "Champagne Limousines", sans-serif !important;
+                pointer-events: all !important;
+                left: auto !important;
+                bottom: auto !important;
+                text-align: left;
+            }
+
+            .close-popup-btn {
+                background-color: #d3d3d3;
+                border: 3px solid #888888;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #333333;
+                cursor: pointer;
+                display: block;
+                margin: 20px auto 0;
+                font-family: "Champagne Limousines", sans-serif !important;
+                min-height: 48px;
+                min-width: 48px;
+
+                &:hover {
+                    background-color: #e6e6e6;
+                    color: #222222;
+                    border: 3px solid #666666;
+                }
+            }
+        }
+    }
+}

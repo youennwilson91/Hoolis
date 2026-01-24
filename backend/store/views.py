@@ -1,5 +1,5 @@
 import os
-import random
+import secrets
 from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view
@@ -51,7 +51,7 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'title']
     pagination_class = PageNumberPagination
-    #permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         queryset = Product.objects.select_related('collection').prefetch_related('images')
@@ -83,7 +83,7 @@ class CollectionViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name']
     ordering_fields = ['name']
-    #permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     
     def destroy(self, request, *args, **kwargs):
         collection = get_object_or_404(Collection, pk=kwargs['pk'])
@@ -95,7 +95,7 @@ class CollectionViewSet(ModelViewSet):
 @method_decorator(cache_page(60 * 10), name='retrieve')
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
-    #permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
@@ -114,69 +114,70 @@ def process_order_view(request, order_id):
     # Retourner une réponse immédiate à l'utilisateur
     return HttpResponse("Votre commande est en cours de traitement")
 
-class SlotsProductViewSet(ModelViewSet):
-    http_method_names = ['get']
-    serializer_class = SlotsProductSerializer
-    #permission_classes = [IsAdminUser]
+# BOOKING DISABLED
+# class SlotsProductViewSet(ModelViewSet):
+#     http_method_names = ['get']
+#     serializer_class = SlotsProductSerializer
+#     permission_classes = [IsAdminOrReadOnly]
 
-    def get_queryset(self):
-        date_str = self.request.GET.get('date')
-        if not date_str:
-            return Response({"error": "Missing 'date' parameter (YYYY-MM-DD)"}, status=400)
-        try:
-            selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-        except ValueError:
-            return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
-        return SlotsProduct.objects.filter(is_available=True).filter(date=selected_date)
+#     def get_queryset(self):
+#         date_str = self.request.GET.get('date')
+#         if not date_str:
+#             return Response({"error": "Missing 'date' parameter (YYYY-MM-DD)"}, status=400)
+#         try:
+#             selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+#         except ValueError:
+#             return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+#         return SlotsProduct.objects.filter(is_available=True).filter(date=selected_date)
 
 
-class BookingProductViewSet(ModelViewSet):
-    http_method_names = ['post', 'delete', 'head', 'options']
-    queryset = BookingProduct.objects.all()
-    #permission_classes = [IsAdminUser]
-    
-    def get_serializer_context(self):
-        return {
-            'date': self.request.data.get('date'),
-            'phone': self.request.data.get('phone'),
-            'product': self.request.data.get('product'),
-            'name': self.request.data.get('name'),
-            'start_time': self.request.data.get('start_time'), 
-            'end_time': self.request.data.get('end_time')
-            }
+# class BookingProductViewSet(ModelViewSet):
+#     http_method_names = ['post', 'delete', 'head', 'options']
+#     queryset = BookingProduct.objects.all()
+#     permission_classes = [AllowAny]  # POST ouvert pour les réservations, DELETE géré dans la vue
 
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreateBookingProductSerializer
-        elif self.request.method == 'DELETE':
-            return DeleteBookingProductSerializer
+#     def get_serializer_context(self):
+#         return {
+#             'date': self.request.data.get('date'),
+#             'phone': self.request.data.get('phone'),
+#             'product': self.request.data.get('product'),
+#             'name': self.request.data.get('name'),
+#             'start_time': self.request.data.get('start_time'),
+#             'end_time': self.request.data.get('end_time')
+#             }
 
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except IntegrityError as e:
-            # Vérifier si c'est une erreur de contrainte d'unicité sur le téléphone
-            if 'phone' in str(e).lower():
-                return Response(
-                    {
-                        'error': 'Ce numéro de téléphone est déjà utilisé.',
-                        'detail': 'Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou annuler votre réservation existante.'
-                    },
-                    status=status.HTTP_409_CONFLICT
-                )
-            # Pour les autres erreurs d'intégrité, on relance l'exception
-            raise
+#     def get_serializer_class(self):
+#         if self.request.method == 'POST':
+#             return CreateBookingProductSerializer
+#         elif self.request.method == 'DELETE':
+#             return DeleteBookingProductSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         try:
+#             return super().create(request, *args, **kwargs)
+#         except IntegrityError as e:
+#             # Vérifier si c'est une erreur de contrainte d'unicité sur le téléphone
+#             if 'phone' in str(e).lower():
+#                 return Response(
+#                     {
+#                         'error': 'Ce numéro de téléphone est déjà utilisé.',
+#                         'detail': 'Une réservation existe déjà avec ce numéro de téléphone. Veuillez utiliser un autre numéro ou annuler votre réservation existante.'
+#                     },
+#                     status=status.HTTP_409_CONFLICT
+#                 )
+#             # Pour les autres erreurs d'intégrité, on relance l'exception
+#             raise
 
 
 
 class CartViewSet(ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.prefetch_related('items__product').all()
-    #permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]  # Panier accessible sans auth
 
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
-    #permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]  # Panier accessible sans auth
 
     def get_queryset(self):
         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
@@ -194,7 +195,6 @@ class CartItemViewSet(ModelViewSet):
 
 
 class CustomerViewSet(ModelViewSet):
-    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name', 'email', 'phone']
@@ -204,6 +204,13 @@ class CustomerViewSet(ModelViewSet):
 
     def get_permissions(self):
         return [IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return Customer.objects.all()
+        # Un utilisateur normal ne voit que son propre profil
+        return Customer.objects.filter(user=user)
 
 
 
@@ -244,188 +251,177 @@ class OrderViewSet(ModelViewSet):
 class OrderItemViewSet(ModelViewSet):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
-    #permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 
-    ###### SMS ######
+    # BOOKING DISABLED
+    # ###### SMS ######
 
-@api_view(['POST'])
-def send_confirmation_code(request):
-    """
-    Envoyer un code de vérification par email
-    """
-    try:
-        # Récupérer les données de la requête
-        phone = request.data.get('phone')
-        email = request.data.get('email')   
-        type = request.data.get('type')
-        date = request.data.get('date')
-        start_time = request.data.get('start_time')
-        end_time = request.data.get('end_time')
-        name = request.data.get('name')
-        
-        # Valider les données
-        if not phone or not type:
-            return Response(
-                {"error": "Numéro de téléphone et type requis"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        if not email:
-            return Response(
-                {"error": "Email requis"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        if not name: 
-            return Response(
-                {"error": "Nom requis"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        logger.info(f"=== DÉBUT ENVOI EMAIL DJANGO ===")
-        logger.info(f"Email destinataire: {email}")
-        logger.info(f"Type de paiement: {type}")
-        logger.info(f"Date: {date}")
-        logger.info(f"Heure de début: {start_time}")
-        logger.info(f"Heure de fin: {end_time}")
-        logger.info(f"Nom: {name}")
+# @api_view(['POST'])
+# def send_confirmation_code(request):
+#     """
+#     Envoyer un code de vérification par email
+#     """
+#     try:
+#         # Récupérer les données de la requête
+#         phone = request.data.get('phone')
+#         email = request.data.get('email')
+#         type = request.data.get('type')
+#         date = request.data.get('date')
+#         start_time = request.data.get('start_time')
+#         end_time = request.data.get('end_time')
+#         name = request.data.get('name')
 
-        code = random.randint(1000, 9999)
-        serializer = EmailConfirmationCodeSerializer(data={'email': email, 'code': code})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+#         # Valider les données
+#         if not phone or not type:
+#             return Response(
+#                 {"error": "Numéro de téléphone et type requis"},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
 
-        email_context = {
-            'email': email,
-            'name': name,
-            'date': date,
-            'start_time': start_time,
-            'end_time': end_time,
-            'code': code,
-        }
-        
-        logger.info(f"Contexte email préparé pour {type}")
-        
-        # Générer le contenu HTML et texte
-        html_message = render_to_string('emails/code_confirmation.html', email_context)
-        plain_message = strip_tags(html_message)
-        
-        logger.info("Template email généré, envoi en cours...")
-        logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
-        logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
-        logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
-        logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
-        logger.info(f"Recipients: {[email, settings.DEFAULT_FROM_EMAIL]}")
-        
-        # Envoyer l'email
-        send_mail(
-            subject=f"Code de confirmation - Maison Hoolis",
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
-            html_message=html_message,
-            fail_silently=False,
-        )
-        
-        logger.info("Email envoyé avec succès via Django")
-        
-        return Response(
-            {"message": "Code de confirmation envoyé avec succès"}, 
-            status=status.HTTP_200_OK
-        )
-        
-    except Exception as e:
-        return Response(
-            {"error": f"Erreur lors de l'envoi de l'email de confirmation. {e}"}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+#         if not email:
+#             return Response(
+#                 {"error": "Email requis"},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         if not name:
+#             return Response(
+#                 {"error": "Nom requis"},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         # Code à 6 chiffres cryptographiquement sécurisé
+#         code = secrets.randbelow(900000) + 100000
+#         serializer = EmailConfirmationCodeSerializer(data={'email': email, 'code': code})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+
+#         email_context = {
+#             'email': email,
+#             'name': name,
+#             'date': date,
+#             'start_time': start_time,
+#             'end_time': end_time,
+#             'code': code,
+#         }
+
+#         # Générer le contenu HTML et texte
+#         html_message = render_to_string('emails/code_confirmation.html', email_context)
+#         plain_message = strip_tags(html_message)
+
+#         # Envoyer l'email
+#         send_mail(
+#             subject=f"Code de confirmation - Maison Hoolis",
+#             message=plain_message,
+#             from_email=settings.DEFAULT_FROM_EMAIL,
+#             recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
+#             html_message=html_message,
+#             fail_silently=False,
+#         )
+
+#         logger.info("Email envoyé avec succès via Django")
+
+#         return Response(
+#             {"message": "Code de confirmation envoyé avec succès"},
+#             status=status.HTTP_200_OK
+#         )
+
+#     except Exception as e:
+#         return Response(
+#             {"error": f"Erreur lors de l'envoi de l'email de confirmation. {e}"},
+#             status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#         )
 
 
-@api_view(['POST'])
-def verify_confirmation_code(request):
-    """
-    Vérifier le code de confirmation
-    """
-    try:
-        code = request.data.get('code')
-        email = request.data.get('email')
-        date = request.data.get('date')
-        start_time = request.data.get('start_time')
-        end_time = request.data.get('end_time')
-        name = request.data.get('name')
-        phone = request.data.get('phone')
-        product = request.data.get('product')
-        type = request.data.get('type')
-        print(type)
+# @api_view(['POST'])
+# def verify_confirmation_code(request):
+#     """
+#     Vérifier le code de confirmation
+#     """
+#     try:
+#         code = request.data.get('code')
+#         email = request.data.get('email')
+#         date = request.data.get('date')
+#         start_time = request.data.get('start_time')
+#         end_time = request.data.get('end_time')
+#         name = request.data.get('name')
+#         phone = request.data.get('phone')
+#         product = request.data.get('product')
+#         type = request.data.get('type')
 
-        confirmation = EmailConfirmationCode.objects.get(email=email, code=code)
-        if not confirmation:
-            return Response(
-                {"error": "Code de confirmation invalide"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        confirmation.verified = True
-        confirmation.save()
+#         try:
+#             confirmation = EmailConfirmationCode.objects.get(email=email, code=code)
+#         except EmailConfirmationCode.DoesNotExist:
+#             return Response(
+#                 {"error": "Code de confirmation invalide"},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
 
+#         if confirmation.is_expired():
+#             return Response(
+#                 {"error": "Code expiré, veuillez en demander un nouveau"},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
 
-        slot = SlotsProduct.objects.get(date=date, start_time=start_time, end_time=end_time)
-        slot.is_available = False
-        slot.save()
+#         confirmation.verified = True
+#         confirmation.save()
 
-        BookingProduct.objects.create(
-            date=date,
-            start_time=start_time,
-            end_time=end_time,
-            name=name,
-            phone=phone,
-            product=product
-        )
+#         try:
+#             slot = SlotsProduct.objects.get(date=date, start_time=start_time, end_time=end_time)
+#         except SlotsProduct.DoesNotExist:
+#             return Response(
+#                 {"error": "Créneau non trouvé"},
+#                 status=status.HTTP_404_NOT_FOUND
+#             )
+#         slot.is_available = False
+#         slot.save()
 
-        email_context = {
-            'email': email,
-            'name': name,
-            'date': date,
-            'start_time': start_time,
-            'end_time': end_time,
-            'code': code,
-        }
-        
-        logger.info(f"Contexte email préparé pour {type}")
-        
-        # Générer le contenu HTML et texte
-        html_message = render_to_string('emails/reservation_confirmation.html', email_context)
-        plain_message = strip_tags(html_message)
-        
-        logger.info("Template email généré, envoi en cours...")
-        logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
-        logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
-        logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
-        logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
-        logger.info(f"Recipients: {[email, settings.DEFAULT_FROM_EMAIL]}")
-        
-        # Envoyer l'email
-        send_mail(
-            subject=f"Confirmation de réservation - Maison Hoolis",
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
-            html_message=html_message,
-            fail_silently=False,
-        )
-        
-        logger.info("Email envoyé avec succès via Django")
-        
-        return Response(
-            {"message": "Confirmation de réservation envoyée avec succès"}, 
-            status=status.HTTP_200_OK
-        )
+#         BookingProduct.objects.create(
+#             date=date,
+#             start_time=start_time,
+#             end_time=end_time,
+#             name=name,
+#             phone=phone,
+#             product=product
+#         )
 
-    except Exception as e:
-        return Response(
-            {"error": f"Erreur lors de la vérification du code de confirmation. {e}"}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+#         email_context = {
+#             'email': email,
+#             'name': name,
+#             'date': date,
+#             'start_time': start_time,
+#             'end_time': end_time,
+#             'code': code,
+#         }
+
+#         # Générer le contenu HTML et texte
+#         html_message = render_to_string('emails/reservation_confirmation.html', email_context)
+#         plain_message = strip_tags(html_message)
+
+#         # Envoyer l'email
+#         send_mail(
+#             subject="Confirmation de réservation - Maison Hoolis",
+#             message=plain_message,
+#             from_email=settings.DEFAULT_FROM_EMAIL,
+#             recipient_list=[email, settings.DEFAULT_FROM_EMAIL],
+#             html_message=html_message,
+#             fail_silently=False,
+#         )
+
+#         logger.info("Email de confirmation envoyé")
+
+#         return Response(
+#             {"message": "Confirmation de réservation envoyée avec succès"},
+#             status=status.HTTP_200_OK
+#         )
+
+#     except Exception as e:
+#         logger.error(f"Erreur vérification code: {str(e)}")
+#         return Response(
+#             {"error": "Erreur lors de la vérification du code de confirmation"},
+#             status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#         )
 
 
 @api_view(['POST'])
@@ -469,23 +465,20 @@ def create_stripe_session(request):
                 email=customer_email,
                 defaults={'username': customer_email}
             )
-            logger.info(f"User {'créé' if created else 'récupéré'}: {user.email}")
-            
             # Créer ou récupérer le customer avec has_payed=False par défaut
             customer, customer_created = Customer.objects.get_or_create(
                 user=user,
                 defaults={
                     'name': customer_name_full[:100],
-                    'email': customer_email[:100], 
+                    'email': customer_email[:100],
                     'phone': customer_phone[:50],
                     'address': customer_address[:100],
-                    'has_payed': False  # Créé avec has_payed=False
+                    'has_payed': False
                 }
             )
-            logger.info(f"Customer {'créé' if customer_created else 'récupéré'}: {customer.name} (has_payed: {customer.has_payed})")
-            
+
         except Exception as user_error:
-            logger.error(f"ERREUR création utilisateur/customer: {str(user_error)}")
+            logger.error("Erreur création utilisateur/customer")
             return Response(
                 {"error": "Erreur création utilisateur"}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -593,8 +586,7 @@ def verify_payment(request):
     """
     Vérifier le paiement Stripe et créer une commande
     """
-    logger.info("🚀 === VERIFY_PAYMENT APPELÉE ===")
-    logger.info(f"Request data: {request.data}")
+    logger.info("=== VERIFY_PAYMENT ===")
     try:
         stripe.api_key = settings.STRIPE_SECRET_KEY
         
@@ -611,11 +603,9 @@ def verify_payment(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        logger.info(f"Vérification paiement: {session_id}")
-        
         try:
             session = stripe.checkout.Session.retrieve(session_id)
-            logger.info(f"Session récupérée - Status: {session.payment_status}, Amount: {session.amount_total/100}€")
+            logger.info(f"Session status: {session.payment_status}")
         except stripe.error.InvalidRequestError as e:
             logger.error(f"Session Stripe invalide: {session_id} - {str(e)}")
             return Response({
@@ -643,9 +633,8 @@ def verify_payment(request):
             # Récupérer l'utilisateur existant (il devrait déjà exister depuis create_stripe_session)
             try:
                 user = User.objects.get(email=customer_email)
-                logger.info(f"Utilisateur récupéré: {user.id}")
             except User.DoesNotExist:
-                logger.error(f"ERREUR: Utilisateur non trouvé pour email: {customer_email}")
+                logger.error("Utilisateur non trouvé")
                 return Response({
                     'status': 'error',
                     'message': 'Utilisateur non trouvé'
@@ -657,11 +646,8 @@ def verify_payment(request):
                 if not customer.has_payed:
                     customer.has_payed = True
                     customer.save()
-                    logger.info(f"Customer mis à jour: {customer.name} - has_payed=True")
-                else:
-                    logger.info(f"Customer déjà payé: {customer.name}")
             except Customer.DoesNotExist:
-                logger.error(f"ERREUR: Customer non trouvé pour user: {user.id}")
+                logger.error("Customer non trouvé")
                 return Response({
                     'status': 'error',
                     'message': 'Customer non trouvé'
@@ -669,12 +655,10 @@ def verify_payment(request):
             
 
             cart_id = metadata.get('cart_id')
-            logger.info(f"Processing cart_purchase for cart_id: {cart_id}")
-            
+
             # Vérifier si le cart existe avant la validation
             from .models import Cart
             cart_exists = Cart.objects.filter(pk=cart_id).exists()
-            logger.info(f"Cart exists: {cart_exists}")
             
             serializer = CreateOrderSerializer(
                 data={'cart_id': cart_id}, 
@@ -707,18 +691,10 @@ def verify_payment(request):
             
             # Envoi email de confirmation avec Django
             try:
-                logger.info(f"=== DÉBUT ENVOI EMAIL DJANGO ===")
-                logger.info(f"Email destinataire: {customer_email}")
-                logger.info(f"Type de paiement: {payment_type}")
-                logger.info(f"Order ID: {order.id}")
-                
-                # Préparer les données pour le template
                 from datetime import datetime
-                
-                brand_name = "Maison Hoolis"
-                
+
                 email_context = {
-                    'brand_name': brand_name,
+                    'brand_name': "Maison Hoolis",
                     'customer_first_name': metadata.get('customer_first_name', ''),
                     'customer_last_name': metadata.get('customer_last_name', ''),
                     'customer_address': metadata.get('customer_address', ''),
@@ -732,38 +708,23 @@ def verify_payment(request):
                     'payment_id': session.payment_intent,
                     'year': datetime.now().year,
                 }
-                
-                logger.info(f"Contexte email préparé pour {brand_name}")
-                
-                # Générer le contenu HTML et texte
+
                 html_message = render_to_string('emails/order_confirmation.html', email_context)
                 plain_message = strip_tags(html_message)
-                
-                logger.info("Template email généré, envoi en cours...")
-                logger.info(f"Configuration email - HOST: {settings.EMAIL_HOST}")
-                logger.info(f"Configuration email - PORT: {settings.EMAIL_PORT}")
-                logger.info(f"Configuration email - USER: {settings.EMAIL_HOST_USER}")
-                logger.info(f"Configuration email - FROM: {settings.DEFAULT_FROM_EMAIL}")
-                logger.info(f"Recipients: {[customer_email, settings.DEFAULT_FROM_EMAIL]}")
-                
-                # Envoyer l'email
+
                 send_mail(
                     subject=email_subject,
                     message=plain_message,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],  # Copie pour vous
+                    recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
                     html_message=html_message,
                     fail_silently=False,
                 )
-                
-                logger.info("Email envoyé avec succès via Django")
-                
+
+                logger.info(f"Order #{order.id} - email envoyé")
+
             except Exception as email_error:
-                logger.error(f"Erreur envoi email Django: {str(email_error)}")
-                import traceback
-                logger.error(f"Traceback complet: {traceback.format_exc()}")
-            
-            logger.info(f"Paiement traité avec succès - Order #{order.id} - {order.total_price}€")
+                logger.error(f"Erreur envoi email: {type(email_error).__name__}")
             
             return Response({
                 'status': 'success',

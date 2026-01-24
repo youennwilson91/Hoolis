@@ -19,8 +19,9 @@ export const apiClient = axios.create({
 // Endpoints API centralisés
 export const API_ENDPOINTS = {
   products: '/store/products/',
-  availableSlotsProducts: '/store/available-slots-products/',
-  bookingsProducts: '/store/bookings-products/',
+  // BOOKING DISABLED
+  // availableSlotsProducts: '/store/available-slots-products/',
+  // bookingsProducts: '/store/bookings-products/',
   collections: '/store/collections/',
   verifyAccess: '/api/verify-access/',
   // Endpoints JWT
@@ -28,9 +29,10 @@ export const API_ENDPOINTS = {
   jwtRefresh: '/auth/jwt/refresh/',
   jwtVerify: '/auth/jwt/verify/',
   // Endpoints pour la commande
-  sendConfirmationCode: '/store/send-confirmation-code/',
-  verifyConfirmationCode: '/store/verify-confirmation-code/',
-  cancelVerification: '/store/cancel-verification/',
+  // BOOKING DISABLED
+  // sendConfirmationCode: '/store/send-confirmation-code/',
+  // verifyConfirmationCode: '/store/verify-confirmation-code/',
+  // cancelVerification: '/store/cancel-verification/',
 };
 
 // Fonction pour obtenir le token d'accès

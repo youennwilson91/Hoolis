@@ -13,11 +13,11 @@ export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, t
     const buttons = type === "hoolis" 
         ? [
             
-            {id: 1, label: "MAROQUINERIE", upscale: 1.7, navigate: "/shop/maroquinerie"},
-            {id: 2,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
+            {id: 1, label: "LE KISS", upscale: 1.7, navigate: "/shop/maroquinerie"},
+            //{id: 2,  label: "VETEMENTS", upscale: 1.7, navigate: "/shop/vetements"},
         ]
         : [
-            {id: 1,  label: "SACS", upscale: 1.7, navigate: "/resell/sacs"},
+            {id: 1,  label: "MAROQUINERIE", upscale: 1.7, navigate: "/resell/sacs"},
             {id: 2,  label: "MONTRES", upscale: 1.7, navigate: "/resell/montres"},
             {id: 3, label: "ACCESSOIRES", upscale: 1.7, navigate: "/resell/accessoires"}
         ];
@@ -96,8 +96,9 @@ export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, t
             className={"gallery-buttons-open"} 
             key={button.id}
             onClick={() => handleButtonClick(index)}
-            onMouseEnter={() => handleButtonHover(index, true)}
-            onMouseLeave={() => handleButtonHover(index, false)}
+            /*onMouseEnter={() => handleButtonHover(index, true)}
+            onMouseLeave={() => handleButtonHover(index, false)}*/
+            disabled
           >
             {button.label}
           </button>
