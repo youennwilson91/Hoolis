@@ -3,9 +3,9 @@ import { sanitizeImageUrl, sanitizeAltText } from "../utils/sanitizer";
 import "./OrderForm.scss";
 import { apiClient } from "../utils/axiosConfig";
 
-export default function OrderForm({ 
-  item, 
-  isOpen, 
+export default function OrderForm({
+  item,
+  isOpen,
   onClose
 }) {
   const [formData, setFormData] = useState({
@@ -18,6 +18,7 @@ export default function OrderForm({
     postalCode: '',
     country: 'France'
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleFormChange(field, value) {
     setFormData(prev => ({
@@ -46,7 +47,8 @@ export default function OrderForm({
 
   async function handleClientInfoSubmit(e) {
     e.preventDefault();
-    
+    setIsLoading(true);
+
     try {
       console.log('Création de la session Stripe...');
       
@@ -58,13 +60,15 @@ export default function OrderForm({
       if (!item || !item.name || item.name.trim() === '') {
         console.error('Nom de l\'article manquant:', item);
         alert('Erreur: Nom de l\'article manquant');
+        setIsLoading(false);
         onClose();
         return;
       }
-      
+
       if (item.price === undefined || item.price === null) {
         console.error('Prix de l\'article manquant:', item);
         alert('Erreur: Prix de l\'article manquant');
+        setIsLoading(false);
         onClose();
         return;
       }
@@ -109,12 +113,14 @@ export default function OrderForm({
       } else {
         console.error('URL de checkout manquante');
         alert('Erreur lors de la redirection vers le paiement');
+        setIsLoading(false);
         onClose();
       }
-      
+
     } catch (error) {
       console.error('Erreur lors du processus de commande:', error);
-      
+      setIsLoading(false);
+
       // Afficher un message d'erreur plus spécifique
       if (error.response?.data?.error) {
         alert(`Erreur: ${error.response.data.error}`);
@@ -123,7 +129,7 @@ export default function OrderForm({
       } else {
         alert('Erreur lors de la création du paiement');
       }
-      
+
       // En cas d'erreur, fermer le formulaire aussi
       onClose();
     }
@@ -135,8 +141,11 @@ export default function OrderForm({
     <div className="order-popup-overlay" onClick={handleClose}>
       <div className="order-popup" onClick={(e) => e.stopPropagation()}>
         <div className="order-popup-header">
-          <h2>Finaliser votre commande</h2>
-          <button className="close-popup-btn" onClick={handleClose}>×</button>
+          <h2>
+            {isLoading && <span className="header-spinner"></span>}
+            {isLoading ? 'Redirection vers le paiement...' : 'Finaliser votre commande'}
+          </h2>
+          <button className="close-popup-btn" onClick={handleClose} disabled={isLoading}>×</button>
         </div>
         
         <div className="order-popup-content">
@@ -254,11 +263,11 @@ export default function OrderForm({
             </div>
 
             <div className="order-form-actions">
-              <button type="button" className="cancel-btn" onClick={handleClose}>
+              <button type="button" className="cancel-btn" onClick={handleClose} disabled={isLoading}>
                 ANNULER
               </button>
-              <button type="submit" className="validate-btn">
-                PASSER AU PAIEMENT{item?.price ? ` - ${item.price}€` : ''}
+              <button type="submit" className={`validate-btn ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+                {isLoading ? 'CHARGEMENT...' : `PASSER AU PAIEMENT${item?.price ? ` - ${item.price}€` : ''}`}
               </button>
             </div>
           </form>
