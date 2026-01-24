@@ -8,11 +8,12 @@ import Gallery from '../pages/others/Gallery';
 const router = createBrowserRouter([
 
   // Landing
-  {path: '/', element: <Landing />},
+  //{path: '/', element: <Landing />},
   //{path: '/about', element: <About />},
-  {path: '/resell', element: <Resell />},
-  {path: '/gallery', element: <Gallery />},
-  {path: '/hoolis', element: <Hoolis />},
+  //{path: '/resell', element: <Resell />},
+  //{path: '/gallery', element: <Gallery />},
+  //{path: '/hoolis', element: <Hoolis />},
+  {path: '/', element: <Hoolis />},
 ]);
 
 export default router;

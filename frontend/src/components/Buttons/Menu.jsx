@@ -18,17 +18,18 @@ export default React.memo(function MenuButtons({ screenRef}) {
     return (
     <>
       <div className="buttons-container">
-        {pathname === "/" ? (
+        {/* pathname === "/" ? (
           // Page d'accueil - afficher les deux options de navigation
           
           <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
-            <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Pièces Uniques"/>
-            <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Resell & Occasions"/>
+            <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/lekiss.png" label="Le Kiss"/>
+            <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/lekiss.png" label="Selection Vintage"/>
             <VintedButton />
             <InstagramButton />
             <SupportButton />
           </div>
-        ) : pathname.includes("/hoolis") ? (
+        ) : */}
+        {  pathname.includes("/") ? (
           // Page Hoolis - afficher le menu spécifique Hoolis
           <>
           <button
@@ -63,7 +64,7 @@ export default React.memo(function MenuButtons({ screenRef}) {
           </button>
           {mainButtonHover && (
               <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
-                <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Resell & Occasions"/>
+                {/*<NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Selection Vintage"/>*/}
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />
@@ -104,7 +105,7 @@ export default React.memo(function MenuButtons({ screenRef}) {
           </button>
           {mainButtonHover && (
               <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
-                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/hoolis-logo.png" label="Pièces Uniques"/>
+                <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/lekiss.png" label="Le Kiss"/>
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />

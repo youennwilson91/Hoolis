@@ -287,6 +287,7 @@ export default function ResellMobile({ labelRef }) {
                     article={article}
                     index={index}
                     isClicked={clickedArticleId === article.id}
+                    isAnyArticleClicked={clickedArticleId !== null}
                     handleArticleClick={handleArticleClick}
                     handleArticleClose={handleArticleClose}
                     handleAddToCart={handleAddToCart}

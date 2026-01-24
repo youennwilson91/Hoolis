@@ -63,7 +63,7 @@ export default function Landing() {
             <div ref={screenRef} className="desktop-view">
                 <div className="crown-container" style={{backgroundColor: bgColor}}>
                     <h1 ref={labelRef} className="title-label" style={{color: labelColor}}>{label}</h1>
-                        <svg version="1.0" className="crown-svg"
+                        {/*<svg version="1.0" className="crown-svg"
                             viewBox="0 0 300 241.000000"
                             preserveAspectRatio="xMidYMid meet"
                             >
@@ -87,18 +87,18 @@ export default function Landing() {
                                 317 -214 548 -214 564 0 23 35 -11 223 -214 112 -123 230 -247 261 -277 l57
                                 -53 24 22 c27 25 74 103 155 255 97 181 326 582 397 694 40 62 53 58 71 -19z"/>
                             </g>
-                        </svg>
+                        </svg>*/}
                     <div className="landing-menus">
                         <div 
                             className="landing-menu-item" 
                             ref={menuRef1}
                         >
-                            {/*<img 
-                                src="/hoolis-img/coquillage-tee-polito.jpg" 
+                            <img 
+                                src="/hoolis-img/gainsbourglove.jpeg" 
                                 alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
                                 loading="lazy" 
-                            />*/}
-                            <video src="/hoolis-img/bg-vid-shop.mp4" autoPlay loop muted />
+                            />
+                            {/*<video src="/hoolis-img/bg-vid-shop.mp4" autoPlay loop muted />*/}
                         </div>
                     </div>
                     {buttonsVisible && <MenuButtons screenRef={screenRef} labelRef={labelRef} buttonsPosition="landing" />}
@@ -107,13 +107,13 @@ export default function Landing() {
 
             <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing"> 
-                    {/*<img 
-                        src="/hoolis-img/coquillage-tee-polito.jpg" 
+                    <img 
+                        src="/hoolis-img/gainsbourg.jpeg" 
                         alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
                         loading="lazy" 
-                    /> */}
-                    <video src="/hoolis-img/video.mp4" autoPlay loop muted />
-                    <svg version="1.0" className="crown-svg"
+                    /> 
+                    {/*<video src="/hoolis-img/video.mp4" autoPlay loop muted /> */}
+                    {/*<svg version="1.0" className="crown-svg"
                             viewBox="0 0 300 241.000000"
                             preserveAspectRatio="xMidYMid meet"
                             >
@@ -137,7 +137,7 @@ export default function Landing() {
                                 317 -214 548 -214 564 0 23 35 -11 223 -214 112 -123 230 -247 261 -277 l57
                                 -53 24 22 c27 25 74 103 155 255 97 181 326 582 397 694 40 62 53 58 71 -19z"/>
                             </g>
-                    </svg>
+                    </svg>*/}
                     <MenuButtons 
                         screenRef={screenMobileRef} 
                         labelRef={labelRef} 

@@ -50,16 +50,18 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ['true', '1', 'yes']
-
-SECRET_KEY="django-insecure-h-30p5e_5(a@)%@bjo7rmqs4*e=x=sjsaz(4l=n_y*hi^%1s^z"
-
-# Environment variables
+# Environment variables - doit être défini en premier
 env = environ.Env(
     LOG_LEVEL=(str, 'INFO'),
     ALLOW_REGISTRATION=(bool, True)
 )
 environ.Env.read_env(BASE_DIR / '.env')
+
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
+
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='django-insecure-dev-only-key' if DEBUG else None)
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY is required in production")
         
 
 INSTALLED_APPS = [
@@ -96,7 +98,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-PREVIEW_PASSWORD = os.environ.get('PREVIEW_PASSWORD', '2025!')
+PREVIEW_PASSWORD = env('PREVIEW_PASSWORD', default=None)
 
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
@@ -125,7 +127,7 @@ TEMPLATES = [
 
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='mssql://sa:PateSaucisse91!@localhost:1433/hoolis_db')
+    'default': env.db('DATABASE_URL')
 }
 
 # Options SQL Server (seulement si c'est mssql)
@@ -195,26 +197,24 @@ REST_FRAMEWORK = {
 
 # Configuration pour Azure et Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS = [
-        RENDER_EXTERNAL_HOSTNAME,
-        '18.156.158.53',  # IP Render
-        'localhost',
-        '127.0.0.1',
-        '0.0.0.0',
-    ]
-else:
-    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.1.184,18.156.158.53').split(',')
 
 if DEBUG:
-    # Configuration HTTP pour le développement  
-    CORS_ALLOW_ALL_ORIGINS = True  # Adresse réseau local si nécessaire
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.184']
+else:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+if DEBUG:
+    # Configuration HTTP pour le développement
+    CORS_ALLOW_ALL_ORIGINS = True
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
-    # Production 
-    CORS_ALLOW_ALL_ORIGINS = True
+    # Production - CORS restreint
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
 
     # Production settings - full HTTPS enforcement
     SECURE_SSL_REDIRECT = True
@@ -281,8 +281,8 @@ CORS_URLS_REGEX = r'^.*$'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=int(os.environ.get('ACCESS_TOKEN_LIFETIME', '2'))),
-    'REFRESH_TOKEN_LIFETIME': timedelta(hours=int(os.environ.get('REFRESH_TOKEN_LIFETIME', '24'))),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=env.int('ACCESS_TOKEN_LIFETIME', default=2)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=env.int('REFRESH_TOKEN_LIFETIME', default=24)),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
@@ -297,20 +297,18 @@ DJOSER = {
 }
 
 # Configuration Stripe
-STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
-STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY', default=None)
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default=None)
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default=None)
 
 # Configuration Email
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default=None)
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=None)
 
 # URL du frontend pour les redirections Stripe
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')

@@ -68,7 +68,7 @@ export default function MenuButtons({ screenRef }) {
     return (
     <>
       <div className="buttons-container">
-        {location.pathname === "/" ? (
+        {/*location.pathname === "/" ? (
           // Page d'accueil - afficher les deux options de navigation
           <>
             <MainButton />
@@ -82,13 +82,14 @@ export default function MenuButtons({ screenRef }) {
               </div>
             )}
           </>
-        ) : location.pathname.includes("/hoolis") ? (
+        ) : */}
+        { location.pathname.includes("/") ? (
           // Page Hoolis - afficher le menu spécifique Hoolis
           <>
             <MainButton />
             {menuOpen && (
               <div className="buttons-div">
-                <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Franck & Watch"/>
+                {/*<NavigationButtons screenRef={screenRef} homeTo="/resell" image="/fw-logo.png" label="Franck & Watch"/>*/}
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />
