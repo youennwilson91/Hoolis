@@ -26,7 +26,7 @@ function ArticleComponent({
     <div
       ref={el => articleRefs.current[index] = el}
       key={article.id}
-      className="article"
+      className={`article ${isClicked && isMobile ? 'article-clicked' : ''}`}
       onMouseEnter={() => {
         if (!isAnyArticleClicked && handleArticleHover) {
           handleArticleHover({

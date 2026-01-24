@@ -173,8 +173,7 @@
                 display: flex;
                 justify-content: center;
                 gap: 10px;
-                margin-bottom: 20px;
-                margin-top: 20px;
+                margin-bottom: 10px;
                 flex-wrap: wrap;
 
                 .gallery-buttons-open {
@@ -227,6 +226,11 @@
                 .article {
                     width: 48%;
                     height: 50%;
+
+                    &.article-clicked {
+                        width: 100% !important;
+                        height: 100% !important;
+                    }
                 }
             }
         }
