@@ -45,12 +45,15 @@
     align-items: center;
     padding: 1rem;
     border-bottom: 1px solid #333;
-    
+
     h2 {
       font-size: 1.8rem;
       font-weight: 300;
       color: #ffffff;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
     }
     
     .close-popup-btn {
@@ -73,6 +76,31 @@
         background: rgba(255, 255, 255, 0.1);
         transform: rotate(90deg);
       }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        &:hover {
+          transform: none;
+          background: none;
+        }
+      }
+    }
+  }
+
+  .header-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #EFEC8F;
+    border-radius: 50%;
+    animation: headerSpin 0.8s linear infinite;
+  }
+
+  @keyframes headerSpin {
+    to {
+      transform: rotate(360deg);
     }
   }
   
@@ -227,11 +255,21 @@
     background: transparent;
     color: #ccc;
     border: 1px solid #444;
-    
+
     &:hover {
       background: #2a2a2a;
       color: #fff;
       border-color: #666;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      &:hover {
+        background: transparent;
+        color: #ccc;
+        border-color: #444;
+      }
     }
   }
   
@@ -239,15 +277,20 @@
     background: linear-gradient(135deg, #EFEC8F, #d4d16a);
     color: #1a1a1a;
     font-weight: 600;
-    
-    &:hover {
+
+    &:hover:not(:disabled) {
       background: linear-gradient(135deg, #f5f2a3, #e0dd7a);
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(239, 236, 143, 0.3);
     }
-    
-    &:active {
+
+    &:active:not(:disabled) {
       transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
   
