@@ -524,8 +524,10 @@ def create_stripe_session(request):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            success_url = f"{settings.FRONTEND_URL}/hoolis?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
-            cancel_url = f"{settings.FRONTEND_URL}/hoolis?payment=cancelled"
+            #success_url = f"{settings.FRONTEND_URL}/hoolis?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
+            #cancel_url = f"{settings.FRONTEND_URL}/hoolis?payment=cancelled"            
+            success_url = f"{settings.FRONTEND_URL}/?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
+            cancel_url = f"{settings.FRONTEND_URL}/?payment=cancelled"
             
             metadata = {
                 'type': 'cart_purchase',

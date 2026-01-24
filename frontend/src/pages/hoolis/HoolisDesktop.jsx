@@ -167,9 +167,9 @@ export default function HoolisDesktop() {
     setClickedArticleId(id);
     gsap.timeline()
       .to(articleRef, {
-        duration: 0.5,
+        duration: 0.4,
         ease: "power3.inOut",
-        width: "100%",
+        width: "55%",
         height: "100%"
       })
       .call(() => {

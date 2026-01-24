@@ -30,7 +30,7 @@ export default function useCart() {
     id: 'cart',
     name: `Commande (${addToCart.length} article${addToCart.length > 1 ? 's' : ''})`,
     price: cartTotal,
-    wide: addToCart.length > 0 ? [{ media: addToCart[0].images[0].image }] : [],
+    wide: addToCart[0]?.images?.[0]?.image ? [{ media: addToCart[0].images[0].image }] : [],
     isCart: true,
     cartItems: addToCart
   }), [addToCart, cartTotal]);
