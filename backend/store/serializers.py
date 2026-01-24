@@ -49,78 +49,79 @@ class SimpleProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'price']
 
 
-class SlotsProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SlotsProduct
-        fields = ['date', 'start_time', 'end_time', 'is_available']
+# BOOKING DISABLED
+# class SlotsProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = SlotsProduct
+#         fields = ['date', 'start_time', 'end_time', 'is_available']
 
 
-class CreateBookingProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingProduct
-        fields = ['name', 'phone', 'product', 'date', 'start_time', 'end_time']
-    
-    def validate_name(self, value):
-        if not value or len(value.strip()) == 0:
-            raise serializers.ValidationError("Le nom est requis")
-        
-        sanitized = sanitize_text_input(value, 100)
-        if len(sanitized) < 2:
-            raise serializers.ValidationError("Le nom doit contenir au moins 2 caractères")
-        
-        return sanitized
-    
-    def validate_phone(self, value):
-        sanitized = sanitize_phone_number(value)
-        if not sanitized:
-            raise serializers.ValidationError("Format de numéro de téléphone invalide")
-        
-        # Vérifier l'unicité en déchiffrant tous les numéros existants
-        existing_bookings = BookingProduct.objects.all()
-        for booking in existing_bookings:
-            if booking.phone == sanitized:  # django-cryptography déchiffre automatiquement
-                raise serializers.ValidationError("Ce numéro de téléphone est déjà utilisé pour une réservation produit")
-        
-        return sanitized
-    
-    def validate_product(self, value):
-        if value:
-            return sanitize_text_input(value, 200)
-        return value
-    
-    def create(self, validated_data):
-        booking = BookingProduct.objects.create(**validated_data)
-        SlotsProduct.objects.filter(
-            date=validated_data['date'], 
-            start_time=validated_data['start_time'], 
-            end_time=validated_data['end_time']).update(is_available=False)
-        return booking
+# class CreateBookingProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BookingProduct
+#         fields = ['name', 'phone', 'product', 'date', 'start_time', 'end_time']
 
-class DeleteBookingProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingProduct
-        fields = ['name', 'phone', 'date', 'start_time', 'end_time']
+#     def validate_name(self, value):
+#         if not value or len(value.strip()) == 0:
+#             raise serializers.ValidationError("Le nom est requis")
 
-    def update(self):
-        # Chercher le booking en déchiffrant tous les numéros de téléphone
-        bookings_candidates = BookingProduct.objects.filter(
-            name=self.context['name'],
-            start_time=self.context['start_time'],
-            end_time=self.context['end_time']
-        )
-        
-        instance = None
-        for booking in bookings_candidates:
-            if booking.phone == self.context['phone']:  # django-cryptography déchiffre automatiquement
-                instance = booking
-                break
-        
-        if not instance:
-            raise serializers.ValidationError("Aucune réservation trouvée avec ces informations")
-        
-        instance.is_canceled = True
-        instance.save()
-        return instance
+#         sanitized = sanitize_text_input(value, 100)
+#         if len(sanitized) < 2:
+#             raise serializers.ValidationError("Le nom doit contenir au moins 2 caractères")
+
+#         return sanitized
+
+#     def validate_phone(self, value):
+#         sanitized = sanitize_phone_number(value)
+#         if not sanitized:
+#             raise serializers.ValidationError("Format de numéro de téléphone invalide")
+
+#         # Vérifier l'unicité en déchiffrant tous les numéros existants
+#         existing_bookings = BookingProduct.objects.all()
+#         for booking in existing_bookings:
+#             if booking.phone == sanitized:  # django-cryptography déchiffre automatiquement
+#                 raise serializers.ValidationError("Ce numéro de téléphone est déjà utilisé pour une réservation produit")
+
+#         return sanitized
+
+#     def validate_product(self, value):
+#         if value:
+#             return sanitize_text_input(value, 200)
+#         return value
+
+#     def create(self, validated_data):
+#         booking = BookingProduct.objects.create(**validated_data)
+#         SlotsProduct.objects.filter(
+#             date=validated_data['date'],
+#             start_time=validated_data['start_time'],
+#             end_time=validated_data['end_time']).update(is_available=False)
+#         return booking
+
+# class DeleteBookingProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BookingProduct
+#         fields = ['name', 'phone', 'date', 'start_time', 'end_time']
+
+#     def update(self):
+#         # Chercher le booking en déchiffrant tous les numéros de téléphone
+#         bookings_candidates = BookingProduct.objects.filter(
+#             name=self.context['name'],
+#             start_time=self.context['start_time'],
+#             end_time=self.context['end_time']
+#         )
+
+#         instance = None
+#         for booking in bookings_candidates:
+#             if booking.phone == self.context['phone']:  # django-cryptography déchiffre automatiquement
+#                 instance = booking
+#                 break
+
+#         if not instance:
+#             raise serializers.ValidationError("Aucune réservation trouvée avec ces informations")
+
+#         instance.is_canceled = True
+#         instance.save()
+#         return instance
 
 
 
@@ -264,7 +265,8 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['payment_status', 'shipping_status']
 
-class EmailConfirmationCodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmailConfirmationCode
-        fields = ['email', 'code', 'verified']
+# BOOKING DISABLED
+# class EmailConfirmationCodeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = EmailConfirmationCode
+#         fields = ['email', 'code', 'verified']

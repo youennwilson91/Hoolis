@@ -20,7 +20,8 @@ const createUISlice = (set) => ({
   selectedArticleId: null,
   mobileButtonsVisible: false,
   isMouseActive: false,
-  isBooking: false,
+  // BOOKING DISABLED
+  // isBooking: false,
   isMobile: false,
   collectionChosen: null,
 
@@ -39,7 +40,8 @@ const createUISlice = (set) => ({
   setSelectedArticleId: (id) => set({ selectedArticleId: id }),
   setMobileButtonsVisible: (visible) => set({ mobileButtonsVisible: visible }),
   setIsMouseActive: (active) => set({ isMouseActive: active }),
-  setIsBooking: (isBooking) => set({ isBooking: isBooking }),
+  // BOOKING DISABLED
+  // setIsBooking: (isBooking) => set({ isBooking: isBooking }),
   setIsMobile: (isMobile) => set({ isMobile: isMobile }),
   setCollectionChosen: (collection) => set({ collectionChosen: collection }),
 });

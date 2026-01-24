@@ -4,7 +4,8 @@ import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Hoolis.scss";
-import BookingCalendar from "../../components/Calendar.jsx";
+// BOOKING DISABLED
+// import BookingCalendar from "../../components/Calendar.jsx";
 import { BarLoader } from "react-spinners";
 import { sanitizeError, sanitizeProduct, sanitizeImageUrl, sanitizeAltText } from "../../utils/sanitizer.js";
 import OrderForm from "../../components/OrderForm.jsx";
@@ -18,8 +19,9 @@ import CartIcon from "../../components/Cart/CartIcon.jsx";
 
 export default function HoolisMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
-  const bookingContainerRef = useRef(null);
-  const bookButtonRef = useRef(null);
+  // BOOKING DISABLED
+  // const bookingContainerRef = useRef(null);
+  // const bookButtonRef = useRef(null);
   const articlesContainerRef = useRef(null);
   const collectionRef = useRef(null);
   const articleRef = useRef([]);
@@ -32,8 +34,9 @@ export default function HoolisMobile({ labelRef }) {
   // Sélecteurs individuels
   const cartVisible = useStore(state => state.cartVisible);
   const setCartVisible = useStore(state => state.setCartVisible);
-  const isBooking = useStore(state => state.isBooking);
-  const setIsBooking = useStore(state => state.setIsBooking);
+  // BOOKING DISABLED
+  // const isBooking = useStore(state => state.isBooking);
+  // const setIsBooking = useStore(state => state.setIsBooking);
   const collectionChosen = useStore(state => state.collectionChosen);
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
 
@@ -51,12 +54,13 @@ export default function HoolisMobile({ labelRef }) {
 
 
   useEffect(() => {
-    setIsBooking(false);
+    // BOOKING DISABLED
+    // setIsBooking(false);
     setClickedArticleId(null);
 
     // Reset collection states pour éviter le flash de l'ancienne page
     setDisplayedCollection("");
-    setCollectionChosen("MAROQUINERIE");
+    setCollectionChosen("VETEMENTS");
   }, []);
     
 
@@ -134,15 +138,16 @@ export default function HoolisMobile({ labelRef }) {
     }
   }, [clickedArticleId]);
 
-  useGSAP(() => {
-    if (bookingContainerRef.current && isBooking) {
-      gsap.to(bookingContainerRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 1
-      });
-    }
-  }, [isBooking]);
+  // BOOKING DISABLED
+  // useGSAP(() => {
+  //   if (bookingContainerRef.current && isBooking) {
+  //     gsap.to(bookingContainerRef.current, {
+  //       duration: 0.40,
+  //       ease: "power3.inOut",
+  //       opacity: 1
+  //     });
+  //   }
+  // }, [isBooking]);
 
   // Article click handlers (like ResellMobile)
   const handleArticleClick = useCallback((clickedArticleElement, id) => {
@@ -262,6 +267,7 @@ export default function HoolisMobile({ labelRef }) {
                     article={article}
                     index={index}
                     isClicked={clickedArticleId === article.id}
+                    isAnyArticleClicked={clickedArticleId !== null}
                     handleArticleClick={handleArticleClick}
                     handleArticleClose={handleArticleClose}
                     handleAddToCart={handleAddToCart}
@@ -285,12 +291,12 @@ export default function HoolisMobile({ labelRef }) {
         onCheckout={handleCheckout}
       />
 
-      {/* Calendrier de booking */}
-      {isBooking && (
+      {/* BOOKING DISABLED */}
+      {/* {isBooking && (
         <div ref={bookingContainerRef} className="booking-container" style={{ opacity: 0 }}>
           <BookingCalendar type="product" />
         </div>
-      )}
+      )} */}
 
       <OrderForm 
         item={cartAsItem}

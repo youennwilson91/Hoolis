@@ -1,12 +1,11 @@
-import { useRef, useEffect, useState, memo } from "react";
-import { gsap } from "gsap";
-import useStore from "../utils/store";
-import { useGSAP } from "@gsap/react";
+import { useState, memo } from "react";
+import "./Article.scss";
 
 function ArticleComponent({
   article,
   index,
   isClicked,
+  isAnyArticleClicked,
   handleArticleHover,
   handleArticleClick,
   handleArticleClose,
@@ -17,9 +16,10 @@ function ArticleComponent({
 }) {
 
   //console.log('🔵 Article render', article.id)
-  const isBooking = useStore(state => state.isBooking);
-  const setIsBooking = useStore(state => state.setIsBooking);
-  const bookButtonRef = useRef(null);
+  // BOOKING DISABLED
+  // const isBooking = useStore(state => state.isBooking);
+  // const setIsBooking = useStore(state => state.setIsBooking);
+  // const bookButtonRef = useRef(null);
   const [showDescription, setShowDescription] = useState(false);
   
   return (
@@ -28,7 +28,7 @@ function ArticleComponent({
       key={article.id}
       className="article"
       onMouseEnter={() => {
-        if (!isClicked && handleArticleHover) {
+        if (!isAnyArticleClicked && handleArticleHover) {
           handleArticleHover({
             width: "20%",
             articleRef: articleRefs.current[index],
@@ -37,7 +37,7 @@ function ArticleComponent({
         }
       }}
       onMouseLeave={() => {
-        if (!isClicked && handleArticleHover) {
+        if (!isAnyArticleClicked && handleArticleHover) {
           handleArticleHover({
             width: "7%",
             articleRef: articleRefs.current[index],
@@ -81,7 +81,8 @@ function ArticleComponent({
                 </svg>
               </button>
 
-              {!isBooking && !resell && (
+              {/* BOOKING DISABLED */}
+              {/* {!isBooking && !resell && (
                 <button
                   className="action-button calendar-button"
                   onClick={(e) => {
@@ -96,7 +97,7 @@ function ArticleComponent({
                     M14.728,21.624a9.985,9.985,0,1,1,6.9-6.895,1,1,0,1,0,1.924.542,11.989,11.989, 0,1,0-8.276,8.277,1,1,0,1,0-.544-1.924Z"/>
                   </svg>
                 </button>
-              )}
+              )} */}
 
               <button
                 className="action-button info-button"
@@ -119,19 +120,20 @@ function ArticleComponent({
             /* Boutons pour desktop */
             <div className="article-buttons-container">
               <h1 className="add-to-cart" onClick={(e) => handleAddToCart(article, e)}>AJOUTER AU PANIER</h1>
-              {!isBooking && !resell ?
+              {/* BOOKING DISABLED */}
+              {/* {!isBooking && !resell ?
                 <button ref={bookButtonRef} className="add-to-cart" onClick={(e) => {
                   e.stopPropagation();
                   setIsBooking(true);
                 }}>
                   PRENDRE RENDEZ-VOUS
-                </button> : null}
-              <button className="add-to-cart" onClick={(e) => {
+                </button> : null} */}
+              {/*<button className="add-to-cart" onClick={(e) => {
                 e.stopPropagation();
                 setShowDescription(true);
               }}>
                 DESCRIPTION
-              </button>
+              </button>*/}
             </div>
           )}
         
@@ -140,7 +142,6 @@ function ArticleComponent({
           {showDescription && (
             <div className="description-popup-overlay" onClick={() => setShowDescription(false)}>
               <div className="description-popup" onClick={(e) => e.stopPropagation()}>
-                <h3>Description</h3>
                 <p>{article.description}</p>
                 <button className="close-popup-btn" onClick={() => setShowDescription(false)}>
                   Fermer

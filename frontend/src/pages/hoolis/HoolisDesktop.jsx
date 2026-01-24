@@ -7,7 +7,8 @@ import GalleryButtons from "../../components/Buttons/GalleryButtons.jsx";
 import Article from "../../components/Article.jsx";
 import "./Hoolis.scss";
 import "../../components/Buttons/GalleryButtons.scss";
-import BookingCalendar from "../../components/Calendar.jsx";
+// BOOKING DISABLED
+// import BookingCalendar from "../../components/Calendar.jsx";
 import { BarLoader } from "react-spinners";
 import OrderForm from "../../components/OrderForm.jsx";
 import ErrorBoundary from "../../components/ErrorBoundary.jsx";
@@ -23,7 +24,8 @@ export default function HoolisDesktop() {
   const galleryRef = useRef(null);
   const articleRef = useRef([]);
   const collectionRef = useRef(null);
-  const bookingContainerRef = useRef(null);
+  // BOOKING DISABLED
+  // const bookingContainerRef = useRef(null);
   const cartRef = useRef(null);
 
   const [hoveredArticleId, setHoveredArticleId] = useState(null);
@@ -54,8 +56,9 @@ export default function HoolisDesktop() {
   const collectionChosen = useStore(state => state.collectionChosen);
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
   const setIsMouseActive = useStore(state => state.setIsMouseActive);
-  const isBooking = useStore(state => state.isBooking);
-  const setIsBooking = useStore(state => state.setIsBooking);
+  // BOOKING DISABLED
+  // const isBooking = useStore(state => state.isBooking);
+  // const setIsBooking = useStore(state => state.setIsBooking);
 
   useEffect(() => {
     setIsClicked(false);
@@ -67,7 +70,8 @@ export default function HoolisDesktop() {
     setCartVisible(false);
     setMobileButtonsVisible(false);
     setIsMouseActive(false);
-    setIsBooking(false);
+    // BOOKING DISABLED
+    // setIsBooking(false);
 
     // Reset collection states pour éviter le flash de l'ancienne page
     setDisplayedCollection("");
@@ -136,26 +140,27 @@ export default function HoolisDesktop() {
     changeCollection();
   }, [collectionChosen, products]);
 
-  useGSAP(() => {
-    if (bookingContainerRef.current) {
-      gsap.to(bookingContainerRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 1
-      });
-    } else if (bookingContainerRef.current) {
-      gsap.to(bookingContainerRef.current, {
-        duration: 0.40,
-        ease: "power3.inOut",
-        opacity: 0
-      });
-    }
-  }, [isBooking]);
+  // BOOKING DISABLED
+  // useGSAP(() => {
+  //   if (bookingContainerRef.current) {
+  //     gsap.to(bookingContainerRef.current, {
+  //       duration: 0.40,
+  //       ease: "power3.inOut",
+  //       opacity: 1
+  //     });
+  //   } else if (bookingContainerRef.current) {
+  //     gsap.to(bookingContainerRef.current, {
+  //       duration: 0.40,
+  //       ease: "power3.inOut",
+  //       opacity: 0
+  //     });
+  //   }
+  // }, [isBooking]);
 
 
   const handleArticleHover = useCallback(({width, articleRef, id}) => {
     setHoveredArticleId(id);
-    gsap.to(articleRef, { width, duration: 0.5 });
+    gsap.to(articleRef , { width, duration: 0.5 });
   }, []);
 
   const handleArticleClick = useCallback((articleRef, id) => {
@@ -227,7 +232,7 @@ export default function HoolisDesktop() {
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img 
-            src="/hoolis-img/mouth-tee-thomas.jpg" 
+            src="/hoolis-img/gainsbourglove.jpeg" 
             alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
             loading="lazy" 
         />
@@ -253,6 +258,7 @@ export default function HoolisDesktop() {
                     article={article}
                     index={index}
                     isClicked={clickedArticleId === article.id}
+                    isAnyArticleClicked={clickedArticleId !== null}
                     handleArticleHover={handleArticleHover}
                     handleArticleClick={handleArticleClick}
                     handleArticleClose={handleArticleClose}
@@ -276,13 +282,13 @@ export default function HoolisDesktop() {
           onCheckout={handleCheckout}
         />
 
-        
-        {isBooking ? (
+        {/* BOOKING DISABLED */}
+        {/* {isBooking ? (
           <div ref={bookingContainerRef} className="booking-container">
             <BookingCalendar type="product" />
             <button className="close-booking-button" onClick={() => setIsBooking(false)}>X</button>
           </div>
-        ) : null}
+        ) : null} */}
 
         <OrderForm 
           item={cartAsItem}
