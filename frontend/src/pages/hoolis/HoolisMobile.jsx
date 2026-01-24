@@ -108,7 +108,7 @@ export default function HoolisMobile({ labelRef }) {
       // Animer le fade-in seulement si le conteneur a du contenu
       if (collectionRef.current && collectionRef.current.children.length > 0) {
         gsap.to(collectionRef.current, {
-          duration: 0.3,
+          duration: 0.25,
           opacity: 1,
           ease: "power2.inOut"
         });
@@ -130,11 +130,29 @@ export default function HoolisMobile({ labelRef }) {
   useGSAP(() => {
     if (galleryButtonsRef.current) {
         gsap.to(galleryButtonsRef.current, {
-          duration: 0.3,
+          duration: 0.25,
           ease: "power3.inOut",
           opacity: 1,
           pointerEvents: "auto"
         });
+    }
+  }, [clickedArticleId]);
+
+  // Animer le remount des articles quand on ferme (fade in)
+  useEffect(() => {
+    if (clickedArticleId === null && articleRef.current.length > 0) {
+      articleRef.current.forEach((ref) => {
+        if (ref) {
+          gsap.fromTo(ref,
+            { opacity: 0 },
+            {
+              duration: 0.25,
+              ease: "power3.inOut",
+              opacity: 1
+            }
+          );
+        }
+      });
     }
   }, [clickedArticleId]);
 
@@ -151,58 +169,44 @@ export default function HoolisMobile({ labelRef }) {
 
   // Article click handlers (like ResellMobile)
   const handleArticleClick = useCallback((clickedArticleElement, id) => {
-    setClickedArticleId(id);
-    // Masquer les autres articles en les réduisant à 0
+    // Fade out tous les articles
     articleRef.current.forEach((ref) => {
-      if (ref && ref !== clickedArticleElement) {
+      if (ref) {
         gsap.to(ref, {
-          duration: 0.5,
+          duration: 0.25,
           ease: "power3.inOut",
-          opacity: 0,
-          width: 0,
-          height: 0,
-          pointerEvents: "none"
+          opacity: 0
         });
       }
     });
 
-    gsap.timeline()
-      .to(clickedArticleElement, {
-        duration: 0.5,
-        ease: "power3.inOut",
-        width: "100%",
-        height: "85%"
-      })
-      .call(() => {
-        const detailsElement = clickedArticleElement.querySelector('.article-details');
-        if (detailsElement) {
-          gsap.fromTo(detailsElement,
-            { opacity: 0 },
-            {
-              opacity: 1,
-              duration: 0.25,
-              ease: "power3.inOut"
-            }
-          );
+    // Après le fade out, unmount les autres et fade in l'article cliqué
+    setTimeout(() => {
+      setClickedArticleId(id);
+
+      // Fade in de l'article cliqué
+      gsap.fromTo(clickedArticleElement,
+        { opacity: 0 },
+        {
+          duration: 0.25,
+          ease: "power3.inOut",
+          opacity: 1,
         }
-      });
+      );
+    }, 300);
   }, []);
 
   const handleArticleClose = useCallback((clickedArticleElement, e) => {
     e.stopPropagation();
-    setClickedArticleId(null);
 
-    // Réafficher tous les articles avec leurs dimensions originales
-    articleRef.current.forEach((ref) => {
-      if (ref) {
-        gsap.to(ref, {
-          duration: 0.5,
-          ease: "power3.inOut",
-          opacity: 1,
-          width: "48%", // 2 colonnes avec un peu d'espace
-          height: "45%",
-          pointerEvents: "auto"
-        });
+    // Fade out l'article cliqué
+    gsap.to(clickedArticleElement, {
+      duration: 0.25,
+      ease: "power3.inOut",
+      opacity: 0,
+      onComplete: () => {
+        // Remount tous les articles
+        setClickedArticleId(null);
       }
     });
   }, []);
@@ -212,7 +216,7 @@ export default function HoolisMobile({ labelRef }) {
       // Fermeture avec animation
       if (cartRef.current) {
         gsap.to(cartRef.current, {
-          duration: 0.5,
+          duration: 0.25,
           ease: "power3.inOut",
           opacity: 0,
           onComplete: () => {
@@ -258,9 +262,15 @@ export default function HoolisMobile({ labelRef }) {
                 if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                   return null;
                 }
-                const filteredProducts = products.filter(article =>
+                let filteredProducts = products.filter(article =>
                   article && article.collection && article.collection.name === displayedCollection
                 );
+
+                // Si un article est cliqué, ne rendre que celui-là
+                if (clickedArticleId !== null) {
+                  filteredProducts = filteredProducts.filter(article => article.id === clickedArticleId);
+                }
+
                 return filteredProducts.map((article, index) => (
                   <Article
                     key={article.id}
