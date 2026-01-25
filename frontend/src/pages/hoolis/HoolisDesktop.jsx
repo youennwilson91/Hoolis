@@ -160,7 +160,7 @@ export default function HoolisDesktop() {
 
   const handleArticleHover = useCallback(({width, articleRef, id}) => {
     setHoveredArticleId(id);
-    gsap.to(articleRef , { width, duration: 0.5 });
+    gsap.to(articleRef , { width, duration: 0.5});
   }, []);
 
   const handleArticleClick = useCallback((articleRef, id) => {
