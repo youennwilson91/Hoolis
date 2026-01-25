@@ -1,5 +1,6 @@
 import os
 import secrets
+import threading
 from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view
@@ -691,42 +692,48 @@ def verify_payment(request):
             for item in order.order_items.all():
                 products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
             
-            # Envoi email de confirmation avec Django
-            try:
-                from datetime import datetime
+            # Fonction pour envoi email asynchrone
+            def send_order_confirmation_email():
+                try:
+                    from datetime import datetime
 
-                email_context = {
-                    'brand_name': "Maison Hoolis",
-                    'customer_first_name': metadata.get('customer_first_name', ''),
-                    'customer_last_name': metadata.get('customer_last_name', ''),
-                    'customer_address': metadata.get('customer_address', ''),
-                    'customer_city': metadata.get('customer_city', ''),
-                    'customer_postal_code': metadata.get('customer_postal_code', ''),
-                    'customer_country': metadata.get('customer_country', ''),
-                    'order_id': order.id,
-                    'order_date': datetime.now().strftime('%d/%m/%Y'),
-                    'products': products_details,
-                    'total_price': f"{order.total_price}€",
-                    'payment_id': session.payment_intent,
-                    'year': datetime.now().year,
-                }
+                    email_context = {
+                        'brand_name': "Maison Hoolis",
+                        'customer_first_name': metadata.get('customer_first_name', ''),
+                        'customer_last_name': metadata.get('customer_last_name', ''),
+                        'customer_address': metadata.get('customer_address', ''),
+                        'customer_city': metadata.get('customer_city', ''),
+                        'customer_postal_code': metadata.get('customer_postal_code', ''),
+                        'customer_country': metadata.get('customer_country', ''),
+                        'order_id': order.id,
+                        'order_date': datetime.now().strftime('%d/%m/%Y'),
+                        'products': products_details,
+                        'total_price': f"{order.total_price}€",
+                        'payment_id': session.payment_intent,
+                        'year': datetime.now().year,
+                    }
 
-                html_message = render_to_string('emails/order_confirmation.html', email_context)
-                plain_message = strip_tags(html_message)
+                    html_message = render_to_string('emails/order_confirmation.html', email_context)
+                    plain_message = strip_tags(html_message)
 
-                send_mail(
-                    subject=email_subject,
-                    message=plain_message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
-                    html_message=html_message,
-                    fail_silently=False,
-                )
+                    send_mail(
+                        subject=email_subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
+                        html_message=html_message,
+                        fail_silently=True,
+                    )
 
-                logger.info(f"Order #{order.id} - email envoyé")
+                    logger.info(f"Order #{order.id} - email envoyé avec succès")
 
-            except Exception as email_error:
-                logger.error(f"Erreur envoi email: {type(email_error).__name__}")
+                except Exception as email_error:
+                    logger.error(f"Order #{order.id} - Erreur envoi email: {type(email_error).__name__} - {str(email_error)}")
+
+            # Envoi email de confirmation en arrière-plan
+            email_thread = threading.Thread(target=send_order_confirmation_email, daemon=True)
+            email_thread.start()
+            logger.info(f"Order #{order.id} - email thread lancé")
             
             return Response({
                 'status': 'success',
