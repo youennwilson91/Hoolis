@@ -126,18 +126,18 @@ class CartItem(models.Model):
         unique_together = [['cart', 'product']]
 
 class Order(models.Model):
-    PAYMENT_PENDING = 'P'
-    PAYMENT_COMPLETED = 'C'
-    PAYMENT_FAILED = 'F'
+    PAYMENT_PENDING = 'Pending'
+    PAYMENT_COMPLETED = 'Completed'
+    PAYMENT_FAILED = 'Failed'
     PAYMENT_CHOICES = [
         (PAYMENT_PENDING, 'Pending'),
         (PAYMENT_COMPLETED, 'Completed'),
         (PAYMENT_FAILED, 'Failed'),
     ]
 
-    SHIPPING_PENDING = 'P'
-    SHIPPING_SHIPPED = 'S'
-    SHIPPING_DELIVERED = 'D'
+    SHIPPING_PENDING = 'Pending'
+    SHIPPING_SHIPPED = 'Shipped'
+    SHIPPING_DELIVERED = 'Delivered'
     SHIPPING_CHOICES = [
         (SHIPPING_PENDING, 'Pending'),
         (SHIPPING_SHIPPED, 'Shipped'),
@@ -148,8 +148,8 @@ class Order(models.Model):
     quantity = models.IntegerField(default=0)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=1, choices=PAYMENT_CHOICES, default=PAYMENT_PENDING)
-    shipping_status = models.CharField(max_length=1, choices=SHIPPING_CHOICES, default=SHIPPING_PENDING)
+    payment_status = models.CharField(max_length=10, choices=PAYMENT_CHOICES, default=PAYMENT_PENDING)
+    shipping_status = models.CharField(max_length=10, choices=SHIPPING_CHOICES, default=SHIPPING_PENDING)
 
     def __str__(self):
         return f"Commande #{self.id} - {self.customer.name} - {self.total_price}€"
