@@ -4,7 +4,11 @@
       "Bash(git checkout:*)",
       "Bash(npm run build:*)",
       "Bash(git rm:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nRemove .env from tracking\n\nSecurity: prevent credentials from being committed to repository\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nRemove .env from tracking\n\nSecurity: prevent credentials from being committed to repository\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(python manage.py runserver:*)",
+      "Bash(python manage.py check:*)",
+      "Bash(netstat:*)",
+      "Bash(python:*)"
     ]
   }
 }
