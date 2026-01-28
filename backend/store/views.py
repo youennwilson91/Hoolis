@@ -722,7 +722,7 @@ def verify_payment(request):
                         from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
                         html_message=html_message,
-                        fail_silently=True,
+                        fail_silently=False,
                     )
 
                     logger.info(f"Order #{order.id} - email envoyé avec succès")
@@ -731,7 +731,7 @@ def verify_payment(request):
                     logger.error(f"Order #{order.id} - Erreur envoi email: {type(email_error).__name__} - {str(email_error)}")
 
             # Envoi email de confirmation en arrière-plan
-            email_thread = threading.Thread(target=send_order_confirmation_email, daemon=True)
+            email_thread = threading.Thread(target=send_order_confirmation_email)
             email_thread.start()
             logger.info(f"Order #{order.id} - email thread lancé")
             
