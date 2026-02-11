@@ -15,5 +15,5 @@ errorlog = '-'
 loglevel = 'info'
 
 # Security
-forwarded_allow_ips = '*'
+forwarded_allow_ips = '10.0.0.0/8'  # Réseau privé Render - accepte uniquement le proxy interne
 secure_scheme_headers = {'X-FORWARDED-PROTO': 'https'} 
