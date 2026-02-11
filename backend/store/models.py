@@ -103,27 +103,29 @@ class Customer(models.Model):
             models.Index(fields=['name', 'email']),
         ]
 
-class Cart(models.Model):
-    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
-    quantity = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0)
-
-    def __str__(self):
-        return f"Cart {self.id}"
-    
-class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1)]
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.quantity} x {self.product.title}" 
-
-    class Meta:
-        unique_together = [['cart', 'product']]
+# DEPRECATED: Cart models removed - items now passed directly to Stripe
+# Keeping the model definitions commented for historical reference
+# class Cart(models.Model):
+#     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+#     quantity = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
+#     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0)
+#
+#     def __str__(self):
+#         return f"Cart {self.id}"
+#
+# class CartItem(models.Model):
+#     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     quantity = models.PositiveSmallIntegerField(
+#         validators=[MinValueValidator(1)]
+#     )
+#     created_at = models.DateTimeField(auto_now_add=True)
+#
+#     def __str__(self):
+#         return f"{self.quantity} x {self.product.title}"
+#
+#     class Meta:
+#         unique_together = [['cart', 'product']]
 
 class Order(models.Model):
     PAYMENT_PENDING = 'Pending'
@@ -145,6 +147,7 @@ class Order(models.Model):
     ]
 
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, to_field='user')
+    stripe_session_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
