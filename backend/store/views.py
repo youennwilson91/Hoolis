@@ -706,8 +706,6 @@ def stripe_webhook(request):
     Webhook Stripe : reçoit les événements de paiement directement de Stripe
     Pas de rate limiting : Stripe est la source de vérité
     """
-    import json
-
     logger.info("=== STRIPE WEBHOOK APPELÉ ===")
 
     # Récupérer la signature et le payload
@@ -718,7 +716,7 @@ def stripe_webhook(request):
 
     if not webhook_secret:
         logger.error("STRIPE_WEBHOOK_SECRET non configuré")
-        return JsonResponse({'error': 'Configuration webhook manquante'}, status=500)
+        return Response({'error': 'Configuration webhook manquante'}, status=500)
 
     # Vérifier la signature
     try:
@@ -727,10 +725,10 @@ def stripe_webhook(request):
         )
     except ValueError as e:
         logger.error(f"Payload invalide: {str(e)}")
-        return JsonResponse({'error': 'Invalid payload'}, status=400)
+        return Response({'error': 'Invalid payload'}, status=400)
     except stripe.error.SignatureVerificationError as e:
         logger.error(f"Signature invalide: {str(e)}")
-        return JsonResponse({'error': 'Invalid signature'}, status=400)
+        return Response({'error': 'Invalid signature'}, status=400)
 
     # Traiter l'événement
     event_type = event['type']
@@ -750,23 +748,23 @@ def stripe_webhook(request):
             if error:
                 logger.error(f"Erreur webhook création commande: {error}")
                 # Retourner 500 pour que Stripe retry
-                return JsonResponse({'error': error}, status=500)
+                return Response({'error': error}, status=500)
 
             logger.info(f"Commande #{order.id} créée via webhook")
-            return JsonResponse({'status': 'success', 'order_id': order.id}, status=200)
+            return Response({'status': 'success', 'order_id': order.id}, status=200)
         else:
             logger.warning(f"Session {session_id} completed mais payment_status={payment_status}")
-            return JsonResponse({'status': 'ignored'}, status=200)
+            return Response({'status': 'ignored'}, status=200)
 
     elif event_type == 'checkout.session.expired':
         session = event['data']['object']
         session_id = session['id']
         logger.info(f"Session {session_id} expirée sans paiement")
-        return JsonResponse({'status': 'logged'}, status=200)
+        return Response({'status': 'logged'}, status=200)
 
     else:
         logger.info(f"Événement non géré: {event_type}")
-        return JsonResponse({'status': 'ignored'}, status=200)
+        return Response({'status': 'ignored'}, status=200)
 
 
 @api_view(['GET'])
