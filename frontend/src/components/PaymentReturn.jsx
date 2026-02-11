@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { apiClient } from '../utils/axiosConfig';
 import useStore from '../utils/store';
 import './PaymentReturn.scss';
 
@@ -25,24 +24,12 @@ export default function PaymentReturn() {
   }, [location.search]);
 
   const verifyPayment = async (sessionId) => {
-    try {
-      const response = await apiClient.post('/store/verify-payment/', {
-        session_id: sessionId
-      });
-
-      if (response.data.status === 'success') {
-        setPaymentStatus('success');
-        setMessage('Paiement confirmé !');
-        // Vider le panier via setState direct
-        useStore.setState({ addToCart: [] });
-      } else {
-        setPaymentStatus('failed');
-        setMessage('Paiement échoué');
-      }
-    } catch (error) {
-      setPaymentStatus('failed');
-      setMessage('Erreur de vérification');
-    }
+    // Le webhook Stripe crée la commande automatiquement côté serveur
+    // Pas besoin d'appel API, juste afficher la confirmation
+    setPaymentStatus('success');
+    setMessage('Merci pour votre commande ! Vous recevrez un email avec les détails.');
+    // Vider le panier via setState direct
+    useStore.setState({ addToCart: [] });
   };
 
   const closePopup = () => {
