@@ -23,6 +23,7 @@ from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.views.decorators.vary import vary_on_headers
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 
 from .filters import ProductFilter
@@ -55,7 +56,7 @@ class ProductViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        queryset = Product.objects.select_related('collection').prefetch_related('images')
+        queryset = Product.objects.select_related('collection').prefetch_related('images').order_by('-id')
         collection_id = self.request.query_params.get('collection_id')
         if collection_id is not None:
             queryset = queryset.filter(collection_id=collection_id)
@@ -569,207 +570,204 @@ def create_stripe_session(request):
         return SafeErrorHandler.handle_exception(e, "create_stripe_session")
 
 
-@api_view(['POST'])
-@throttle_classes([PaymentRateThrottle, BurstRateThrottle])
-def verify_payment(request):
+def _create_order_from_stripe_session(session, session_id):
     """
-    Vérifier le paiement Stripe et créer une commande
-    Rate limited: 10 requests/hour per IP + 20 requests/minute burst protection
+    Fonction helper : créer Order + OrderItems depuis une session Stripe
+    Utilisée par le webhook ET verify_payment
+
+    Returns:
+        tuple: (order, error_message)
+        - Si succès : (order, None)
+        - Si erreur : (None, error_message)
     """
-    logger.info("=== VERIFY_PAYMENT ===")
+    from django.db import transaction
+    from datetime import datetime
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    # Vérifier idempotence
+    existing_order = Order.objects.filter(stripe_session_id=session_id).first()
+    if existing_order:
+        logger.warning(f"Commande déjà traitée pour session {session_id}")
+        return (existing_order, None)
+
+    # Récupérer métadonnées
+    metadata = session.metadata
+    customer_email = session.customer_email
+
+    # Récupérer User et Customer
+    User = get_user_model()
     try:
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        
-        if not stripe.api_key:
-            return Response(
-                {"error": "Configuration Stripe manquante"}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        user = User.objects.get(email=customer_email)
+    except User.DoesNotExist:
+        logger.error(f"Utilisateur non trouvé: {customer_email}")
+        return (None, "Utilisateur non trouvé")
+
+    try:
+        customer = Customer.objects.get(user=user)
+        if not customer.has_payed:
+            customer.has_payed = True
+            customer.save()
+    except Customer.DoesNotExist:
+        logger.error(f"Customer non trouvé pour user: {user.id}")
+        return (None, "Customer non trouvé")
+
+    # Créer la commande avec transaction atomique
+    try:
+        with transaction.atomic():
+            # Créer l'Order
+            order = Order.objects.create(
+                customer=customer,
+                stripe_session_id=session_id,
+                payment_status=Order.PAYMENT_COMPLETED,
+                total_price=session.amount_total / 100
             )
-        
-        session_id = request.data.get('session_id')
-        if not session_id:
-            return Response(
-                {"error": "Session ID manquant"}, 
-                status=status.HTTP_400_BAD_REQUEST
+
+            # Récupérer les line_items depuis Stripe
+            line_items = stripe.checkout.Session.list_line_items(
+                session_id,
+                limit=100,
+                expand=['data.price.product']
             )
-        
+
+            for line_item in line_items.data:
+                quantity = line_item.quantity
+
+                # Récupérer le product_id depuis les metadata
+                product_metadata = line_item.price.product.metadata if hasattr(line_item.price, 'product') else {}
+                product_id = product_metadata.get('product_id')
+
+                if not product_id:
+                    logger.error(f"product_id manquant dans metadata du line_item")
+                    continue
+
+                try:
+                    product = Product.objects.get(id=product_id)
+                    OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        quantity=quantity
+                    )
+                except Product.DoesNotExist:
+                    logger.error(f"Produit non trouvé: {product_id}")
+                    continue
+
+        # Envoi email de confirmation (hors transaction)
+        email_subject = f'Commande confirmée #{order.id} - Hoolis'
+        products_details = []
+        for item in order.order_items.all():
+            products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
+
         try:
-            session = stripe.checkout.Session.retrieve(session_id)
-            logger.info(f"Session status: {session.payment_status}")
-        except stripe.error.InvalidRequestError as e:
-            logger.error(f"Session Stripe invalide: {session_id} - {str(e)}")
-            return Response({
-                'status': 'error',
-                'message': 'Session de paiement invalide'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except stripe.error.StripeError as e:
-            logger.error(f"Erreur Stripe lors récupération session: {str(e)}")
-            raise  # Re-lancer pour être capturé par le except général
-        
-        if session.payment_status == 'paid':
-            logger.info("=== DÉBUT TRAITEMENT PAIEMENT RÉUSSI ===")
-            
-            # Étape 1: Récupération métadonnées
-            metadata = session.metadata
-            payment_type = metadata.get('type')
-            
-            # Import User model
-            from django.contrib.auth import get_user_model
-            User = get_user_model()
-            
-            # Récupération données client
-            customer_email = session.customer_email
-            
-            # Récupérer l'utilisateur existant (il devrait déjà exister depuis create_stripe_session)
-            try:
-                user = User.objects.get(email=customer_email)
-            except User.DoesNotExist:
-                logger.error("Utilisateur non trouvé")
-                return Response({
-                    'status': 'error',
-                    'message': 'Utilisateur non trouvé'
-                }, status=status.HTTP_404_NOT_FOUND)
-            
-            # Récupérer le customer existant et marquer has_payed=True
-            try:
-                customer = Customer.objects.get(user=user)
-                if not customer.has_payed:
-                    customer.has_payed = True
-                    customer.save()
-            except Customer.DoesNotExist:
-                logger.error("Customer non trouvé")
-                return Response({
-                    'status': 'error',
-                    'message': 'Customer non trouvé'
-                }, status=status.HTTP_404_NOT_FOUND)
-            
-
-            # Vérifier si une commande existe déjà pour cette session Stripe (idempotence)
-            existing_order = Order.objects.filter(stripe_session_id=session_id).first()
-
-            if existing_order:
-                logger.warning(f"Commande déjà traitée pour session {session_id}")
-                return Response({
-                    'status': 'success',
-                    'message': 'Commande déjà traitée',
-                    'order_id': existing_order.id
-                })
-
-            # Créer la commande avec transaction atomique
-            from django.db import transaction
-
-            with transaction.atomic():
-                # Créer l'Order
-                order = Order.objects.create(
-                    customer=customer,
-                    stripe_session_id=session_id,
-                    payment_status=Order.PAYMENT_COMPLETED,
-                    total_price=session.amount_total / 100
-                )
-
-                # Récupérer les line_items depuis Stripe pour créer les OrderItems
-                line_items = stripe.checkout.Session.list_line_items(
-                    session_id,
-                    limit=100,
-                    expand=['data.price.product']
-                )
-
-                for line_item in line_items.data:
-                    quantity = line_item.quantity
-
-                    # Récupérer le product_id depuis les metadata du line_item
-                    product_metadata = line_item.price.product.metadata if hasattr(line_item.price, 'product') else {}
-                    product_id = product_metadata.get('product_id')
-
-                    if not product_id:
-                        logger.error(f"product_id manquant dans metadata du line_item")
-                        continue
-
-                    try:
-                        product = Product.objects.get(id=product_id)
-                        OrderItem.objects.create(
-                            order=order,
-                            product=product,
-                            quantity=quantity
-                        )
-                    except Product.DoesNotExist:
-                        logger.error(f"Produit non trouvé: {product_id}")
-                        continue
-            
-            email_subject = f'Commande confirmée #{order.id} - Hoolis'
-            products_details = []
-            for item in order.order_items.all():
-                products_details.append(f"{item.quantity}x {item.product.title} - {item.product.price}€")
-
-            # Envoi email de confirmation synchrone
-            try:
-                from datetime import datetime
-
-                email_context = {
-                    'brand_name': "Maison Hoolis",
-                    'customer_first_name': metadata.get('customer_first_name', ''),
-                    'customer_last_name': metadata.get('customer_last_name', ''),
-                    'customer_address': metadata.get('customer_address', ''),
-                    'customer_city': metadata.get('customer_city', ''),
-                    'customer_postal_code': metadata.get('customer_postal_code', ''),
-                    'customer_country': metadata.get('customer_country', ''),
-                    'order_id': order.id,
-                    'order_date': datetime.now().strftime('%d/%m/%Y'),
-                    'products': products_details,
-                    'total_price': f"{order.total_price}€",
-                    'payment_id': session.payment_intent,
-                    'year': datetime.now().year,
-                }
-
-                html_message = render_to_string('emails/order_confirmation.html', email_context)
-                plain_message = strip_tags(html_message)
-
-                send_mail(
-                    subject=email_subject,
-                    message=plain_message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
-                    html_message=html_message,
-                    fail_silently=True,  # Render bloque SMTP, ne pas bloquer la commande
-                )
-
-                logger.info(f"Order #{order.id} - email envoyé avec succès")
-
-            except Exception as email_error:
-                logger.error(f"Order #{order.id} - Erreur envoi email: {type(email_error).__name__} - {str(email_error)}")
-            
-            return Response({
-                'status': 'success',
-                'payment_status': session.payment_status,
+            email_context = {
+                'brand_name': "Maison Hoolis",
+                'customer_first_name': metadata.get('customer_first_name', ''),
+                'customer_last_name': metadata.get('customer_last_name', ''),
+                'customer_address': metadata.get('customer_address', ''),
+                'customer_city': metadata.get('customer_city', ''),
+                'customer_postal_code': metadata.get('customer_postal_code', ''),
+                'customer_country': metadata.get('customer_country', ''),
                 'order_id': order.id,
-                'message': 'Commande créée'
-            })
-        
-        elif session.payment_status == 'unpaid':
-            logger.warning(f"Paiement en attente - Status: {session.payment_status}")
-            return Response({
-                'status': 'pending',
-                'payment_status': session.payment_status,
-                'message': 'Paiement en attente'
-            })
-            
-        else:
-            logger.error(f"Statut de paiement inattendu: {session.payment_status}")
-            return Response({
-                'status': 'failed',
-                'payment_status': session.payment_status,
-                'message': 'Paiement échoué'
-            })
-    
-    except stripe.error.StripeError as e:
-        logger.error(f"Erreur Stripe: {str(e)}")
-        return Response(
-            {"error": "Erreur vérification paiement"}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-    
+                'order_date': datetime.now().strftime('%d/%m/%Y'),
+                'products': products_details,
+                'total_price': f"{order.total_price}€",
+                'payment_id': session.payment_intent,
+                'year': datetime.now().year,
+            }
+
+            html_message = render_to_string('emails/order_confirmation.html', email_context)
+            plain_message = strip_tags(html_message)
+
+            send_mail(
+                subject=email_subject,
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
+                html_message=html_message,
+                fail_silently=True,
+            )
+
+            logger.info(f"Order #{order.id} - email envoyé avec succès")
+
+        except Exception as email_error:
+            logger.error(f"Order #{order.id} - Erreur envoi email: {type(email_error).__name__} - {str(email_error)}")
+
+        return (order, None)
+
     except Exception as e:
-        return SafeErrorHandler.handle_exception(e, "verify_payment")
+        logger.error(f"Erreur création commande: {type(e).__name__} - {str(e)}")
+        return (None, f"Erreur création commande: {str(e)}")
+
+
+@csrf_exempt
+@api_view(['POST'])
+def stripe_webhook(request):
+    """
+    Webhook Stripe : reçoit les événements de paiement directement de Stripe
+    Pas de rate limiting : Stripe est la source de vérité
+    """
+    import json
+
+    logger.info("=== STRIPE WEBHOOK APPELÉ ===")
+
+    # Récupérer la signature et le payload
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+
+    webhook_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    if not webhook_secret:
+        logger.error("STRIPE_WEBHOOK_SECRET non configuré")
+        return JsonResponse({'error': 'Configuration webhook manquante'}, status=500)
+
+    # Vérifier la signature
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError as e:
+        logger.error(f"Payload invalide: {str(e)}")
+        return JsonResponse({'error': 'Invalid payload'}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        logger.error(f"Signature invalide: {str(e)}")
+        return JsonResponse({'error': 'Invalid signature'}, status=400)
+
+    # Traiter l'événement
+    event_type = event['type']
+    logger.info(f"Événement reçu: {event_type}")
+
+    if event_type == 'checkout.session.completed':
+        session = event['data']['object']
+        session_id = session['id']
+        payment_status = session.get('payment_status')
+
+        logger.info(f"Session {session_id} - payment_status: {payment_status}")
+
+        if payment_status == 'paid':
+            # Créer la commande
+            order, error = _create_order_from_stripe_session(session, session_id)
+
+            if error:
+                logger.error(f"Erreur webhook création commande: {error}")
+                # Retourner 500 pour que Stripe retry
+                return JsonResponse({'error': error}, status=500)
+
+            logger.info(f"Commande #{order.id} créée via webhook")
+            return JsonResponse({'status': 'success', 'order_id': order.id}, status=200)
+        else:
+            logger.warning(f"Session {session_id} completed mais payment_status={payment_status}")
+            return JsonResponse({'status': 'ignored'}, status=200)
+
+    elif event_type == 'checkout.session.expired':
+        session = event['data']['object']
+        session_id = session['id']
+        logger.info(f"Session {session_id} expirée sans paiement")
+        return JsonResponse({'status': 'logged'}, status=200)
+
+    else:
+        logger.info(f"Événement non géré: {event_type}")
+        return JsonResponse({'status': 'ignored'}, status=200)
+
 
 @api_view(['GET'])
 def test_ip(request):
