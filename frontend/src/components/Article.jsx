@@ -15,6 +15,7 @@ function ArticleComponent({
   isMobile
 }) {
 
+
   //console.log('🔵 Article render', article.id)
   // BOOKING DISABLED
   // const isBooking = useStore(state => state.isBooking);
