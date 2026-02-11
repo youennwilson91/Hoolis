@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 
 from django.contrib import admin
-from .models import Product, ProductImage, Cart, CartItem, Order, OrderItem
+from .models import Product, ProductImage, Order, OrderItem
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -44,14 +44,6 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'phone', 'address']
 
 
-class CartItemInline(admin.TabularInline):
-    model = CartItem
-    extra = 1
-
-class CartAdmin(admin.ModelAdmin):
-    inlines = [CartItemInline]
-    list_display = ['id', 'total_price']
-
 # BOOKING DISABLED
 # class EmailConfirmationCodeAdmin(admin.ModelAdmin):
 #     model = models.EmailConfirmationCode
@@ -66,8 +58,6 @@ admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Collection)
 # admin.site.register(models.Promotion)
 admin.site.register(models.Customer, CustomerAdmin)
-admin.site.register(models.Cart, CartAdmin)
-admin.site.register(models.CartItem)
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.OrderItem)
 # BOOKING DISABLED

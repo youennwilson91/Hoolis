@@ -192,6 +192,15 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',  # 100 requêtes par heure pour les anonymes
+        'user': '1000/hour',  # 1000 requêtes par heure pour les authentifiés
+        'payment': '10/hour',  # 10 tentatives de paiement par heure par IP
+        'burst': '20/min',  # 20 requêtes par minute (burst protection)
+    },
     'COERCE_DECIMAL_TO_STRING': False,
 }
 

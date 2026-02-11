@@ -7,15 +7,11 @@ app_name = 'store'
 router = SimpleRouter()
 router.register('products', views.ProductViewSet, basename='products')
 router.register('collections', views.CollectionViewSet, basename='collections')
-router.register('carts', views.CartViewSet, basename='carts')
 router.register('orders', views.OrderViewSet, basename='orders')
 router.register('customers', views.CustomerViewSet, basename='customers')
 # BOOKING DISABLED
 # router.register('bookings-products', views.BookingProductViewSet, basename='bookings-products')
 # router.register('slots-products', views.SlotsProductViewSet, basename='slots-products')
-
-cart_router = NestedSimpleRouter(router, 'carts', lookup='cart')
-cart_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 order_router = NestedSimpleRouter(router, 'orders', lookup='order')
 order_router.register('items', views.OrderItemViewSet, basename='order-items')
@@ -25,7 +21,6 @@ product_router.register('images', views.ProductImageViewSet, basename='product-i
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', include(cart_router.urls)),
     path('', include(product_router.urls)),
     # BOOKING DISABLED
     # path('bookings-products/', views.BookingProductViewSet.as_view({'post': 'create'})),
@@ -34,4 +29,5 @@ urlpatterns = [
     # path('verify-confirmation-code/', views.verify_confirmation_code),
     path('create-stripe-session/', views.create_stripe_session, name='create-stripe-session'),
     path('verify-payment/', views.verify_payment, name='verify-payment'),
+    path('test-ip/', views.test_ip, name='test-ip'),
 ]

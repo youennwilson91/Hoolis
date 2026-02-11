@@ -77,27 +77,21 @@ export default function OrderForm({
       let stripeResponse;
       
       if (item.isCart || item.cartItems) {
-        // Pour un panier : créer d'abord le panier API puis la session Stripe
-        const cartResponse = await apiClient.post('/store/carts/', {});
-        const cartId = cartResponse.data.id;
-
-        // Ajouter les articles au panier
-        for (const cartItem of item.cartItems) {
-          await apiClient.post(`/store/carts/${cartId}/items/`, {
+        // Pour un panier : envoyer directement les items à Stripe
+        stripeResponse = await apiClient.post('/store/create-stripe-session/', {
+          items: item.cartItems.map(cartItem => ({
             product_id: cartItem.id,
             quantity: cartItem.quantity || 1
-          });
-        }
-
-        // Créer la session Stripe avec le cart_id
-        stripeResponse = await apiClient.post('/store/create-stripe-session/', {
-          cart_id: cartId,
+          })),
           customer: formData
         });
       } else {
-        // Pour une montre : utiliser l'ancien système
+        // Pour un article unique : envoyer comme un item
         stripeResponse = await apiClient.post('/store/create-stripe-session/', {
-          watch_id: item.id,
+          items: [{
+            product_id: item.id,
+            quantity: 1
+          }],
           customer: formData
         });
       }

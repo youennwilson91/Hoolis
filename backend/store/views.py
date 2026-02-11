@@ -2,7 +2,7 @@ import os
 import secrets
 from .models import *
 from .serializers import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin, UpdateModelMixin
@@ -29,6 +29,7 @@ from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
 from .tasks import process_order
 from .utils import SafeErrorHandler, sanitize_phone_number, sanitize_text_input, log_security_event
+from .throttling import PaymentRateThrottle, BurstRateThrottle
 
     # External libraries
 import stripe
@@ -168,30 +169,6 @@ def process_order_view(request, order_id):
 #             # Pour les autres erreurs d'intégrité, on relance l'exception
 #             raise
 
-
-
-class CartViewSet(ModelViewSet):
-    serializer_class = CartSerializer
-    queryset = Cart.objects.prefetch_related('items__product').all()
-    permission_classes = [AllowAny]  # Panier accessible sans auth
-
-class CartItemViewSet(ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = [AllowAny]  # Panier accessible sans auth
-
-    def get_queryset(self):
-        return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return AddCartItemSerializer
-        elif self.request.method == 'PATCH':
-            return UpdateCartItemSerializer
-        return CartItemSerializer
-
-    def get_serializer_context(self):
-        return {'cart_id': self.kwargs['cart_pk']}
-    
 
 
 class CustomerViewSet(ModelViewSet):
@@ -425,29 +402,37 @@ class OrderItemViewSet(ModelViewSet):
 
 
 @api_view(['POST'])
+@throttle_classes([PaymentRateThrottle, BurstRateThrottle])
 def create_stripe_session(request):
     """
-    Créer session Stripe pour  cart_id
+    Créer session Stripe à partir d'une liste d'items directe
+    Rate limited: 10 requests/hour per IP + 20 requests/minute burst protection
     """
     try:
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        
+
         if not stripe.api_key:
             return Response(
-                {"error": "Configuration Stripe manquante"}, 
+                {"error": "Configuration Stripe manquante"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
+
         data = request.data
         customer_data = data.get('customer', {})
-        cart_id = data.get('cart_id')
-        
+        items = data.get('items', [])
+
         if not customer_data.get('email'):
             return Response(
-                {"error": "Email client requis"}, 
+                {"error": "Email client requis"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
+        if not items:
+            return Response(
+                {"error": "Panier vide"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         # Créer le customer immédiatement avec has_payed=False
         customer_email = sanitize_text_input(customer_data.get('email', '').strip())
         customer_first_name = sanitize_text_input(customer_data.get('firstName', ''))
@@ -455,10 +440,10 @@ def create_stripe_session(request):
         customer_name_full = f"{customer_first_name} {customer_last_name}".strip()
         customer_phone = sanitize_text_input(customer_data.get('phone', ''))
         customer_address = sanitize_text_input(customer_data.get('address', ''))
-        
+
 
         User = get_user_model()
-        
+
         try:
             # Créer ou récupérer l'utilisateur
             user, created = User.objects.get_or_create(
@@ -480,73 +465,74 @@ def create_stripe_session(request):
         except Exception as user_error:
             logger.error("Erreur création utilisateur/customer")
             return Response(
-                {"error": "Erreur création utilisateur"}, 
+                {"error": "Erreur création utilisateur"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-            
-        if cart_id:
+
+        # Construire les line_items à partir de la liste d'items
+        line_items = []
+        total_amount = 0
+        product_ids = []
+
+        for item_data in items:
+            product_id = item_data.get('product_id')
+            quantity = item_data.get('quantity', 1)
+
+            if not product_id or quantity <= 0:
+                return Response(
+                    {"error": "Données item invalides"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             try:
-                cart = Cart.objects.prefetch_related('items__product').get(id=cart_id)
-            except Cart.DoesNotExist:
+                # Récupérer le produit et vérifier qu'il est disponible
+                product = Product.objects.get(id=product_id, is_available=True)
+            except Product.DoesNotExist:
                 return Response(
-                    {"error": "Panier non trouvé"}, 
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            
-            if not cart.items.exists():
-                return Response(
-                    {"error": "Panier vide"}, 
+                    {"error": f"Produit {product_id} non disponible"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            
-            line_items = []
-            total_amount = 0
-            
-            for cart_item in cart.items.all():
-                item_total = int(cart_item.product.price * cart_item.quantity * 100)
-                total_amount += item_total
-                
-                line_items.append({
-                    'price_data': {
-                        'currency': 'eur',
-                        'product_data': {
-                            'name': sanitize_text_input(cart_item.product.title),
-                            'description': sanitize_text_input(cart_item.product.description[:100]),
-                        },
-                        'unit_amount': int(cart_item.product.price * 100),
+
+            item_total = int(product.price * quantity * 100)
+            total_amount += item_total
+            product_ids.append(str(product_id))
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'eur',
+                    'product_data': {
+                        'name': sanitize_text_input(product.title),
+                        'description': sanitize_text_input(product.description[:100]),
+                        'metadata': {
+                            'product_id': str(product_id),
+                        }
                     },
-                    'quantity': cart_item.quantity,
-                })
-            
-            if total_amount <= 0:
-                return Response(
-                    {"error": "Montant invalide"}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            
-            #success_url = f"{settings.FRONTEND_URL}/hoolis?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
-            #cancel_url = f"{settings.FRONTEND_URL}/hoolis?payment=cancelled"            
-            success_url = f"{settings.FRONTEND_URL}/?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
-            cancel_url = f"{settings.FRONTEND_URL}/?payment=cancelled"
-            
-            metadata = {
-                'type': 'cart_purchase',
-                'cart_id': str(cart_id),
-                'customer_first_name': sanitize_text_input(customer_data.get('firstName', '')),
-                'customer_last_name': sanitize_text_input(customer_data.get('lastName', '')),
-                'customer_phone': sanitize_text_input(customer_data.get('phone', '')),
-                'customer_address': sanitize_text_input(customer_data.get('address', '')),
-                'customer_city': sanitize_text_input(customer_data.get('city', '')),
-                'customer_postal_code': sanitize_text_input(customer_data.get('postalCode', '')),
-                'customer_country': sanitize_text_input(customer_data.get('country', '')),
-                'total_items': str(cart.items.count()),
-            }
-            
-        else:
+                    'unit_amount': int(product.price * 100),
+                },
+                'quantity': quantity,
+            })
+
+        if total_amount <= 0:
             return Response(
-                {"error": "cart_id requis"}, 
+                {"error": "Montant invalide"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        success_url = f"{settings.FRONTEND_URL}/?payment=success&session_id={{CHECKOUT_SESSION_ID}}"
+        cancel_url = f"{settings.FRONTEND_URL}/?payment=cancelled"
+
+        metadata = {
+            'type': 'cart_purchase',
+            'product_ids': ','.join(product_ids),
+            'customer_first_name': sanitize_text_input(customer_data.get('firstName', '')),
+            'customer_last_name': sanitize_text_input(customer_data.get('lastName', '')),
+            'customer_phone': sanitize_text_input(customer_data.get('phone', '')),
+            'customer_address': sanitize_text_input(customer_data.get('address', '')),
+            'customer_city': sanitize_text_input(customer_data.get('city', '')),
+            'customer_postal_code': sanitize_text_input(customer_data.get('postalCode', '')),
+            'customer_country': sanitize_text_input(customer_data.get('country', '')),
+            'total_items': str(len(items)),
+        }
         
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -584,9 +570,11 @@ def create_stripe_session(request):
 
 
 @api_view(['POST'])
+@throttle_classes([PaymentRateThrottle, BurstRateThrottle])
 def verify_payment(request):
     """
     Vérifier le paiement Stripe et créer une commande
+    Rate limited: 10 requests/hour per IP + 20 requests/minute burst protection
     """
     logger.info("=== VERIFY_PAYMENT ===")
     try:
@@ -656,35 +644,57 @@ def verify_payment(request):
                 }, status=status.HTTP_404_NOT_FOUND)
             
 
-            cart_id = metadata.get('cart_id')
+            # Vérifier si une commande existe déjà pour cette session Stripe (idempotence)
+            existing_order = Order.objects.filter(stripe_session_id=session_id).first()
 
-            # Vérifier si le cart existe avant la validation
-            from .models import Cart
-            cart_exists = Cart.objects.filter(pk=cart_id).exists()
-            
-            serializer = CreateOrderSerializer(
-                data={'cart_id': cart_id}, 
-                context={'user_id': user.id}
-            )
-            
-            if not serializer.is_valid():
-                logger.error(f"Serializer invalide: {serializer.errors}")
-                # Si le cart n'existe plus, c'est peut-être déjà traité
-                if 'No cart with the given ID was found' in str(serializer.errors):
-                    logger.warning(f"Cart {cart_id} already processed, returning success")
-                    return Response({
-                        'status': 'success',
-                        'message': 'Commande déjà traitée'
-                    })
+            if existing_order:
+                logger.warning(f"Commande déjà traitée pour session {session_id}")
                 return Response({
-                    'status': 'error',
-                    'message': 'Erreur création commande'
+                    'status': 'success',
+                    'message': 'Commande déjà traitée',
+                    'order_id': existing_order.id
                 })
-            
-            order = serializer.save()
-            order.payment_status = Order.PAYMENT_COMPLETED
-            order.total_price = session.amount_total / 100
-            order.save()
+
+            # Créer la commande avec transaction atomique
+            from django.db import transaction
+
+            with transaction.atomic():
+                # Créer l'Order
+                order = Order.objects.create(
+                    customer=customer,
+                    stripe_session_id=session_id,
+                    payment_status=Order.PAYMENT_COMPLETED,
+                    total_price=session.amount_total / 100
+                )
+
+                # Récupérer les line_items depuis Stripe pour créer les OrderItems
+                line_items = stripe.checkout.Session.list_line_items(
+                    session_id,
+                    limit=100,
+                    expand=['data.price.product']
+                )
+
+                for line_item in line_items.data:
+                    quantity = line_item.quantity
+
+                    # Récupérer le product_id depuis les metadata du line_item
+                    product_metadata = line_item.price.product.metadata if hasattr(line_item.price, 'product') else {}
+                    product_id = product_metadata.get('product_id')
+
+                    if not product_id:
+                        logger.error(f"product_id manquant dans metadata du line_item")
+                        continue
+
+                    try:
+                        product = Product.objects.get(id=product_id)
+                        OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            quantity=quantity
+                        )
+                    except Product.DoesNotExist:
+                        logger.error(f"Produit non trouvé: {product_id}")
+                        continue
             
             email_subject = f'Commande confirmée #{order.id} - Hoolis'
             products_details = []
@@ -720,7 +730,7 @@ def verify_payment(request):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[customer_email, settings.DEFAULT_FROM_EMAIL],
                     html_message=html_message,
-                    fail_silently=False,
+                    fail_silently=True,  # Render bloque SMTP, ne pas bloquer la commande
                 )
 
                 logger.info(f"Order #{order.id} - email envoyé avec succès")
@@ -736,7 +746,7 @@ def verify_payment(request):
             })
         
         elif session.payment_status == 'unpaid':
-            logger.warning(f"Paiement non payé - Status: {session.payment_status}")
+            logger.warning(f"Paiement en attente - Status: {session.payment_status}")
             return Response({
                 'status': 'pending',
                 'payment_status': session.payment_status,
@@ -761,3 +771,8 @@ def verify_payment(request):
     except Exception as e:
         return SafeErrorHandler.handle_exception(e, "verify_payment")
 
+@api_view(['GET'])
+def test_ip(request):
+    logger.info(f"REMOTE_ADDR: {request.META.get('REMOTE_ADDR')}")
+    logger.info(f"HTTP_X_FORWARDED_FOR: {request.META.get('HTTP_X_FORWARDED_FOR')}")
+    return Response({'ok': True, 'REMOTE_ADDR': request.META.get('REMOTE_ADDR'), 'HTTP_X_FORWARDED_FOR': request.META.get('HTTP_X_FORWARDED_FOR')})
