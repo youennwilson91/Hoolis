@@ -1,25 +1,18 @@
-import os
-import secrets
 from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin, UpdateModelMixin
-from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from rest_framework.permissions import *
-from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
-from datetime import datetime, timedelta, time, date
-from django.http import HttpResponse, JsonResponse
-from django.utils.timezone import make_aware
+from datetime import datetime
+from django.http import HttpResponse
 from django.conf import settings
-from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.views.decorators.vary import vary_on_headers
@@ -28,13 +21,11 @@ from django.contrib.auth import get_user_model
 
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
-from .tasks import process_order
-from .utils import SafeErrorHandler, sanitize_phone_number, sanitize_text_input, log_security_event
+from .utils import SafeErrorHandler, sanitize_text_input
 from .throttling import PaymentRateThrottle, BurstRateThrottle
 
-    # External libraries
+# External libraries
 import stripe
-import vonage
 import logging
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -104,17 +95,6 @@ class ProductImageViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'product_id': self.kwargs['product_pk']}
-
-
-def process_order_view(request, order_id):
-    # Logique pour enregistrer la commande dans la base de données
-    # ...
-    
-    # Lancer le traitement asynchrone
-    process_order.delay(order_id)
-    
-    # Retourner une réponse immédiate à l'utilisateur
-    return HttpResponse("Votre commande est en cours de traitement")
 
 # BOOKING DISABLED
 # class SlotsProductViewSet(ModelViewSet):
@@ -194,24 +174,16 @@ class CustomerViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    # POST removed: orders are created via Stripe webhook, not direct API
+    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
 
     def get_permissions(self):
         if self.request.method in ['PATCH', 'DELETE']:
             return [IsAdminUser()]
         return [IsAuthenticated()]
 
-    def create(self, request, *args, **kwargs):
-        serializer = CreateOrderSerializer(data=request.data, context={'user_id': request.user.id})
-        serializer.is_valid(raise_exception=True)
-        order = serializer.save()
-        serializer = OrderSerializer(order)
-        return Response(serializer.data)
-
     def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreateOrderSerializer
-        elif self.request.method == 'PATCH':
+        if self.request.method == 'PATCH':
             return UpdateOrderSerializer
         return OrderSerializer
 

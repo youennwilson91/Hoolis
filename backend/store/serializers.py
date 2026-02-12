@@ -1,10 +1,8 @@
-from rest_framework import serializers  
+from rest_framework import serializers
 from .models import *
 from decimal import Decimal
-from django.db import transaction
-from django.utils.html import escape
 from . import order_created
-from .utils import sanitize_text_input, sanitize_phone_number
+from .utils import sanitize_text_input
 import logging
 
 logger = logging.getLogger(__name__)
@@ -146,60 +144,6 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'customer', 'order_items', 'total_price', 'created_at', 'payment_status', 'shipping_status']
-
-
-class CreateOrderSerializer(serializers.ModelSerializer):
-    cart_id = serializers.UUIDField()
-
-    class Meta:
-        model = Order
-        fields = ['cart_id']
-
-    def validate_cart_id(self, value):
-        if not Cart.objects.filter(pk=value).exists():
-            raise serializers.ValidationError('No cart with the given ID was found.')
-        if CartItem.objects.filter(cart__id=value).count() == 0:
-            raise serializers.ValidationError('The cart is empty.')
-        return value
-
-    def save(self, **kwargs):
-        with transaction.atomic():
-            cart_id = self.validated_data['cart_id']
-            try:
-                customer = Customer.objects.get(user_id=self.context['user_id'])
-            except Customer.DoesNotExist:
-                # Si le customer n'existe pas, on le crée avec des valeurs par défaut
-                from django.contrib.auth import get_user_model
-                User = get_user_model()
-                user = User.objects.get(id=self.context['user_id'])
-                customer = Customer.objects.create(
-                    user=user,
-                    name=user.username or user.email.split('@')[0],
-                    email=user.email,
-                    phone='',
-                    address='',
-                    has_payed=False
-                )
-            order = Order.objects.create(customer=customer)
-            
-            cart_items = CartItem.objects.select_related('product').filter(cart__id=cart_id)
-            
-            order_items = [
-                OrderItem(
-                    order=order,
-                    product=item.product,
-                    quantity=item.quantity
-                )
-                for item in cart_items
-            ]
-            OrderItem.objects.bulk_create(order_items)
-
-            Cart.objects.filter(pk=cart_id).delete()
-            logger.info(f"Cart deleted: {cart_id}")
-
-            order_created.send(sender=self.__class__, order=order)
-            
-            return order
 
 
 class UpdateOrderSerializer(serializers.ModelSerializer):

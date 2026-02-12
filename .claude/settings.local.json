@@ -9,7 +9,17 @@
       "Bash(python manage.py check:*)",
       "Bash(netstat:*)",
       "Bash(python:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git update-ref:*)",
+      "Bash(git reflog expire:*)",
+      "Bash(git gc:*)",
+      "Bash(git stash:*)",
+      "Bash(python3:*)",
+      "Bash(__NEW_LINE_6088de4806abc3d1__ echo -e \"\\\\n1. escape:\")",
+      "Bash(__NEW_LINE_431e5551c61c07b8__ echo -e \"\\\\n2. order_created signal:\")",
+      "Bash(__NEW_LINE_d66e4fe9f2a52c0d__ echo -e \"\\\\n3. sanitize_phone_number:\")",
+      "Bash(__NEW_LINE_f0b7f1b2a5cb3425__ echo -e \"\\\\n4. Decimal:\")",
+      "Bash(__NEW_LINE_0d6496d8ee4aa6d0__ echo -e \"\\\\n5. transaction:\")"
     ]
   }
 }

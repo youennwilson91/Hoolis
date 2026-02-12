@@ -1,10 +1,6 @@
 from django.db import models
-import uuid 
-from django.core.validators import MinValueValidator
-from django.core.exceptions import ValidationError
 from django.conf import settings
 from .validators import validate_image_file
-from datetime import datetime
 from django_cryptography.fields import encrypt
 
 # Create your models here.

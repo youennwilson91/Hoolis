@@ -1,8 +1,5 @@
 from django.contrib import admin
-from . import models
-
-from django.contrib import admin
-from .models import Product, ProductImage, Order, OrderItem
+from .models import Product, ProductImage, Order, OrderItem, Collection, Customer
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -54,12 +51,12 @@ class CustomerAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(models.Product, ProductAdmin)
-admin.site.register(models.Collection)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Collection)
 # admin.site.register(models.Promotion)
-admin.site.register(models.Customer, CustomerAdmin)
-admin.site.register(models.Order, OrderAdmin)
-admin.site.register(models.OrderItem)
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem)
 # BOOKING DISABLED
 # admin.site.register(models.BookingProduct)
 # admin.site.register(models.SlotsProduct)
