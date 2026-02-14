@@ -13,9 +13,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from datetime import datetime
 from django.http import HttpResponse
 from django.conf import settings
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
-from django.views.decorators.vary import vary_on_headers
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 
@@ -23,6 +20,7 @@ from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
 from .utils import SafeErrorHandler, sanitize_text_input
 from .throttling import PaymentRateThrottle, BurstRateThrottle
+from .mixins import CacheControlMixin
 
 # External libraries
 import stripe
@@ -34,10 +32,10 @@ from django.utils.html import strip_tags
 # Configuration du logger
 logger = logging.getLogger(__name__)
 
-@method_decorator(cache_page(60 * 10), name='list')
-@method_decorator(cache_page(60 * 10), name='retrieve')
-@method_decorator(vary_on_headers('User-Agent'), name='list')
-class ProductViewSet(ModelViewSet):
+class ProductViewSet(CacheControlMixin, ModelViewSet):
+    # Cache: 10min navigateur, 1h CDN (via CacheControlMixin)
+    cache_max_age = 600
+    cache_s_maxage = 3600
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
@@ -65,10 +63,10 @@ class ProductViewSet(ModelViewSet):
 
 
 
-@method_decorator(cache_page(60 * 10), name='list')
-@method_decorator(cache_page(60 * 10), name='retrieve')
-@method_decorator(vary_on_headers('User-Agent'), name='list')
-class CollectionViewSet(ModelViewSet):
+class CollectionViewSet(CacheControlMixin, ModelViewSet):
+    # Cache: 10min navigateur, 1h CDN (via CacheControlMixin)
+    cache_max_age = 600
+    cache_s_maxage = 3600
     queryset = Collection.objects.annotate(
         products_count=Count('product')
     )
@@ -84,9 +82,10 @@ class CollectionViewSet(ModelViewSet):
             return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
 
-@method_decorator(cache_page(60 * 10), name='list')
-@method_decorator(cache_page(60 * 10), name='retrieve')
-class ProductImageViewSet(ModelViewSet):
+class ProductImageViewSet(CacheControlMixin, ModelViewSet):
+    # Cache: 10min navigateur, 1h CDN (via CacheControlMixin)
+    cache_max_age = 600
+    cache_s_maxage = 3600
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminOrReadOnly]
     
