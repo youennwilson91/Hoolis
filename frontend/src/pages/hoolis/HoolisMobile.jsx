@@ -63,13 +63,6 @@ export default function HoolisMobile({ labelRef }) {
     setCollectionChosen("VETEMENTS");
   }, []);
 
-  // Initialiser l'opacité du conteneur d'articles (pour que le loader soit visible)
-  useEffect(() => {
-    if (collectionRef.current) {
-      gsap.set(collectionRef.current, { opacity: 1 });
-    }
-  }, []);
-
   // Gestion du changement de collection
   useEffect(() => {
     if (!collectionChosen || !products?.length) return;

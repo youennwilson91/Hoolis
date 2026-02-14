@@ -82,13 +82,6 @@ export default function Resell() {
     });
   }, []);
 
-  // Initialiser l'opacité du conteneur d'articles (pour que le loader soit visible)
-  useEffect(() => {
-    if (collectionRef.current) {
-      gsap.set(collectionRef.current, { opacity: 1 });
-    }
-  }, []);
-
   //useEffect(() => {
   //
   //  if (galleryVisible && galleryRef.current) {

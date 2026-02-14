@@ -87,6 +87,7 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
+            opacity: 1; // Force visible pour loader (override GSAP inline)
             align-items: center;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -208,6 +209,7 @@
                 align-items: center;
                 overflow-y: auto;
                 scrollbar-width: none;
+                opacity: 1; // Force visible pour loader (override GSAP inline)
                 -ms-overflow-style: none;
                 -webkit-overflow-scrolling: touch;
                 gap: 2%;
