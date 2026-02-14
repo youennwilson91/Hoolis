@@ -12,8 +12,8 @@ export function useProducts(isResell) {
   const products = useStore(state => isResell ? state.resellProducts : state.hoolisProducts);
   const setProducts = useStore(state => isResell ? state.setResellProducts : state.setHoolisProducts);
 
-  // État de chargement local
-  const [isLoading, setIsLoading] = useState(false);
+  // État de chargement local - true par défaut
+  const [isLoading, setIsLoading] = useState(true);
 
   // Ref pour éviter setState après unmount
   const isMountedRef = useRef(true);
@@ -113,6 +113,10 @@ export function useProducts(isResell) {
         count: products.length,
         collections: [...new Set(products.map(p => p.collection?.name))].filter(Boolean)
       });
+      // Cache valide, pas besoin de loader
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
 
     // Cleanup
