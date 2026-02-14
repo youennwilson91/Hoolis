@@ -83,7 +83,7 @@ export default function Resell() {
   }, []);
 
   //useEffect(() => {
-  //
+  //  
   //  if (galleryVisible && galleryRef.current) {
   //    galleryRef.current.style.opacity = "0";
   //    gsap.to(galleryRef.current, {
@@ -294,11 +294,13 @@ export default function Resell() {
         <div ref={galleryRef} className="resell-gallery">
           <GalleryButtons type="resell"/>
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
+
+          {(productsLoading || imagesLoading) &&
+            <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
+          }
+
           <ErrorBoundary>
             <div className="resell-gallery-articles" ref={collectionRef}>
-              {(productsLoading || imagesLoading) &&
-                <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
-              }
               {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {

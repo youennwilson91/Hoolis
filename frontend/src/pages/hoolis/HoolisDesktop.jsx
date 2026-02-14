@@ -239,11 +239,13 @@ export default function HoolisDesktop() {
         <div ref={galleryRef} className="shop-gallery">
           <GalleryButtons type="hoolis"/>
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
+
+          {(productsLoading || imagesLoading) &&
+            <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
+          }
+
           <ErrorBoundary>
             <div className="shop-gallery-articles" ref={collectionRef}>
-              {(productsLoading || imagesLoading) &&
-                <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
-              }
               {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
