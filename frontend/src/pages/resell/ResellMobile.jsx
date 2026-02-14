@@ -58,6 +58,7 @@ export default function ResellMobile({ labelRef }) {
     setDisplayedCollection("");
     setCollectionChosen("SACS");
   }, []);
+    
 
   // Gestion du changement de collection
   useEffect(() => {
@@ -267,9 +268,13 @@ export default function ResellMobile({ labelRef }) {
         <div ref={galleryButtonsRef}>
           <GalleryButtons type="resell" />
         </div>
+
+        {(productsLoading || imagesLoading) &&
+          <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+        }
+
         <ErrorBoundary>
           <div className="mobile-resell-gallery-articles" ref={collectionRef}>
-            {(productsLoading || imagesLoading) && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
             {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
 
             {!productsLoading && !imagesLoading &&

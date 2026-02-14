@@ -62,6 +62,7 @@ export default function HoolisMobile({ labelRef }) {
     setDisplayedCollection("");
     setCollectionChosen("VETEMENTS");
   }, []);
+    
 
   // Gestion du changement de collection
   useEffect(() => {
@@ -251,9 +252,13 @@ export default function HoolisMobile({ labelRef }) {
         <div ref={galleryButtonsRef}>
           <GalleryButtons type="hoolis" />
         </div>
+
+        {(productsLoading || imagesLoading) &&
+          <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+        }
+
         <ErrorBoundary>
           <div className="mobile-hoolis-gallery-articles" ref={collectionRef}>
-            {(productsLoading || imagesLoading) && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
             {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
 
             {!productsLoading && !imagesLoading &&
