@@ -29,12 +29,12 @@ export default function Resell() {
   const [hoveredArticleId, setHoveredArticleId] = useState(null);
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const is_resell = true;
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const products = useProducts(true);
+  const { products, isLoading: productsLoading } = useProducts(true);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -111,7 +111,7 @@ export default function Resell() {
 
       // Mettre à jour et preload
       setDisplayedCollection(collectionChosen);
-      setLoading(true);
+      setImagesLoading(true);
 
       // Preload images
       const filteredProducts = products.filter(
@@ -130,7 +130,7 @@ export default function Resell() {
       );
 
       await Promise.all(imagePromises);
-      setLoading(false);
+      setImagesLoading(false);
 
       // Attendre que React ait rendu les articles dans le DOM
       await new Promise(resolve => {
@@ -296,10 +296,10 @@ export default function Resell() {
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
           <ErrorBoundary>
             <div className="resell-gallery-articles" ref={collectionRef}>
-              {loading &&
+              {(productsLoading || imagesLoading) &&
                 <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
               }
-              {!loading &&
+              {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                     return null;

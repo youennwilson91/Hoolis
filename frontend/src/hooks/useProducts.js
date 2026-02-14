@@ -1,15 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useStore from '../utils/store';
 import { apiClient, API_ENDPOINTS } from '../utils/axiosConfig';
 
 /**
  * Hook pour gérer le fetching des produits avec gestion du cache
  * @param {boolean} isResell - true pour produits resell, false pour produits hoolis
+ * @returns {{ products: Array, isLoading: boolean }}
  */
 export function useProducts(isResell) {
   // Utiliser le cache approprié selon isResell
   const products = useStore(state => isResell ? state.resellProducts : state.hoolisProducts);
   const setProducts = useStore(state => isResell ? state.setResellProducts : state.setHoolisProducts);
+
+  // État de chargement local
+  const [isLoading, setIsLoading] = useState(false);
 
   // Ref pour éviter setState après unmount
   const isMountedRef = useRef(true);
@@ -29,6 +33,7 @@ export function useProducts(isResell) {
 
     if (!isCacheValid) {
       console.log(`🌐 Fetching products from API (is_resell: ${isResell})...`);
+      setIsLoading(true);
 
       const fetchProducts = async () => {
         let retries = 3;
@@ -72,10 +77,17 @@ export function useProducts(isResell) {
               setProducts(productsData);
               console.log(`✅ Products stored in cache (is_resell: ${isResell})`);
             }
+
+            if (isMountedRef.current) {
+              setIsLoading(false);
+            }
           } catch (error) {
             // Ignorer les erreurs d'abort
             if (error.name === 'AbortError' || error.name === 'CanceledError') {
               console.log('Fetch annulé');
+              if (isMountedRef.current) {
+                setIsLoading(false);
+              }
               return;
             }
 
@@ -86,6 +98,9 @@ export function useProducts(isResell) {
             }
 
             console.error('Erreur lors du fetch des produits:', error);
+            if (isMountedRef.current) {
+              setIsLoading(false);
+            }
           }
         };
 
@@ -107,5 +122,5 @@ export function useProducts(isResell) {
     };
   }, [isResell]); // Dépend uniquement de isResell, pas de products/setProducts (fonctions stables de Zustand)
 
-  return products;
+  return { products, isLoading };
 }
