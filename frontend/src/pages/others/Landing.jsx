@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import MenuButtons from "../../components/Buttons/Menu.jsx";
 import useStore from "../../utils/store.jsx";
 import SEOHead from "../../components/SEOHead.jsx";
@@ -13,6 +13,8 @@ export default function Landing() {
     const screenMobileRef = useRef(null);
     const menuRef1 = useRef(null);
     const menuRef2 = useRef(null);
+    const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
+    const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
 
     useEffect(() => {
         setBgColor("#000000");
@@ -93,10 +95,14 @@ export default function Landing() {
                             className="landing-menu-item" 
                             ref={menuRef1}
                         >
-                            <img 
-                                src="/hoolis-img/gainsbourglove.jpeg" 
-                                alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
-                                loading="lazy" 
+                            <img
+                                src="/hoolis-img/gainsbourglove.webp"
+                                alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
+                                onLoad={() => setDesktopImageLoaded(true)}
+                                style={{
+                                    opacity: desktopImageLoaded ? 1 : 0,
+                                    transition: 'opacity 0.5s ease-in-out'
+                                }}
                             />
                             {/*<video src="/hoolis-img/bg-vid-shop.mp4" autoPlay loop muted />*/}
                         </div>
@@ -107,10 +113,14 @@ export default function Landing() {
 
             <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing"> 
-                    <img 
-                        src="/hoolis-img/gainsbourg.jpeg" 
-                        alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
-                        loading="lazy" 
+                    <img
+                        src="/hoolis-img/gainsbourg.webp"
+                        alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
+                        onLoad={() => setMobileImageLoaded(true)}
+                        style={{
+                            opacity: mobileImageLoaded ? 1 : 0,
+                            transition: 'opacity 0.5s ease-in-out'
+                        }}
                     /> 
                     {/*<video src="/hoolis-img/video.mp4" autoPlay loop muted /> */}
                     {/*<svg version="1.0" className="crown-svg"
