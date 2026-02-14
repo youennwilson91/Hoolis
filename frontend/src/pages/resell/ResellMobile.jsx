@@ -264,14 +264,15 @@ export default function ResellMobile({ labelRef }) {
 
   return (
     <div ref={mobileScreenRef} className="mobile-resell-container">
+
+      {(productsLoading || imagesLoading) &&
+        <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+      }
+
       <div className="mobile-resell-gallery">
         <div ref={galleryButtonsRef}>
           <GalleryButtons type="resell" />
         </div>
-
-        {(productsLoading || imagesLoading) &&
-          <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
-        }
 
         <ErrorBoundary>
           <div className="mobile-resell-gallery-articles" ref={collectionRef}>

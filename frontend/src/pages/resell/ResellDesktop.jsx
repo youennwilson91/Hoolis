@@ -286,18 +286,19 @@ export default function Resell() {
 
     <div ref={screenRef} className="resell-container">
       <div className="resell-landing">
-        <img 
-            src="/hoolis-img/mouth-tee-back.jpg" 
-            alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée" 
-            loading="lazy" 
+        <img
+            src="/hoolis-img/mouth-tee-back.jpg"
+            alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
+            loading="lazy"
         />
+
+        {(productsLoading || imagesLoading) &&
+          <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
+        }
+
         <div ref={galleryRef} className="resell-gallery">
           <GalleryButtons type="resell"/>
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
-
-          {(productsLoading || imagesLoading) &&
-            <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
-          }
 
           <ErrorBoundary>
             <div className="resell-gallery-articles" ref={collectionRef}>
