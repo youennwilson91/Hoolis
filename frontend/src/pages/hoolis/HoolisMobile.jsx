@@ -248,14 +248,15 @@ export default function HoolisMobile({ labelRef }) {
 
   return (
     <div ref={mobileScreenRef} className="mobile-hoolis-container">
+
+      {(productsLoading || imagesLoading) &&
+        <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
+      }
+
       <div className="mobile-hoolis-gallery">
         <div ref={galleryButtonsRef}>
           <GalleryButtons type="hoolis" />
         </div>
-
-        {(productsLoading || imagesLoading) &&
-          <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>
-        }
 
         <ErrorBoundary>
           <div className="mobile-hoolis-gallery-articles" ref={collectionRef}>
