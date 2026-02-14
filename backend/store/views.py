@@ -18,7 +18,7 @@ from django.contrib.auth import get_user_model
 
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
-from .utils import SafeErrorHandler, sanitize_text_input
+from .utils import SafeErrorHandler, sanitize_text_input, send_email_async
 from .throttling import PaymentRateThrottle, BurstRateThrottle
 from .mixins import CacheControlMixin
 
@@ -623,9 +623,48 @@ def _create_order_from_stripe_session(session, session_id):
                     logger.error(f"Produit non trouvé: {product_id}")
                     continue
 
-        # TODO: Implémenter envoi email asynchrone avec Celery
-        # Pour l'instant, pas d'email depuis le webhook pour éviter les timeouts
-        logger.info(f"Commande #{order.id} créée - Email à envoyer via Celery (à implémenter)")
+        # Envoyer email de confirmation en arrière-plan (threading simple)
+        try:
+            from datetime import datetime
+            order_items = order.order_items.select_related('product').all()
+
+            # Préparer le contexte de l'email (compatible avec template existant)
+            email_context = {
+                'brand_name': 'Maison Hoolis',
+                'customer_first_name': metadata.get('customer_first_name', ''),
+                'customer_last_name': metadata.get('customer_last_name', ''),
+                'order_id': order.id,
+                'order_date': order.created_at.strftime('%d/%m/%Y'),
+                'total_price': f"{order.total_price}€",
+                'products': [f"{item.quantity}x {item.product.title}" for item in order_items],
+                'customer_address': metadata.get('customer_address', ''),
+                'customer_city': metadata.get('customer_city', ''),
+                'customer_postal_code': metadata.get('customer_postal_code', ''),
+                'customer_country': metadata.get('customer_country', ''),
+                'payment_id': session_id,
+                'year': datetime.now().year,
+            }
+
+            # Générer le contenu HTML et texte
+            html_message = render_to_string('emails/order_confirmation.html', email_context)
+            plain_message = strip_tags(html_message)
+
+            # Envoyer en arrière-plan (pas de timeout webhook)
+            send_email_async(
+                send_mail,
+                subject=f"Confirmation de commande #{order.id} - Maison Hoolis",
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[customer.email, settings.DEFAULT_FROM_EMAIL],
+                html_message=html_message,
+                fail_silently=False
+            )
+
+            logger.info(f"Commande #{order.id} créée - Email délégué au thread async")
+
+        except Exception as email_error:
+            # Ne pas bloquer la création de commande si email échoue
+            logger.error(f"Erreur préparation email (non bloquante): {str(email_error)}")
 
         return (order, None)
 
