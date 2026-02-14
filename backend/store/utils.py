@@ -2,6 +2,7 @@
 Utilitaires de sécurité pour l'application store
 """
 import logging
+import threading
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -123,17 +124,52 @@ def sanitize_text_input(text, max_length=200):
 def log_security_event(event_type, details, request=None):
     """
     Enregistre un événement de sécurité
-    
+
     Args:
         event_type (str): Type d'événement de sécurité
         details (str): Détails de l'événement
         request (HttpRequest, optional): Requête associée
     """
     log_message = f"SECURITY EVENT - {event_type}: {details}"
-    
+
     if request:
         user_info = f"User: {getattr(request.user, 'username', 'Anonymous')}"
         ip_info = f"IP: {request.META.get('REMOTE_ADDR', 'Unknown')}"
         log_message += f" | {user_info} | {ip_info}"
-    
-    logger.warning(log_message) 
+
+    logger.warning(log_message)
+
+
+def send_email_async(send_mail_callable, *args, **kwargs):
+    """
+    Envoie un email en arrière-plan via threading (solution simple sans Celery)
+
+    Usage:
+        send_email_async(
+            send_mail,
+            subject="Confirmation",
+            message="...",
+            from_email="noreply@hoolis.com",
+            recipient_list=["customer@example.com"],
+            html_message="<html>...</html>"
+        )
+
+    Args:
+        send_mail_callable: La fonction send_mail de Django
+        *args, **kwargs: Arguments à passer à send_mail
+
+    Note:
+        - Pas de retry automatique (SMTP retry nativement)
+        - Email perdu si serveur crash (acceptable en v1)
+        - Pour production à fort volume, migrer vers Celery
+    """
+    def _send():
+        try:
+            send_mail_callable(*args, **kwargs)
+            logger.info(f"Email envoyé avec succès (async) à {kwargs.get('recipient_list', [])}")
+        except Exception as e:
+            logger.error(f"Erreur envoi email async: {type(e).__name__} - {str(e)}", exc_info=True)
+
+    thread = threading.Thread(target=_send, daemon=True)
+    thread.start()
+    logger.info(f"Email délégué au thread (async) pour {kwargs.get('recipient_list', [])}") 
