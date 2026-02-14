@@ -31,12 +31,12 @@ export default function HoolisDesktop() {
   const [hoveredArticleId, setHoveredArticleId] = useState(null);
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const is_resell = false;
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const products = useProducts(false);
+  const { products, isLoading: productsLoading } = useProducts(false);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -100,7 +100,7 @@ export default function HoolisDesktop() {
       }
 
       setDisplayedCollection(collectionChosen);
-      setLoading(true);
+      setImagesLoading(true);
 
       const filteredProducts = products.filter(
         article => article?.collection?.name === collectionChosen
@@ -118,7 +118,7 @@ export default function HoolisDesktop() {
       );
 
       await Promise.all(imagePromises);
-      setLoading(false);
+      setImagesLoading(false);
 
       // Attendre que React ait rendu les articles dans le DOM
       await new Promise(resolve => {
@@ -241,10 +241,10 @@ export default function HoolisDesktop() {
           <hr style={{color: "white", width: "100%", position: "relative", bottom: "265px"}}/>
           <ErrorBoundary>
             <div className="shop-gallery-articles" ref={collectionRef}>
-              {loading &&
+              {(productsLoading || imagesLoading) &&
                 <BarLoader className="loader" color="#EFEC8F" height={10} speedMultiplier={1} width={200}/>
               }
-              {!loading &&
+              {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                     return null;

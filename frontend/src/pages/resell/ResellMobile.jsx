@@ -38,9 +38,9 @@ export default function ResellMobile({ labelRef }) {
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const products = useProducts(true);
+  const { products, isLoading: productsLoading } = useProducts(true);
 
-  const [loading, setLoading] = useState(true);
+  const [imagesLoading, setImagesLoading] = useState(true);
   const [error, setError] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const [clickedArticleId, setClickedArticleId] = useState(null);
@@ -74,7 +74,7 @@ export default function ResellMobile({ labelRef }) {
       }
 
       setDisplayedCollection(collectionChosen);
-      setLoading(true);
+      setImagesLoading(true);
 
       const filteredProducts = products.filter(
         article => article?.collection?.name === collectionChosen
@@ -92,7 +92,7 @@ export default function ResellMobile({ labelRef }) {
       );
 
       await Promise.all(imagePromises);
-      setLoading(false);
+      setImagesLoading(false);
 
       // Attendre que React ait rendu les articles dans le DOM
       await new Promise(resolve => {
@@ -270,10 +270,10 @@ export default function ResellMobile({ labelRef }) {
         </div>
         <ErrorBoundary>
           <div className="mobile-resell-gallery-articles" ref={collectionRef}>
-            {loading && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
+            {(productsLoading || imagesLoading) && <BarLoader className="loader" color="#EFEC8F" height={6} speedMultiplier={1} width={107}/>}
             {error && <div style={{color: 'white', padding: '20px', backgroundColor: 'rgba(0,0,0,0.7)', margin: '10px'}}>{error}</div>}
 
-            {!loading &&
+            {!productsLoading && !imagesLoading &&
               (() => {
                 if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
                   return null;
