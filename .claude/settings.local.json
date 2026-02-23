@@ -25,7 +25,10 @@
       "Bash(git add:*)",
       "Bash(npm install:*)",
       "Bash(npm run preview:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm search:*)",
+      "Bash(npm view:*)"
     ]
   }
 }
