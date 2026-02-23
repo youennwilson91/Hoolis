@@ -92,11 +92,17 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'mysite.middleware.DisableCSRFMiddleware',  # AVANT CsrfViewMiddleware
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Exemption CSRF pour les webhooks externes
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS.extend(env.list('CORS_ALLOWED_ORIGINS', default=[]))
 
 PREVIEW_PASSWORD = env('PREVIEW_PASSWORD', default=None)
 
