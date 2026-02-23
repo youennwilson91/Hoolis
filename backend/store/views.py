@@ -1,6 +1,6 @@
 from .models import *
 from .serializers import *
-from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.decorators import api_view, throttle_classes, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
@@ -675,10 +675,13 @@ def _create_order_from_stripe_session(session, session_id):
 
 @csrf_exempt
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def stripe_webhook(request):
     """
     Webhook Stripe : reçoit les événements de paiement directement de Stripe
     Pas de rate limiting : Stripe est la source de vérité
+    Sécurité : vérification de signature Stripe (pas d'auth DRF)
     """
     logger.info("=== STRIPE WEBHOOK APPELÉ ===")
 
