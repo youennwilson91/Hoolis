@@ -208,7 +208,7 @@ REST_FRAMEWORK = {
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
 if DEBUG:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.184', 'https://prod-hoolis-fbackend.onrender.com']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.184', 'prod-hoolis-fbackend.onrender.com']
 else:
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
     if RENDER_EXTERNAL_HOSTNAME:
