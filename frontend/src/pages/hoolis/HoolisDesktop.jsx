@@ -31,6 +31,7 @@ export default function HoolisDesktop() {
 
   const [hoveredArticleId, setHoveredArticleId] = useState(null);
   const [clickedArticleId, setClickedArticleId] = useState(null);
+  const [clickedArticleRef, setClickedArticleRef] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
   const [imagesLoading, setImagesLoading] = useState(false);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
@@ -72,6 +73,7 @@ export default function HoolisDesktop() {
     setGalleryVisible(false);
     setHoveredArticleId(0);
     setClickedArticleId(null);
+    setClickedArticleRef(null);
     setCartVisible(false);
     setMobileButtonsVisible(false);
     setIsMouseActive(false);
@@ -171,7 +173,18 @@ export default function HoolisDesktop() {
   }, []);
 
   const handleArticleClick = useCallback((articleRef, id) => {
+    // Fermer l'article précédent s'il existe et est différent
+    if (clickedArticleRef && clickedArticleRef !== articleRef) {
+      gsap.to(clickedArticleRef, {
+        duration: 0.5,
+        ease: "power3.inOut",
+        width: "7%",
+        height: "100%"
+      });
+    }
+
     setClickedArticleId(id);
+    setClickedArticleRef(articleRef);
     gsap.timeline()
       .to(articleRef, {
         duration: 0.4,
@@ -192,11 +205,12 @@ export default function HoolisDesktop() {
           );
         }
       });
-  }, []);
+  }, [clickedArticleRef]);
 
   const handleArticleClose = useCallback((articleRef, e) => {
     e.stopPropagation();
     setClickedArticleId(null);
+    setClickedArticleRef(null);
     setHoveredArticleId(null);
     gsap.to(articleRef, {
       duration: 0.5,
