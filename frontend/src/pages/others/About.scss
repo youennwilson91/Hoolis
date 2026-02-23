@@ -1,0 +1,143 @@
+.about-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #000000;
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-content {
+    width: 100%;
+    height: 100%;
+    padding: 60px 40px 120px;
+    text-align: left;
+    color: #EFEC8F;
+    font-family: "Champagne Limousines", sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(239, 236, 143, 0.3) transparent;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(239, 236, 143, 0.3);
+        border-radius: 3px;
+
+        &:hover {
+            background: rgba(239, 236, 143, 0.5);
+        }
+    }
+
+    h1 {
+        font-size: 72px;
+        font-weight: 700;
+        margin-bottom: 60px;
+        text-align: center;
+        -webkit-text-stroke: 1px white;
+        text-stroke: 1px white;
+    }
+
+    section {
+        margin-bottom: 60px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: #EFEC8F;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+        text-align: justify;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &.highlight {
+            font-size: 18px;
+            color: #EFEC8F;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        &.manifesto {
+            font-size: 18px;
+            color: #EFEC8F;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 30px;
+            line-height: 2;
+        }
+
+        &.closing {
+            font-style: italic;
+            text-align: center;
+            margin-top: 30px;
+            color: #EFEC8F;
+        }
+
+        strong {
+            color: #EFEC8F;
+            font-weight: 600;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        padding: 40px 20px 100px;
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 40px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: left;
+
+            &.highlight,
+            &.manifesto {
+                font-size: 16px;
+            }
+        }
+    }
+}
