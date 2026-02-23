@@ -24,7 +24,8 @@
       "Bash(test:*)",
       "Bash(git add:*)",
       "Bash(npm install:*)",
-      "Bash(npm run preview:*)"
+      "Bash(npm run preview:*)",
+      "Bash(cd:*)"
     ]
   }
 }
