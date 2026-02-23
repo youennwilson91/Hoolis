@@ -7,7 +7,7 @@ export const API_BASE_URL =
     ? 'http://localhost:8000'  // Toujours localhost en local
     : ENVIRONMENT === 'dev'
     ? 'https://dev-hoolis-backend.onrender.com' 
-    : 'https://hoolis-backend.onrender.com';  // prod
+    : 'https://prod-hoolis-fbackend.onrender.com';  // prod
 
 // Instance axios configurée
 export const apiClient = axios.create({
