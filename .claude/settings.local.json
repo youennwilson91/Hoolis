@@ -23,7 +23,8 @@
       "Bash(git commit:*)",
       "Bash(test:*)",
       "Bash(git add:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run preview:*)"
     ]
   }
 }
