@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import useStore from '../utils/store';
 import './PaymentReturn.scss';
@@ -8,6 +8,16 @@ export default function PaymentReturn() {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [message, setMessage] = useState('');
   const hasProcessed = useRef(false);
+  const clearCart = useStore(state => state.clearCart);
+
+  const verifyPayment = useCallback(async (sessionId) => {
+    // Le webhook Stripe crée la commande automatiquement côté serveur
+    // Pas besoin d'appel API, juste afficher la confirmation
+    setPaymentStatus('success');
+    setMessage('Merci pour votre commande ! Vous recevrez un email avec les détails.');
+    // Vider le panier via le hook
+    clearCart();
+  }, [clearCart]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -21,16 +31,7 @@ export default function PaymentReturn() {
       setPaymentStatus('cancelled');
       setMessage('Paiement annulé');
     }
-  }, [location.search]);
-
-  const verifyPayment = async (sessionId) => {
-    // Le webhook Stripe crée la commande automatiquement côté serveur
-    // Pas besoin d'appel API, juste afficher la confirmation
-    setPaymentStatus('success');
-    setMessage('Merci pour votre commande ! Vous recevrez un email avec les détails.');
-    // Vider le panier via setState direct
-    useStore.setState({ addToCart: [] });
-  };
+  }, [location.search, verifyPayment]);
 
   const closePopup = () => {
     window.history.replaceState({}, document.title, window.location.pathname);

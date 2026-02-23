@@ -1,0 +1,58 @@
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 10000;
+  animation: slideIn 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  word-wrap: break-word;
+
+  &.toast-success {
+    background: rgba(16, 185, 129, 0.95);
+  }
+
+  &.toast-error {
+    background: rgba(239, 68, 68, 0.95);
+  }
+
+  &.toast-warning {
+    background: rgba(245, 158, 11, 0.95);
+  }
+
+  &.toast-info {
+    background: rgba(59, 130, 246, 0.95);
+  }
+
+  .toast-message {
+    display: block;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsive mobile
+@media (max-width: 768px) {
+  .toast {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+  }
+}

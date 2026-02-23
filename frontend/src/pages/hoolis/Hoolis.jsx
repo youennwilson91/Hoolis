@@ -38,7 +38,10 @@ export default function Hoolis() {
     return () => {
       window.removeEventListener('resize', checkScreenSize);
     };
-  }, [bgColor, setIsClicked, setLabel, setLabelColor]);
+    // setIsClicked, setLabel, setLabelColor sont des fonctions stables de Zustand
+    // bgColor est uniquement utilisé pour initialiser setLabelColor au mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   useGSAP(() => {

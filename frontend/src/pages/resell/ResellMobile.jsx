@@ -15,6 +15,7 @@ import { useProducts } from "../../hooks/useProducts.js";
 import useCart from "../../hooks/useCart.js";
 import Cart from "../../components/Cart/Cart.jsx";
 import CartIcon from "../../components/Cart/CartIcon.jsx";
+import { useToast } from "../../components/Toast/ToastContainer";
 
 export default function ResellMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
@@ -28,6 +29,9 @@ export default function ResellMobile({ labelRef }) {
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
+
+  // Hook pour les toasts
+  const { addToast } = useToast();
 
   // Sélecteurs individuels
   const cartVisible = useStore(state => state.cartVisible);
@@ -256,7 +260,7 @@ export default function ResellMobile({ labelRef }) {
 
   function handleCheckout() {
     if (addToCart.length === 0) {
-      alert("Votre panier est vide");
+      addToast("Votre panier est vide", "warning");
       return;
     }
     setOrderFormVisible(true);

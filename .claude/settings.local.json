@@ -22,7 +22,8 @@
       "Bash(__NEW_LINE_0d6496d8ee4aa6d0__ echo -e \"\\\\n5. transaction:\")",
       "Bash(git commit:*)",
       "Bash(test:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

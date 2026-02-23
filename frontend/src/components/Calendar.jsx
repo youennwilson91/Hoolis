@@ -88,11 +88,11 @@ function BookingCalendar({ type }) {
     try {
       // Le paramètre 'date' est déjà formaté en YYYY-MM-DD
       const response = await apiClient.get(`${apiAvailableSlots}?date=${date}`);
-      console.log('API response:', response.data);
+      if (import.meta.env.DEV) console.log('API response:', response.data);
       const slotsArray = response.data.results || [];
       setSlots(slotsArray);
     } catch (error) {
-      console.error('Erreur lors de la récupération des créneaux:', error);
+      if (import.meta.env.DEV) console.error('Erreur lors de la récupération des créneaux:', error);
       setSlots([]);
       showError(error.response?.data?.error || "Erreur de chargement des créneaux", error.response?.status);
     }
@@ -118,16 +118,16 @@ function BookingCalendar({ type }) {
       start_time: slot.start_time,
       end_time: slot.end_time
     }).then(response => {
-      console.log('Code SMS envoyé:', response.data);
+      if (import.meta.env.DEV) console.log('Code SMS envoyé:', response.data);
       setVerificationStep('verify');
       setRequestId(response.data.request_id);
-      console.log('Request ID:', response.data.request_id);
+      if (import.meta.env.DEV) console.log('Request ID:', response.data.request_id);
       // Stocker le slot pour l'utiliser après vérification
       setSelectedSlot(slot);
       setErrorMessage(""); // Effacer les erreurs précédentes
     }).catch(error => {
-      console.error('Erreur lors de l\'envoi du code:', error);
-      console.error('Réponse du serveur:', error.response?.data);
+      if (import.meta.env.DEV) console.error('Erreur lors de l\'envoi du code:', error);
+      if (import.meta.env.DEV) console.error('Réponse du serveur:', error.response?.data);
       
       // Affichage d'erreur sécurisé
       const statusCode = error.response?.status;
@@ -163,7 +163,7 @@ function BookingCalendar({ type }) {
 
     })
     .catch(err => {
-      console.error("Erreur lors de la vérification ou réservation:", err);
+      if (import.meta.env.DEV) console.error("Erreur lors de la vérification ou réservation:", err);
       const statusCode = err.response?.status;
       let errorText = err.response?.data?.detail || err.response?.data?.error || err.message;
       showError(errorText, statusCode);
