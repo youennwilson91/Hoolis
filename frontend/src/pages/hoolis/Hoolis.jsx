@@ -62,7 +62,7 @@ export default function Hoolis() {
         title="Collection Hoolis - Vêtements de Luxe & Maroquinerie"
         description="Découvrez la collection exclusive Hoolis : vêtements haut de gamme, maroquinerie de luxe et accessoires de prestige. Mode française d'exception."
         keywords="hoolis collection, vêtements de luxe, maroquinerie haut de gamme, mode française, luxe parisien, accessoires de prestige"
-        url="https://hoolis.com/hoolis"
+        url="https://maisonhoolis.com/"
       />
       <StructuredData data={createOrganizationSchema()} />
       
