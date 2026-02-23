@@ -674,15 +674,15 @@ def _create_order_from_stripe_session(session, session_id):
 
 
 @csrf_exempt
-@api_view(['POST'])
-@authentication_classes([])
-@permission_classes([AllowAny])
 def stripe_webhook(request):
     """
     Webhook Stripe : reçoit les événements de paiement directement de Stripe
-    Pas de rate limiting : Stripe est la source de vérité
-    Sécurité : vérification de signature Stripe (pas d'auth DRF)
+    Vue Django pure (pas DRF) pour éviter les conflits CSRF/auth
+    Sécurité : vérification de signature Stripe
     """
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
     logger.info("=== STRIPE WEBHOOK APPELÉ ===")
 
     # Récupérer la signature et le payload
@@ -693,7 +693,7 @@ def stripe_webhook(request):
 
     if not webhook_secret:
         logger.error("STRIPE_WEBHOOK_SECRET non configuré")
-        return Response({'error': 'Configuration webhook manquante'}, status=500)
+        return HttpResponse('Configuration webhook manquante', status=500)
 
     # Vérifier la signature
     try:
@@ -702,10 +702,10 @@ def stripe_webhook(request):
         )
     except ValueError as e:
         logger.error(f"Payload invalide: {str(e)}")
-        return Response({'error': 'Invalid payload'}, status=400)
+        return HttpResponse('Invalid payload', status=400)
     except stripe.error.SignatureVerificationError as e:
         logger.error(f"Signature invalide: {str(e)}")
-        return Response({'error': 'Invalid signature'}, status=400)
+        return HttpResponse('Invalid signature', status=400)
 
     # Traiter l'événement
     event_type = event['type']
@@ -725,23 +725,23 @@ def stripe_webhook(request):
             if error:
                 logger.error(f"Erreur webhook création commande: {error}")
                 # Retourner 500 pour que Stripe retry
-                return Response({'error': error}, status=500)
+                return HttpResponse(error, status=500)
 
             logger.info(f"Commande #{order.id} créée via webhook")
-            return Response({'status': 'success', 'order_id': order.id}, status=200)
+            return HttpResponse('success', status=200)
         else:
             logger.warning(f"Session {session_id} completed mais payment_status={payment_status}")
-            return Response({'status': 'ignored'}, status=200)
+            return HttpResponse('ignored', status=200)
 
     elif event_type == 'checkout.session.expired':
         session = event['data']['object']
         session_id = session['id']
         logger.info(f"Session {session_id} expirée sans paiement")
-        return Response({'status': 'logged'}, status=200)
+        return HttpResponse('logged', status=200)
 
     else:
         logger.info(f"Événement non géré: {event_type}")
-        return Response({'status': 'ignored'}, status=200)
+        return HttpResponse('ignored', status=200)
 
 
 @api_view(['GET'])
