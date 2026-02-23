@@ -19,6 +19,7 @@ export default function OrderForm({
     country: 'France'
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   function handleFormChange(field, value) {
     setFormData(prev => ({
@@ -48,28 +49,31 @@ export default function OrderForm({
   async function handleClientInfoSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      console.log('Création de la session Stripe...');
-      
-      // Debug: vérifier les données avant envoi
-      console.log('Données item:', item);
-      console.log('Données customer:', formData);
-      
+      if (import.meta.env.DEV) {
+        console.log('Création de la session Stripe...');
+        console.log('Données item:', item);
+        console.log('Données customer:', formData);
+      }
+
       // Validation côté frontend
       if (!item || !item.name || item.name.trim() === '') {
-        console.error('Nom de l\'article manquant:', item);
-        alert('Erreur: Nom de l\'article manquant');
+        if (import.meta.env.DEV) {
+          console.error('Nom de l\'article manquant:', item);
+        }
+        setError('Nom de l\'article manquant');
         setIsLoading(false);
-        onClose();
         return;
       }
 
       if (item.price === undefined || item.price === null) {
-        console.error('Prix de l\'article manquant:', item);
-        alert('Erreur: Prix de l\'article manquant');
+        if (import.meta.env.DEV) {
+          console.error('Prix de l\'article manquant:', item);
+        }
+        setError('Prix de l\'article manquant');
         setIsLoading(false);
-        onClose();
         return;
       }
       
@@ -95,37 +99,37 @@ export default function OrderForm({
           customer: formData
         });
       }
-      
-      console.log('Session Stripe créée:', stripeResponse.data);
-      
+
+      if (import.meta.env.DEV) {
+        console.log('Session Stripe créée:', stripeResponse.data);
+      }
+
       // Rediriger vers Stripe Checkout
       if (stripeResponse.data.checkout_url) {
-        // Fermer le formulaire avant la redirection
-        onClose();
-        // Rediriger vers Stripe
+        // Rediriger vers Stripe (le formulaire reste ouvert pendant la redirection)
         window.location.href = stripeResponse.data.checkout_url;
       } else {
-        console.error('URL de checkout manquante');
-        alert('Erreur lors de la redirection vers le paiement');
+        if (import.meta.env.DEV) {
+          console.error('URL de checkout manquante');
+        }
+        setError('Erreur lors de la redirection vers le paiement');
         setIsLoading(false);
-        onClose();
       }
 
     } catch (error) {
-      console.error('Erreur lors du processus de commande:', error);
+      if (import.meta.env.DEV) {
+        console.error('Erreur lors du processus de commande:', error);
+      }
       setIsLoading(false);
 
       // Afficher un message d'erreur plus spécifique
       if (error.response?.data?.error) {
-        alert(`Erreur: ${error.response.data.error}`);
+        setError(error.response.data.error);
       } else if (error.message) {
-        alert(`Erreur: ${error.message}`);
+        setError(error.message);
       } else {
-        alert('Erreur lors de la création du paiement');
+        setError('Erreur lors de la création du paiement. Veuillez réessayer.');
       }
-
-      // En cas d'erreur, fermer le formulaire aussi
-      onClose();
     }
   }
 
@@ -152,6 +156,20 @@ export default function OrderForm({
               </div>
             </div>
           </div>
+
+          {/* Message d'erreur */}
+          {error && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '16px',
+              backgroundColor: 'rgba(255, 0, 0, 0.1)',
+              border: '1px solid red',
+              borderRadius: '4px',
+              color: 'red'
+            }}>
+              {error}
+            </div>
+          )}
 
           {/* Formulaire client */}
           <form className="order-form" onSubmit={handleClientInfoSubmit}>

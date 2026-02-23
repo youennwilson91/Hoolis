@@ -1,16 +1,18 @@
 import { useCallback, useMemo } from "react";
 import useStore from "../utils/store.jsx";
+import { useToast } from "../components/Toast/ToastContainer";
 
 export default function useCart() {
   const { addToCart, setAddToCart } = useStore();
+  const { addToast } = useToast();
 
   const handleAddToCart = useCallback((article, e) => {
     e.stopPropagation();
     setAddToCart(prevCart => {
       return [...prevCart, { ...article, cartid: Date.now() + Math.random() }];
     });
-    alert("Article ajouté au panier");
-  }, [setAddToCart]);
+    addToast("Article ajouté au panier", "success");
+  }, [setAddToCart, addToast]);
 
   const handleRemoveItem = useCallback((item) => {
     setAddToCart(prevCart => prevCart.filter(
@@ -26,14 +28,19 @@ export default function useCart() {
     }, 0);
   }, [addToCart]);
 
-  const cartAsItem = useMemo(() => ({
-    id: 'cart',
-    name: `Commande (${addToCart.length} article${addToCart.length > 1 ? 's' : ''})`,
-    price: cartTotal,
-    wide: addToCart[0]?.images?.[0]?.image ? [{ media: addToCart[0].images[0].image }] : [],
-    isCart: true,
-    cartItems: addToCart
-  }), [addToCart, cartTotal]);
+  const cartAsItem = useMemo(() => {
+    // Trouver le premier article avec une image valide
+    const firstItemWithImage = addToCart.find(item => item.images?.[0]?.image);
+
+    return {
+      id: 'cart',
+      name: `Commande (${addToCart.length} article${addToCart.length > 1 ? 's' : ''})`,
+      price: cartTotal,
+      wide: firstItemWithImage?.images?.[0]?.image ? [{ media: firstItemWithImage.images[0].image }] : [],
+      isCart: true,
+      cartItems: addToCart
+    };
+  }, [addToCart, cartTotal]);
 
   return {
     addToCart,

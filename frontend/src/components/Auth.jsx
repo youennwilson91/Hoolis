@@ -38,11 +38,15 @@ const Auth = ({ onAuthSuccess }) => {
       
       // Notifier le parent du succès
       onAuthSuccess(access);
-      
-      console.log('✅ Connexion réussie');
-      
+
+      if (import.meta.env.DEV) {
+        console.log('✅ Connexion réussie');
+      }
+
     } catch (error) {
-      console.error('❌ Erreur de connexion:', error);
+      if (import.meta.env.DEV) {
+        console.error('❌ Erreur de connexion:', error);
+      }
       handleError(error);
     } finally {
       setLoading(false);

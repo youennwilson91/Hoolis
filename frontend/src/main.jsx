@@ -4,6 +4,22 @@ import './index.css'
 import './cross-platform.css'
 import App from './App.jsx'
 import './utils/axiosConfig.js'  // Configuration globale d'axios
+import * as Sentry from "@sentry/react"
+
+// Initialiser Sentry uniquement en production
+if (import.meta.env.PROD) {
+  Sentry.init({
+    dsn: "https://5dd6eb76a0e6c3b8b0f4e976742fa730@o4510934666510336.ingest.de.sentry.io/4510934672736336",
+    environment: import.meta.env.VITE_ENVIRONMENT || "production",
+    sendDefaultPii: true,
+    tracesSampleRate: 0.1, // 10% des transactions pour les performances
+    beforeSend(event) {
+      // Ne pas envoyer les erreurs en développement
+      if (import.meta.env.DEV) return null;
+      return event;
+    }
+  });
+}
 
 // Fix for iOS 100vh issue
 const setVhVariable = () => {

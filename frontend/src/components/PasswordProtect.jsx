@@ -41,7 +41,9 @@ const PasswordProtect = ({ children }) => {
       } 
       
       else {
-        console.error('Serveur inaccessible:', error);
+        if (import.meta.env.DEV) {
+          console.error('Serveur inaccessible:', error);
+        }
         setServerStatus('offline');
         return false; 
       }
@@ -67,10 +69,14 @@ const PasswordProtect = ({ children }) => {
           const response = await apiClient.post(API_ENDPOINTS.jwtVerify, {
             token: accessToken
           });
-          console.log('✅ Token valide, authentification réussie');
+          if (import.meta.env.DEV) {
+            console.log('✅ Token valide, authentification réussie');
+          }
           setIsAuthenticated(true);
         } catch (error) {
-          console.log('❌ Token invalide, tentative de rafraîchissement...');
+          if (import.meta.env.DEV) {
+            console.log('❌ Token invalide, tentative de rafraîchissement...');
+          }
           // Token invalide, tenter de le rafraîchir
           if (refreshToken) {
             try {
@@ -81,19 +87,27 @@ const PasswordProtect = ({ children }) => {
               if (response.data.refresh) {
                 localStorage.setItem('hoolis_token_refresh', response.data.refresh);
               }
-              console.log('✅ Token rafraîchi avec succès');
+              if (import.meta.env.DEV) {
+                console.log('✅ Token rafraîchi avec succès');
+              }
               setIsAuthenticated(true);
             } catch (refreshError) {
-              console.log('❌ Impossible de rafraîchir le token, nettoyage...');
+              if (import.meta.env.DEV) {
+                console.log('❌ Impossible de rafraîchir le token, nettoyage...');
+              }
               clearTokens();
             }
           } else {
+            if (import.meta.env.DEV) {
             console.log('❌ Pas de refresh token, nettoyage...');
+          }
             clearTokens();
           }
         }
       } else {
-        console.log('ℹ️ Aucun token trouvé');
+        if (import.meta.env.DEV) {
+          console.log('ℹ️ Aucun token trouvé');
+        }
       }
       
       setIsCheckingAuth(false);
@@ -108,7 +122,9 @@ const PasswordProtect = ({ children }) => {
     setIsLoading(true);
 
     try {
-      console.log('🔐 Tentative de connexion...');
+      if (import.meta.env.DEV) {
+        console.log('🔐 Tentative de connexion...');
+      }
       const response = await apiClient.post(API_ENDPOINTS.jwtCreate, {
         username: username,
         password: password
@@ -117,11 +133,15 @@ const PasswordProtect = ({ children }) => {
       // Sauvegarder les tokens
       localStorage.setItem('hoolis_token_access', response.data.access);
       localStorage.setItem('hoolis_token_refresh', response.data.refresh);
-      console.log('✅ Connexion réussie, tokens sauvegardés');
+      if (import.meta.env.DEV) {
+        console.log('✅ Connexion réussie, tokens sauvegardés');
+      }
       setIsAuthenticated(true);
       
     } catch (error) {
-      console.error('❌ Erreur de connexion:', error);
+      if (import.meta.env.DEV) {
+        console.error('❌ Erreur de connexion:', error);
+      }
       if (error.response?.status === 401) {
         setError('Nom d\'utilisateur ou mot de passe incorrect');
       } else {
@@ -134,7 +154,9 @@ const PasswordProtect = ({ children }) => {
 
   // Fonction pour forcer la déconnexion (utile pour déboguer)
   const handleForceLogout = () => {
-    console.log('🔄 Déconnexion forcée...');
+    if (import.meta.env.DEV) {
+      console.log('🔄 Déconnexion forcée...');
+    }
     clearTokens();
     setIsAuthenticated(false);
     setError('');

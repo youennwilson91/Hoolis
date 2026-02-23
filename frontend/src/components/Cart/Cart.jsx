@@ -1,11 +1,13 @@
 import { useRef, useEffect, forwardRef } from "react";
 import { gsap } from "gsap";
 import useCart from "../../hooks/useCart";
+import { useToast } from "../Toast/ToastContainer";
 import "./Cart.scss";
 
 const Cart = forwardRef(({ isOpen, onClose, onCheckout }, ref) => {
   const cartRef = ref || useRef(null);
   const { addToCart, handleRemoveItem, cartTotal } = useCart();
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (isOpen && cartRef.current) {
@@ -22,7 +24,7 @@ const Cart = forwardRef(({ isOpen, onClose, onCheckout }, ref) => {
 
   const handleCheckoutClick = () => {
     if (addToCart.length === 0) {
-      alert("Votre panier est vide");
+      addToast("Votre panier est vide", "warning");
       return;
     }
     onCheckout();

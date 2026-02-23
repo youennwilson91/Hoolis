@@ -108,33 +108,47 @@ apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     // Si c'est une erreur 401, vérifier le contexte de la requête
     if (error.response?.status === 401) {
       const requestUrl = error.config?.url || '';
-      
-      console.log('❌ Erreur 401 détectée pour:', requestUrl);
-      
+
+      if (import.meta.env.DEV) {
+        console.log('❌ Erreur 401 détectée pour:', requestUrl);
+      }
+
       // Si c'est une tentative de connexion initiale, ne pas recharger la page
       if (requestUrl.includes('/auth/jwt/create/')) {
-        console.log('❌ Erreur de connexion - identifiants incorrects');
+        if (import.meta.env.DEV) {
+          console.log('❌ Erreur de connexion - identifiants incorrects');
+        }
         return Promise.reject(error);
       }
-      
+
       // Si c'est une vérification de token ou un rafraîchissement, ne pas recharger
       if (requestUrl.includes('/auth/jwt/verify/') || requestUrl.includes('/auth/jwt/refresh/')) {
-        console.log('❌ Erreur de vérification/rafraîchissement de token');
+        if (import.meta.env.DEV) {
+          console.log('❌ Erreur de vérification/rafraîchissement de token');
+        }
         return Promise.reject(error);
       }
-      
-      // Pour les autres requêtes avec un token invalide, nettoyer et laisser PasswordProtect gérer
-      console.log('❌ Token invalide pour une requête protégée, nettoyage des tokens');
-      clearTokens();
-      
-      // Ne pas recharger automatiquement la page, laisser PasswordProtect gérer l'état
-      // window.location.reload(); // Commenté pour éviter les rechargements automatiques
+
+      // Tentative de rafraîchissement du token
+      try {
+        const newAccessToken = await refreshAccessToken();
+        // Réessayer la requête avec le nouveau token
+        error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+        return apiClient.request(error.config);
+      } catch (refreshError) {
+        // Si le rafraîchissement échoue, nettoyer les tokens
+        if (import.meta.env.DEV) {
+          console.log('❌ Token invalide, nettoyage des tokens');
+        }
+        clearTokens();
+        return Promise.reject(refreshError);
+      }
     }
-    
+
     return Promise.reject(error);
   }
 );
