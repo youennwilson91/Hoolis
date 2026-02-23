@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useStore from "../../utils/store";
 import {useState, useEffect} from "react";
 import "../../index.css";
@@ -7,16 +7,27 @@ import InstagramButton from "./InstagramButton";
 import SupportButton from "./SupportButton";
 import VintedButton from "./VintedButton";
 import NavigationButtons from "./NavigationButtons";
+import AboutButton from "./AboutButton";
 
 
 
 function MainButton() {
   const { menuOpen, setMenuOpen } = useStore();
+  const navigate = useNavigate();
+  const pathname = useLocation().pathname;
+
+  const handleClick = () => {
+    if (pathname === "/") {
+      setMenuOpen(!menuOpen);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
-    <button 
+    <button
     className="main-button"
-    onClick={() => setMenuOpen(!menuOpen)}
+    onClick={handleClick}
   >
     <svg version="1.0" className="crown-svg"
         width="100%" height="100%" viewBox="0 0 300 241.000000"
@@ -93,6 +104,7 @@ export default function MenuButtons({ screenRef }) {
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />
+                <AboutButton screenRef={screenRef} />
               </div>
             )}
           </>

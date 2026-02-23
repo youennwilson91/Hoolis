@@ -8,19 +8,27 @@ import InstagramButton from "./InstagramButton";
 import SupportButton from "./SupportButton";
 import VintedButton from "./VintedButton";
 import NavigationButtons from "./NavigationButtons";
+import AboutButton from "./AboutButton";
 import React from "react";
 
 export default React.memo(function MenuButtons({ screenRef}) {
 
     const [mainButtonHover, setMainButtonHover] = useState(false);
     const pathname = useLocation().pathname;
+    const navigate = useNavigate();
+
+    const handleCrownClick = () => {
+      if (pathname !== "/") {
+        navigate("/");
+      }
+    };
 
     return (
     <>
       <div className="buttons-container">
         {/* pathname === "/" ? (
           // Page d'accueil - afficher les deux options de navigation
-          
+
           <div className="buttons-div" onMouseLeave={() => setMainButtonHover(false)}>
             <NavigationButtons screenRef={screenRef} homeTo="/hoolis" image="/lekiss.png" label="Le Kiss"/>
             <NavigationButtons screenRef={screenRef} homeTo="/resell" image="/lekiss.png" label="Selection Vintage"/>
@@ -35,6 +43,7 @@ export default React.memo(function MenuButtons({ screenRef}) {
           <button
             className="main-button"
             onMouseEnter={() => setMainButtonHover(true)}
+            onClick={handleCrownClick}
           >
             <svg version="1.0" className="crown-svg"
                 width="100%" height="100%" viewBox="0 0 300 241.000000"
@@ -68,6 +77,7 @@ export default React.memo(function MenuButtons({ screenRef}) {
                 <VintedButton />
                 <InstagramButton />
                 <SupportButton />
+                <AboutButton screenRef={screenRef} />
               </div>
           )}
           </>
@@ -76,6 +86,7 @@ export default React.memo(function MenuButtons({ screenRef}) {
           <button
             className="main-button"
             onMouseEnter={() => setMainButtonHover(true)}
+            onClick={handleCrownClick}
           >
             <svg version="1.0" className="crown-svg"
                 width="100%" height="100%" viewBox="0 0 300 241.000000"

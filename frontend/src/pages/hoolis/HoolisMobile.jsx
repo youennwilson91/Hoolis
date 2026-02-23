@@ -226,8 +226,8 @@ export default function HoolisMobile({ labelRef }) {
           onComplete: () => {
             setCartVisible(false);
             // Réactiver le scroll de la galerie
-            if (articlesContainerRef.current) {
-              articlesContainerRef.current.style.overflow = 'auto';
+            if (collectionRef.current) {
+              collectionRef.current.classList.remove('cart-open');
             }
           }
         });
@@ -236,8 +236,8 @@ export default function HoolisMobile({ labelRef }) {
       // Ouverture simple
       setCartVisible(true);
       // Désactiver le scroll de la galerie
-      if (articlesContainerRef.current) {
-        articlesContainerRef.current.style.overflow = 'hidden';
+      if (collectionRef.current) {
+        collectionRef.current.classList.add('cart-open');
       }
     }
   }

@@ -204,16 +204,20 @@
                 flex-wrap: wrap;
                 justify-content: space-between;
                 align-items: flex-start;
-                overflow-y: none;
-                overflow-x: none;
+                overflow-y: auto;
+                overflow-x: hidden;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
-                -webkit-overflow-scrolling: none;
+                -webkit-overflow-scrolling: touch;
                 touch-action: pan-y;
                 pointer-events: auto;
                 row-gap: 2%;
                 opacity: 0;
                 box-sizing: border-box;
+
+                &.cart-open {
+                    overflow-y: hidden;
+                }
 
                 &::-webkit-scrollbar {
                     display: none;
@@ -229,12 +233,13 @@
                 // Article styles in Article.scss
                 .article {
                     width: 49%;
-                    height: 50%;
+                    aspect-ratio: 0.8;
                     box-sizing: border-box;
 
                     &.article-clicked {
                         width: 100% !important;
                         height: 100% !important;
+                        aspect-ratio: unset;
                     }
                 }
             }
