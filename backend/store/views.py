@@ -18,7 +18,8 @@ from django.contrib.auth import get_user_model
 
 from .filters import ProductFilter
 from .permissons import IsAdminOrReadOnly
-from .utils import SafeErrorHandler, sanitize_text_input, send_email_async
+from .utils import SafeErrorHandler, sanitize_text_input
+from .tasks import send_order_confirmation_email
 from .throttling import PaymentRateThrottle, BurstRateThrottle
 from .mixins import CacheControlMixin
 
@@ -649,18 +650,16 @@ def _create_order_from_stripe_session(session, session_id):
             html_message = render_to_string('emails/order_confirmation.html', email_context)
             plain_message = strip_tags(html_message)
 
-            # Envoyer en arrière-plan (pas de timeout webhook)
-            send_email_async(
-                send_mail,
+            # Envoyer via Celery (retry automatique, non bloquant)
+            send_order_confirmation_email.delay(
                 subject=f"Confirmation de commande #{order.id} - Maison Hoolis",
                 message=plain_message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[customer.email, settings.DEFAULT_FROM_EMAIL],
                 html_message=html_message,
-                fail_silently=False
             )
 
-            logger.info(f"Commande #{order.id} créée - Email délégué au thread async")
+            logger.info(f"Commande #{order.id} créée - Email délégué à Celery")
 
         except Exception as email_error:
             # Ne pas bloquer la création de commande si email échoue

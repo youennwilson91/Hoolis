@@ -2,12 +2,8 @@ import "./InstagramButton.scss";
 
 export default function InstagramButton() {
   const getInstagramUrl = () => {
-    if (location.pathname === "/hoolis" || location.pathname === "/hoolis/") {
-      return "https://www.instagram.com/maisonhoolis/"; // maisonhoolis
-    } else if (location.pathname === "/fw" || location.pathname === "/fw/") {
-      return "https://www.instagram.com/franckandwatch/"; // franckandwatch
-    }
-    return "https://www.vinted.fr/member/203917586"; // default
+
+    return "https://www.instagram.com/maisonhoolis/"; 
   };
   const handleClick = () => {
     window.open(getInstagramUrl(), '_blank', 'noopener,noreferrer');
