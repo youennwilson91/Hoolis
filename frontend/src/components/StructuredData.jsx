@@ -33,10 +33,10 @@ export const createWebsiteSchema = () => ({
   "@type": "WebSite",
   "name": "Hoolis",
   "description": "Découvrez notre collection exclusive de vetements et maroquinerie, et montres de luxe",
-  "url": "https://hoolis.com",
+  "url": "https://maisonhoolis.com",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://hoolis.com/search?q={search_term_string}",
+    "target": "https://maisonhoolis.com/search?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 });
@@ -46,8 +46,8 @@ export const createOrganizationSchema = () => ({
   "@type": "Organization",
   "name": "Hoolis",
   "description": "Boutique de luxe spécialisée en vêtements, maroquinerie et montres de prestige",
-  "url": "https://hoolis.com",
-  "logo": "https://hoolis.com/logo.png",
+  "url": "https://maisonhoolis.com",
+  "logo": "https://maisonhoolis.com/logo.png",
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+33-1-XX-XX-XX-XX",

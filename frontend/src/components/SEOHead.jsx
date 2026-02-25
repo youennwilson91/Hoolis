@@ -4,8 +4,8 @@ const SEOHead = ({
   title = "Hoolis - Vêtements et Maroquinerie de luxe", 
   description = "Découvrez notre collection exclusive de vêtements et maroquinerie, et montres de luxe.",
   keywords = "vêtements de luxe, maroquinerie de luxe, vêtements, maroquinerie, luxe, montres de luxe, horlogerie",
-  image = "https://hoolis.com/crown.png", // Image couronne pour les réseaux sociaux
-  url = "https://hoolis.com/",
+  image = "https://maisonhoolis.com/favicon_io/android-chrome-512x512.png",
+  url = "https://maisonhoolis.com/",
   type = "website"
 }) => {
   

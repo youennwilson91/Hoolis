@@ -12,5 +12,5 @@ def api_home(request):
             'authentication': '/auth/',
         },
         'documentation': 'https://github.com/votre-repo/hoolis',
-        'contact': 'admin@hoolis.com'
+        'contact': 'admin@maisonhoolis.com'
     }) 

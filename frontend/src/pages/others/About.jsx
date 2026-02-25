@@ -23,7 +23,7 @@ export default function About() {
         title="À Propos - Maison Hoolis"
         description="Découvrez l'histoire et les valeurs de Maison Hoolis, créateur de vêtements haut de gamme."
         keywords="maison hoolis, à propos, histoire, luxe français"
-        url="https://hoolis.com/about"
+        url="https://maisonhoolis.com/about"
       />
 
       <div ref={screenRef} className="about-container">

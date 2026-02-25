@@ -44,7 +44,7 @@ export default function Gallery() {
         title="Galerie Hoolis - Collections & Créations de Luxe"
         description="Découvrez la galerie exclusive Hoolis : aperçu de nos créations, collections de vêtements haut de gamme et pièces d'exception. Inspiration mode luxe."
         keywords="galerie hoolis, créations luxe, collections mode, vêtements haut de gamme, inspiration mode, luxe français"
-        url="https://hoolis.com/gallery"
+        url="https://maisonhoolis.com/gallery"
       />
       <StructuredData data={createOrganizationSchema()} />
     

@@ -56,10 +56,10 @@ export default function Resell() {
   return (
     <>
       <SEOHead
-        title="Collection Hoolis - Vêtements de Luxe & Maroquinerie"
+        title="Maison Hoolis - Vêtements & Maroquinerie"
         description="Découvrez la collection exclusive Hoolis : vêtements haut de gamme, maroquinerie de luxe et accessoires de prestige. Mode française d'exception."
-        keywords="hoolis collection, vêtements de luxe, maroquinerie haut de gamme, mode française, luxe parisien, accessoires de prestige"
-        url="https://hoolis.com/hoolis"
+        keywords="maison hoolis, vêtements de luxe, maroquinerie haut de gamme, mode française, luxe parisien, accessoires de prestige"
+        url="https://maisonhoolis.com/hoolis"
       />
       <StructuredData data={createOrganizationSchema()} />
       
