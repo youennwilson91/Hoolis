@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://hoolis.com/sitemap.xml
+Sitemap: https://maisonhoolis.com/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/

@@ -57,7 +57,7 @@ export default function Landing() {
                 title="Hoolis - Boutique de Luxe | Vêtements, Maroquinerie & Montres"
                 description="Découvrez l'univers Hoolis : collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses. Expertise française et savoir-faire d'exception."
                 keywords="hoolis, luxe, vêtements de luxe, maroquinerie, montres de luxe, horlogerie, boutique luxe, mode haut de gamme, paris"
-                url="https://hoolis.com/"
+                url="https://maisonhoolis.com/"
             />
             <StructuredData data={createWebsiteSchema()} />
             <StructuredData data={createOrganizationSchema()} />

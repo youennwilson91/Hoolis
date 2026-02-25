@@ -1,15 +1,15 @@
 {
-  "name": "Hoolis - Montres de Luxe",
+  "name": "Maison Hoolis - Boutique de Luxe",
   "short_name": "Hoolis",
-  "description": "Découvrez notre collection exclusive de montres de luxe. Expertise en horlogerie, service de réparation et entretien professionnel.",
+  "description": "Collections exclusives de vêtements de luxe, maroquinerie haut de gamme et montres prestigieuses.",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/favicon_io/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/favicon_io/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -21,4 +21,4 @@
   "orientation": "portrait",
   "scope": "/",
   "lang": "fr-FR"
-} 
+}

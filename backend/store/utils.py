@@ -149,7 +149,7 @@ def send_email_async(send_mail_callable, *args, **kwargs):
             send_mail,
             subject="Confirmation",
             message="...",
-            from_email="noreply@hoolis.com",
+            from_email="noreply@maisonhoolis.com",
             recipient_list=["customer@example.com"],
             html_message="<html>...</html>"
         )
