@@ -40,7 +40,7 @@ redis==5.2.1
 
 # Utilities
 requests==2.32.3
-python-dateutil==2.8.0
+python-dateutil>=2.9.0
 pytz==2025.2
 vonage==4.4.3
 stripe==12.4.0
