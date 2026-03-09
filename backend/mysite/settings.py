@@ -80,7 +80,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'django_extensions',
-    'django_cryptography'
+    'django_cryptography',
 ]
 
 if DEBUG:
@@ -176,7 +176,7 @@ STATICFILES_DIRS = [
     BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
 ]
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = env('MEDIA_ROOT', default=str(BASE_DIR / 'media'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
