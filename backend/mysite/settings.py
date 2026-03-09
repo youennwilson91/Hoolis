@@ -337,3 +337,4 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=None)
 
 # URL du frontend pour les redirections Stripe
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
+

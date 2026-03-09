@@ -15,5 +15,5 @@ errorlog = '-'
 loglevel = 'info'
 
 # Security
-forwarded_allow_ips = '10.16.195.131'  # IP du proxy Render (identifiée via test_ip)
+forwarded_allow_ips = os.environ.get('FORWARDED_ALLOW_IPS', '*')
 secure_scheme_headers = {'X-FORWARDED-PROTO': 'https'} 
