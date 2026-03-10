@@ -328,7 +328,7 @@ CELERY_TASK_IGNORE_RESULT = True
 CELERY_BROKER_HEARTBEAT = 0
 CELERY_BROKER_HEARTBEAT_CHECKRATE = 0
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'polling_interval': 10,
+    'polling_interval': 30,
 }
 
 # Configuration Email
