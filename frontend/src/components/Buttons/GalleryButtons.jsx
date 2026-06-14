@@ -7,7 +7,10 @@ import "../../index.css";
 
 export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, type }) {
 
-    const {isClicked, setCollectionChosen, setArticleIsHovered, setSelectedArticleId, setArticleIsClicked, displayCollection, collectionChosen} = useStore();
+    const setCollectionChosen = useStore(state => state.setCollectionChosen);
+    const setArticleIsHovered = useStore(state => state.setArticleIsHovered);
+    const setSelectedArticleId = useStore(state => state.setSelectedArticleId);
+    const setArticleIsClicked = useStore(state => state.setArticleIsClicked);
     const buttonRefs = useRef([]);
 
     const buttons = type === "hoolis" 

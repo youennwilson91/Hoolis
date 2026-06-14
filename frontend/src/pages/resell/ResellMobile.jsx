@@ -42,10 +42,9 @@ export default function ResellMobile({ labelRef }) {
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(true);
+  const { products, isLoading: productsLoading, error } = useProducts(true);
 
   const [imagesLoading, setImagesLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");

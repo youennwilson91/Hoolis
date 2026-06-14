@@ -35,7 +35,7 @@ export default function Resell() {
   const is_resell = true;
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(true);
+  const { products, isLoading: productsLoading, error } = useProducts(true);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -306,6 +306,7 @@ export default function Resell() {
 
           <ErrorBoundary>
             <div className="resell-gallery-articles" ref={collectionRef}>
+              {error && <p style={{color: 'white', padding: '20px'}}>{error}</p>}
               {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {

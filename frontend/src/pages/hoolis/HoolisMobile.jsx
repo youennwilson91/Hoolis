@@ -45,10 +45,9 @@ export default function HoolisMobile({ labelRef }) {
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(false);
+  const { products, isLoading: productsLoading, error } = useProducts(false);
 
   const [imagesLoading, setImagesLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showDescription, setShowDescription] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);

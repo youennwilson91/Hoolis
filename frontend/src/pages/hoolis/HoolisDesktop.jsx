@@ -38,7 +38,7 @@ export default function HoolisDesktop() {
   const is_resell = false;
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(false);
+  const { products, isLoading: productsLoading, error } = useProducts(false);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -268,6 +268,7 @@ export default function HoolisDesktop() {
 
           <ErrorBoundary>
             <div className="shop-gallery-articles" ref={collectionRef}>
+              {error && <p style={{color: 'white', padding: '20px'}}>{error}</p>}
               {!productsLoading && !imagesLoading &&
                 (() => {
                   if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {

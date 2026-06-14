@@ -8,7 +8,11 @@ import { gsap } from "gsap";
 export default function NavigationButtons({ screenRef, homeTo, image, label }) {
   const location = useLocation();
   const navigation = useNavigate();
-  const {isClicked, setBgColor, setLabelColor, setLabel, setIsClicked } = useStore();
+  const isClicked = useStore(state => state.isClicked);
+  const setBgColor = useStore(state => state.setBgColor);
+  const setLabelColor = useStore(state => state.setLabelColor);
+  const setLabel = useStore(state => state.setLabel);
+  const setIsClicked = useStore(state => state.setIsClicked);
   const [destination, setDestination] = useState("/hoolis"); // Valeur par défaut
   const [buttonLabel, setButtonLabel] = useState("MaisonHoolis");
   

@@ -22,7 +22,7 @@ export default function useCart() {
 
   const cartTotal = useMemo(() => {
     return addToCart.reduce((total, item) => {
-      const price = parseInt(item.price);
+      const price = parseFloat(item.price) || 0;
       const quantity = item.quantity || 1;
       return total + (price * quantity);
     }, 0);

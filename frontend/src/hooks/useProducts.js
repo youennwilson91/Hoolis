@@ -1,43 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useStore from '../utils/store';
 import { apiClient, API_ENDPOINTS } from '../utils/axiosConfig';
 
-/**
- * Hook pour gérer le fetching des produits avec gestion du cache
- * @param {boolean} isResell - true pour produits resell, false pour produits hoolis
- * @returns {{ products: Array, isLoading: boolean }}
- */
 export function useProducts(isResell) {
-  // Utiliser le cache approprié selon isResell
   const products = useStore(state => isResell ? state.resellProducts : state.hoolisProducts);
   const setProducts = useStore(state => isResell ? state.setResellProducts : state.setHoolisProducts);
 
-  // État de chargement local - true par défaut
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Ref pour éviter setState après unmount
-  const isMountedRef = useRef(true);
+  // Fix #3 : isLoading démarre à false si le cache est déjà rempli
+  const [isLoading, setIsLoading] = useState(() => !(products?.length > 0));
+  // Fix #2 : état d'erreur exposé aux composants consommateurs
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    isMountedRef.current = true;
     const abortController = new AbortController();
-
-    // Vérifier si les produits en cache correspondent au type demandé
     const isCacheValid = products?.length > 0;
 
-    if (import.meta.env.DEV) {
-      console.log(`🔍 Cache validation (is_resell: ${isResell}):`, {
-        cacheType: isResell ? 'resellProducts' : 'hoolisProducts',
-        productsInCache: products?.length || 0,
-        isCacheValid
-      });
-    }
-
     if (!isCacheValid) {
-      if (import.meta.env.DEV) {
-        console.log(`🌐 Fetching products from API (is_resell: ${isResell})...`);
-      }
       setIsLoading(true);
+      setError(null);
 
       const fetchProducts = async () => {
         let retries = 3;
@@ -52,69 +32,28 @@ export function useProducts(isResell) {
               signal: abortController.signal
             });
 
-            if (import.meta.env.DEV) {
-              console.log(`📦 Full API Response (is_resell: ${isResell}):`, response.data);
-              console.log(`📦 Response structure:`, {
-                hasResults: 'results' in response.data,
-                hasCount: 'count' in response.data,
-                hasNext: 'next' in response.data,
-                hasPrevious: 'previous' in response.data,
-              });
-            }
-
             const productsData = response.data.results || response.data;
 
-            if (import.meta.env.DEV) {
-              console.log(`📦 Products data (is_resell: ${isResell}):`, productsData);
-              console.log(`📦 Number of products returned: ${productsData?.length || 0}`);
-              console.log(`📦 API query params:`, {
-                is_resell: isResell,
-                is_available: true
-              });
-
-              if (productsData?.length > 0) {
-                console.log(`📦 First product sample:`, productsData[0]);
-                console.log(`📦 Collections found:`, [...new Set(productsData.map(p => p.collection?.name))].filter(Boolean));
-                console.log(`📦 Availability check:`, {
-                  allAvailable: productsData.every(p => p.is_available === true)
-                });
-              }
-            }
-
-            if (isMountedRef.current && productsData?.length > 0) {
+            if (productsData?.length > 0) {
               setProducts(productsData);
-              if (import.meta.env.DEV) {
-                console.log(`✅ Products stored in cache (is_resell: ${isResell})`);
-              }
             }
 
-            if (isMountedRef.current) {
-              setIsLoading(false);
-            }
-          } catch (error) {
-            // Ignorer les erreurs d'abort
-            if (error.name === 'AbortError' || error.name === 'CanceledError') {
-              if (import.meta.env.DEV) {
-                console.log('Fetch annulé');
-              }
-              if (isMountedRef.current) {
-                setIsLoading(false);
-              }
+            setIsLoading(false);
+          } catch (err) {
+            // Fix #5 : AbortController suffit, pas besoin de isMountedRef
+            if (err.name === 'AbortError' || err.name === 'CanceledError') {
               return;
             }
 
-            if (retries > 0 && isMountedRef.current) {
+            if (retries > 0) {
               retries--;
               await new Promise(resolve => setTimeout(resolve, 1000));
               return attemptFetch();
             }
 
-            if (import.meta.env.DEV) {
-              console.error('Erreur lors du fetch des produits:', error);
-            }
-            if (isMountedRef.current) {
-              setIsLoading(false);
-            }
+            // Fix #2 : erreur visible après épuisement des retries
+            setError('Impossible de charger les produits');
+            setIsLoading(false);
           }
         };
 
@@ -123,24 +62,13 @@ export function useProducts(isResell) {
 
       fetchProducts();
     } else {
-      if (import.meta.env.DEV) {
-        console.log(`✅ Produits déjà en cache (${isResell ? 'resellProducts' : 'hoolisProducts'}):`, {
-          count: products.length,
-          collections: [...new Set(products.map(p => p.collection?.name))].filter(Boolean)
-        });
-      }
-      // Cache valide, pas besoin de loader
-      if (isMountedRef.current) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
 
-    // Cleanup
     return () => {
-      isMountedRef.current = false;
       abortController.abort();
     };
-  }, [isResell]); // Dépend uniquement de isResell, pas de products/setProducts (fonctions stables de Zustand)
+  }, [isResell]);
 
-  return { products, isLoading };
+  return { products, isLoading, error };
 }
