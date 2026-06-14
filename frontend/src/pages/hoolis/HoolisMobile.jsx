@@ -1,6 +1,6 @@
 import MenuButtons from "../../components/Buttons/MenuMobile.jsx";
 import useStore from "../../utils/store.jsx";
-import { useRef, useEffect, useState, useMemo, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Hoolis.scss";
@@ -47,7 +47,7 @@ export default function HoolisMobile({ labelRef }) {
   // Utiliser le hook personnalisé pour gérer les produits
   const { products, isLoading: productsLoading, error } = useProducts(false);
 
-  const [imagesLoading, setImagesLoading] = useState(true);
+  const [imagesLoading, setImagesLoading] = useState(() => !(products?.length > 0));
   const [showDescription, setShowDescription] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);

@@ -1,6 +1,6 @@
 import MenuButtons from "../../components/Buttons/MenuMobile.jsx";
 import useStore from "../../utils/store.jsx";
-import { useRef, useEffect, useState, useMemo, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Resell.scss";
@@ -19,9 +19,6 @@ import { useToast } from "../../components/Toast/ToastContainer";
 
 export default function ResellMobile({ labelRef }) {
   const mobileScreenRef = useRef(null);
-  const bookingContainerRef = useRef(null);
-  const bookButtonRef = useRef(null);
-  const articlesContainerRef = useRef(null);
   const collectionRef = useRef(null);
   const articleRef = useRef([]);
   const galleryButtonsRef = useRef(null);
@@ -44,12 +41,10 @@ export default function ResellMobile({ labelRef }) {
   // Utiliser le hook personnalisé pour gérer les produits
   const { products, isLoading: productsLoading, error } = useProducts(true);
 
-  const [imagesLoading, setImagesLoading] = useState(true);
+  const [imagesLoading, setImagesLoading] = useState(() => !(products?.length > 0));
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
-  const [showDescription, setShowDescription] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
 
 

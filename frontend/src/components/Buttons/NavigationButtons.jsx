@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import "./NavigationButtons.scss";
 import useStore from "../../utils/store.jsx";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 
@@ -13,19 +12,11 @@ export default function NavigationButtons({ screenRef, homeTo, image, label }) {
   const setLabelColor = useStore(state => state.setLabelColor);
   const setLabel = useStore(state => state.setLabel);
   const setIsClicked = useStore(state => state.setIsClicked);
-  const [destination, setDestination] = useState("/hoolis"); // Valeur par défaut
-  const [buttonLabel, setButtonLabel] = useState("MaisonHoolis");
-  
-  useEffect(() => {
-      // Page par défaut (landing)
-      setButtonLabel(label);
-      setDestination(homeTo);
-  }, [location.pathname]);
 
   function handleHover() {
     if (!isClicked) {
       setBgColor("#000000");
-      setLabel(buttonLabel);
+      setLabel(label);
       setLabelColor("#EFEC8F");
     }
   }
@@ -37,18 +28,18 @@ export default function NavigationButtons({ screenRef, homeTo, image, label }) {
       setLabelColor("#000000");
     }
   }
-  
+
   function handleClick() {
-    if (location.pathname !== destination) {
+    if (location.pathname !== homeTo) {
       setIsClicked(true);  // Bloque les interactions pendant la transition
-      
+
       gsap.to(screenRef.current, {
         opacity: 0,
         duration: 0.45,
         ease: "power2.inOut"
       });
-      
-      navigation(destination);
+
+      navigation(homeTo);
       
     }
   }
@@ -60,7 +51,6 @@ export default function NavigationButtons({ screenRef, homeTo, image, label }) {
       onMouseEnter={handleHover}
       onMouseLeave={handleHoverOut}
     >
-      {/* <span className="hoolis-fw-button-text">{buttonLabel}</span> */}
       <img src={image} alt="logo" loading="lazy" />
     </button>
   );
