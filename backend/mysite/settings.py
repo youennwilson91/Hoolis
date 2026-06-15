@@ -176,7 +176,7 @@ STATICFILES_DIRS = [
     BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
 ]
 MEDIA_URL = '/media/'
-MEDIA_ROOT = env('MEDIA_ROOT', default=str(BASE_DIR / 'media'))
+MEDIA_ROOT = env('MEDIA_ROOT', default='/data/media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -320,14 +320,16 @@ STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default=None)
 import ssl
 
 CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = 'cache+memory://'
 CELERY_BROKER_USE_SSL = {'ssl_cert_reqs': ssl.CERT_NONE}
-CELERY_REDIS_BACKEND_USE_SSL = {'ssl_cert_reqs': ssl.CERT_NONE}
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_IGNORE_RESULT = True
 CELERY_BROKER_HEARTBEAT = 0
 CELERY_BROKER_HEARTBEAT_CHECKRATE = 0
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'polling_interval': 30,
+}
 
 # Configuration Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
