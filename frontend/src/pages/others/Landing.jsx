@@ -96,7 +96,7 @@ export default function Landing() {
                             ref={menuRef1}
                         >
                             <img
-                                src="/hoolis-img/gainsbourglove.webp"
+                                src="/hoolis-img/background.webp"
                                 alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
                                 onLoad={() => setDesktopImageLoaded(true)}
                                 style={{
@@ -114,7 +114,7 @@ export default function Landing() {
             <div ref={screenMobileRef} className="mobile-view">
                 <div className="mobile-landing"> 
                     <img
-                        src="/hoolis-img/gainsbourg.webp"
+                        src="/hoolis-img/background.webp"
                         alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
                         onLoad={() => setMobileImageLoaded(true)}
                         style={{
