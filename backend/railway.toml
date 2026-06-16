@@ -4,6 +4,4 @@ buildCommand = "pip install -r requirements.txt && python manage.py collectstati
 
 [deploy]
 startCommand = "python manage.py migrate && gunicorn mysite.wsgi:application --bind 0.0.0.0:$PORT"
-healthcheckPath = "/admin/login/"
-healthcheckTimeout = 30
 restartPolicyType = "on_failure"
