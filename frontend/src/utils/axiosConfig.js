@@ -18,6 +18,7 @@ export const apiClient = axios.create({
 
 // Endpoints API centralisés
 export const API_ENDPOINTS = {
+  siteConfig: '/core/config/',
   products: '/store/products/',
   // BOOKING DISABLED
   // availableSlotsProducts: '/store/available-slots-products/',

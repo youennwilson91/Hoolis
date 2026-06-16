@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/', views.api_home, name='api_home'),  # Changé pour éviter les conflits
     path('admin/', admin.site.urls),
     path('store/', include('store.urls')),
+    path('core/config/', include('core.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
 ]
