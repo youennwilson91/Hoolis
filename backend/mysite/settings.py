@@ -171,10 +171,11 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Configuration pour servir les assets React
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'frontend' / 'dist' / 'assets',  # Assets générés par Vite
-    BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
+    p for p in [
+        BASE_DIR.parent / 'frontend' / 'dist' / 'assets',
+        BASE_DIR.parent / 'frontend' / 'dist',
+    ] if p.exists()
 ]
 USE_S3 = env.bool('USE_S3', default=False)
 
