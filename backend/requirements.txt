@@ -25,6 +25,8 @@ dj-database-url==2.1.0
 # Media & Static Files
 pillow==11.1.0
 whitenoise==6.6.0
+django-storages[s3]==1.14.4
+boto3==1.35.81
 
 # Django Extensions
 django-extensions==4.1

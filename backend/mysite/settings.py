@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
     'django_cryptography',
+    'storages',
 ]
 
 if DEBUG:
@@ -175,8 +176,24 @@ STATICFILES_DIRS = [
     BASE_DIR.parent / 'frontend' / 'dist' / 'assets',  # Assets générés par Vite
     BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
 ]
-MEDIA_URL = '/media/'
-MEDIA_ROOT = env('MEDIA_ROOT', default='/data/media')
+USE_S3 = env.bool('USE_S3', default=False)
+
+if USE_S3:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_ACCESS_KEY_ID = env('R2_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('R2_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('R2_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = env('R2_ENDPOINT_URL')
+    AWS_S3_REGION_NAME = 'auto'
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    _r2_domain = env('R2_CUSTOM_DOMAIN', default=None)
+    MEDIA_URL = f'https://{_r2_domain}/' if _r2_domain else f'{env("R2_ENDPOINT_URL")}/{env("R2_BUCKET_NAME")}/'
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = env('MEDIA_ROOT', default=str(BASE_DIR / 'media'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
