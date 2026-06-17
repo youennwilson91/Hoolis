@@ -4,14 +4,12 @@ import useStore from "../../utils/store.jsx";
 import SEOHead from "../../components/SEOHead.jsx";
 import StructuredData, { createWebsiteSchema, createOrganizationSchema } from "../../components/StructuredData.jsx";
 import PaymentReturn from "../../components/PaymentReturn.jsx";
-import { apiClient, API_ENDPOINTS } from "../../utils/axiosConfig.js";
 import "./Landing.scss";
-
-const FALLBACK_DESKTOP = "/hoolis-img/background.webp";
-const FALLBACK_MOBILE = "/hoolis-img/background.webp";
 
 export default function Landing() {
     const { bgColor, label, labelColor, buttonsVisible, setBgColor, setIsClicked, setButtonsVisible, setLabel, setMobileButtonsVisible } = useStore();
+    const bgImageDesktop = useStore(state => state.bgImageDesktop);
+    const bgImageMobile = useStore(state => state.bgImageMobile);
     const screenRef = useRef(null);
     const labelRef = useRef(null);
     const screenMobileRef = useRef(null);
@@ -19,8 +17,6 @@ export default function Landing() {
     const menuRef2 = useRef(null);
     const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
     const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
-    const [bgImageDesktop, setBgImageDesktop] = useState(FALLBACK_DESKTOP);
-    const [bgImageMobile, setBgImageMobile] = useState(FALLBACK_MOBILE);
 
     useEffect(() => {
         setBgColor("#000000");
@@ -28,23 +24,6 @@ export default function Landing() {
         setLabel("");
         setButtonsVisible(true);
         setMobileButtonsVisible(true);
-
-        let mounted = true;
-        apiClient.get(API_ENDPOINTS.siteConfig)
-            .then(({ data }) => {
-                if (!mounted) return;
-                if (data.bg_image_desktop) {
-                    setDesktopImageLoaded(false);
-                    setBgImageDesktop(data.bg_image_desktop);
-                }
-                if (data.bg_image_mobile) {
-                    setMobileImageLoaded(false);
-                    setBgImageMobile(data.bg_image_mobile);
-                }
-            })
-            .catch((err) => console.error('[SiteConfig error]', err));
-
-        return () => { mounted = false; };
     }, []);
 
     //function handleMenuHover({targetRef, otherRef, isEntering}) {
@@ -120,7 +99,7 @@ export default function Landing() {
                         >
                             <img
                                 key={bgImageDesktop}
-                                src={bgImageDesktop}
+                                src={bgImageDesktop || "/hoolis-img/background.webp"}
                                 alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
                                 onLoad={() => setDesktopImageLoaded(true)}
                                 style={{
@@ -139,7 +118,7 @@ export default function Landing() {
                 <div className="mobile-landing"> 
                     <img
                         key={bgImageMobile}
-                        src={bgImageMobile}
+                        src={bgImageMobile || "/hoolis-img/background.webp"}
                         alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
                         onLoad={() => setMobileImageLoaded(true)}
                         style={{

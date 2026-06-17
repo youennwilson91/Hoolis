@@ -375,6 +375,7 @@ class OrderItemViewSet(ModelViewSet):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 @throttle_classes([PaymentRateThrottle, BurstRateThrottle])
 def create_stripe_session(request):
     """

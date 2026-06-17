@@ -7,11 +7,30 @@ import { loadFont } from './utils/fontLoader'
 import PasswordProtect from './components/PasswordProtect'
 import ErrorBoundary from './components/ErrorBoundary'
 import { ToastProvider } from './components/Toast/ToastContainer'
+import { apiClient, API_ENDPOINTS } from './utils/axiosConfig'
 
 
 function App() {
   const bgColor = useStore((state) => state.bgColor);
+  const setBgImageDesktop = useStore((state) => state.setBgImageDesktop);
+  const setBgImageMobile = useStore((state) => state.setBgImageMobile);
+  const setBgFit = useStore((state) => state.setBgFit);
+  const setSiteConfigReady = useStore((state) => state.setSiteConfigReady);
   const passwordProtect = import.meta.env.VITE_PASSWORD_PROTECT === 'true';
+
+  useEffect(() => {
+    let mounted = true;
+    apiClient.get(API_ENDPOINTS.siteConfig)
+      .then(({ data }) => {
+        if (!mounted) return;
+        if (data.bg_image_desktop) setBgImageDesktop(data.bg_image_desktop);
+        if (data.bg_image_mobile) setBgImageMobile(data.bg_image_mobile);
+        if (data.bg_fit) setBgFit(data.bg_fit);
+        setSiteConfigReady(true);
+      })
+      .catch(() => { if (mounted) setSiteConfigReady(true); });
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     // Load custom fonts
