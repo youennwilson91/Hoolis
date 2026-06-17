@@ -101,7 +101,6 @@ export default function GalleryButtons({ screenRef, labelRef, buttonsPosition, t
             onClick={() => handleButtonClick(index)}
             /*onMouseEnter={() => handleButtonHover(index, true)}
             onMouseLeave={() => handleButtonHover(index, false)}*/
-            disabled
           >
             {button.label}
           </button>

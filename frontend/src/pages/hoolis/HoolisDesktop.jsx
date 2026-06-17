@@ -50,6 +50,9 @@ export default function HoolisDesktop() {
   const label = useStore(state => state.label);
   const setLabel = useStore(state => state.setLabel);
   const bgColor = useStore(state => state.bgColor);
+  const bgImageDesktop = useStore(state => state.bgImageDesktop);
+  const bgFit = useStore(state => state.bgFit);
+  const siteConfigReady = useStore(state => state.siteConfigReady);
   const labelColor = useStore(state => state.labelColor);
   const setLabelColor = useStore(state => state.setLabelColor);
   const setIsClicked = useStore(state => state.setIsClicked);
@@ -253,9 +256,9 @@ export default function HoolisDesktop() {
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img
-            src="/hoolis-img/background.webp"
+            src={bgImageDesktop || "/hoolis-img/background.webp"}
             alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
-            loading="lazy"
+            style={{ opacity: siteConfigReady ? 1 : 0, transition: 'opacity 0.5s ease', objectFit: bgFit }}
         />
 
         {(productsLoading || imagesLoading) &&
@@ -271,12 +274,10 @@ export default function HoolisDesktop() {
               {error && <p style={{color: 'white', padding: '20px'}}>{error}</p>}
               {!productsLoading && !imagesLoading &&
                 (() => {
-                  if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                  if (!Array.isArray(products) || products.length === 0) {
                     return null;
                   }
-                  const filteredProducts = products.filter(article =>
-                    article && article.collection && article.collection.name === displayedCollection
-                  );
+                  const filteredProducts = products.filter(article => article != null);
                   return filteredProducts.map((article, index) => (
                     <Article
                     key={article.id}
