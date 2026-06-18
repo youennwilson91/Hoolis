@@ -83,9 +83,7 @@ export default function HoolisMobile({ labelRef }) {
       setDisplayedCollection(collectionChosen);
       setImagesLoading(true);
 
-      const filteredProducts = products.filter(
-        article => article?.collection?.name === collectionChosen
-      );
+      const filteredProducts = products.filter(article => article != null);
 
       const imagePromises = filteredProducts.flatMap(article =>
         (article.images || []).map(img =>
@@ -267,12 +265,10 @@ export default function HoolisMobile({ labelRef }) {
 
             {!productsLoading && !imagesLoading &&
               (() => {
-                if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                if (!Array.isArray(products) || products.length === 0) {
                   return null;
                 }
-                let filteredProducts = products.filter(article =>
-                  article && article.collection && article.collection.name === displayedCollection
-                );
+                let filteredProducts = products.filter(article => article != null);
 
                 // Si un article est cliqué, ne rendre que celui-là
                 if (clickedArticleId !== null) {

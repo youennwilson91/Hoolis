@@ -114,6 +114,15 @@
 
         button.add-to-cart {
             font-family: "Champagne Limousines", sans-serif !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .cart-icon {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
         }
     }
 

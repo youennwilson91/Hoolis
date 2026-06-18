@@ -35,6 +35,7 @@ const Cart = forwardRef(({ isOpen, onClose, onCheckout }, ref) => {
   return (
     <div className="cart-container" ref={cartRef} style={{ opacity: 0 }}>
       <div className="bg-cart"></div>
+      <button className="close-cart" onClick={onClose} aria-label="Fermer le panier">✕</button>
       <div className="cart-items">
         {addToCart.length === 0 && (
           <div className="cart-item">
