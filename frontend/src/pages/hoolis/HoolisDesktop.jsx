@@ -105,6 +105,7 @@ export default function HoolisDesktop() {
 
     const changeCollection = async () => {
       if (displayedCollection && collectionRef.current) {
+        collectionRef.current.style.pointerEvents = 'none';
         await gsap.to(collectionRef.current, {
           duration: 0.5,
           opacity: 0,
@@ -142,16 +143,26 @@ export default function HoolisDesktop() {
 
       // Animer le fade-in seulement si le conteneur a du contenu
       if (collectionRef.current && collectionRef.current.children.length > 0) {
+        collectionRef.current.style.pointerEvents = 'none';
         gsap.to(collectionRef.current, {
           duration: 0.5,
           opacity: 1,
           ease: "power2.inOut",
           onComplete: () => {
-            if (autoOpenedRef.current) return;
-            autoOpenedRef.current = true;
-            const el = articleRef.current[0];
-            const firstProduct = filteredProducts[0] ?? products.find(p => p != null);
-            if (el && firstProduct) handleArticleClick(el, firstProduct.id);
+            if (!autoOpenedRef.current) {
+              autoOpenedRef.current = true;
+              const el = articleRef.current[0];
+              const firstProduct = filteredProducts[0] ?? products.find(p => p != null);
+              if (el && firstProduct) {
+                handleArticleClick(el, firstProduct.id);
+                // Re-activer après la fin de l'animation d'ouverture (width 0.4s + details 0.25s)
+                setTimeout(() => {
+                  if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
+                }, 700);
+                return;
+              }
+            }
+            if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
           }
         });
       }
