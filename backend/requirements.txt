@@ -35,9 +35,8 @@ django-debug-toolbar==5.1.0
 # Production Server
 gunicorn==23.0.0
 
-# Celery + Redis
-celery==5.4.0
-redis==5.2.1
+# Email
+resend==2.10.0
 
 # Utilities
 requests==2.32.3

@@ -1,14 +1,23 @@
 import logging
 import time
-from django.core.mail import send_mail
+import resend
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 def send_order_confirmation_email(subject, message, from_email, recipient_list, html_message):
+    resend.api_key = settings.RESEND_API_KEY
+
     for attempt in range(3):
         try:
-            send_mail(subject, message, from_email, recipient_list, html_message=html_message)
+            resend.Emails.send({
+                "from": from_email,
+                "to": recipient_list,
+                "subject": subject,
+                "html": html_message,
+                "text": message,
+            })
             logger.info(f"Email envoyé à {recipient_list}")
             return
         except Exception as exc:
