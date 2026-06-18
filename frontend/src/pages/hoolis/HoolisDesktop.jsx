@@ -151,8 +151,9 @@ export default function HoolisDesktop() {
           onComplete: () => {
             if (!autoOpenedRef.current) {
               autoOpenedRef.current = true;
-              const el = articleRef.current[0];
-              const firstProduct = filteredProducts[0] ?? products.find(p => p != null);
+              const randomIndex = Math.floor(Math.random() * filteredProducts.length);
+              const el = articleRef.current[randomIndex];
+              const firstProduct = filteredProducts[randomIndex] ?? products.find(p => p != null);
               if (el && firstProduct) {
                 handleArticleClick(el, firstProduct.id);
                 // Re-activer après la fin de l'animation d'ouverture (width 0.4s + details 0.25s)
