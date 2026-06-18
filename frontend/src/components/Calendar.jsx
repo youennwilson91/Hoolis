@@ -313,7 +313,7 @@ function BookingCalendar({ type }) {
         onClick={() => setIsBooking(false)}
         className="close-booking-button"
       >
-        Fermer
+        X
       </button>
     </div>
   );

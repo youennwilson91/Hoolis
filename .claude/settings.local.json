@@ -30,7 +30,8 @@
       "Bash(npm search:*)",
       "Bash(npm view:*)",
       "Skill(run)",
-      "Skill(run:*)"
+      "Skill(run:*)",
+      "Bash(git push *)"
     ]
   }
 }

@@ -145,7 +145,7 @@ function ArticleComponent({
               <div className="description-popup" onClick={(e) => e.stopPropagation()}>
                 <p>{article.description}</p>
                 <button className="close-popup-btn" onClick={() => setShowDescription(false)}>
-                  Fermer
+                  X
                 </button>
               </div>
             </div>
@@ -153,7 +153,7 @@ function ArticleComponent({
 
 
           <h2 className="close-article" onClick={(e) => handleArticleClose(articleRefs.current[index], e, article.id)}>
-            FERMER
+            X
           </h2>
         </div>
       )}
