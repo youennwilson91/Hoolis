@@ -170,6 +170,22 @@ export default function HoolisDesktop() {
   // }, [isBooking]);
 
 
+  useEffect(() => {
+    if (productsLoading || imagesLoading || !products?.length) return;
+
+    const timer = setTimeout(() => {
+
+      const el = articleRef.current[0];
+      const firstProduct = products.find(p => p != null);
+      if (!el || !firstProduct) return;
+      handleArticleClick(el, firstProduct.id);
+    }, 900);
+
+    return () => clearTimeout(timer);
+  // handleArticleClick est stable (useCallback avec deps stables)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productsLoading, imagesLoading, products]);
+
   const handleArticleHover = useCallback(({width, articleRef, id}) => {
     setHoveredArticleId(id);
     gsap.to(articleRef , { width, duration: 0.5});
