@@ -25,6 +25,7 @@ export default function HoolisDesktop() {
   const galleryRef = useRef(null);
   const articleRef = useRef([]);
   const collectionRef = useRef(null);
+  const autoOpenedRef = useRef(false);
   // BOOKING DISABLED
   // const bookingContainerRef = useRef(null);
   const cartRef = useRef(null);
@@ -144,7 +145,14 @@ export default function HoolisDesktop() {
         gsap.to(collectionRef.current, {
           duration: 0.5,
           opacity: 1,
-          ease: "power2.inOut"
+          ease: "power2.inOut",
+          onComplete: () => {
+            if (autoOpenedRef.current) return;
+            autoOpenedRef.current = true;
+            const el = articleRef.current[0];
+            const firstProduct = filteredProducts[0] ?? products.find(p => p != null);
+            if (el && firstProduct) handleArticleClick(el, firstProduct.id);
+          }
         });
       }
     };
@@ -169,22 +177,6 @@ export default function HoolisDesktop() {
   //   }
   // }, [isBooking]);
 
-
-  useEffect(() => {
-    if (productsLoading || imagesLoading || !products?.length) return;
-
-    const timer = setTimeout(() => {
-
-      const el = articleRef.current[0];
-      const firstProduct = products.find(p => p != null);
-      if (!el || !firstProduct) return;
-      handleArticleClick(el, firstProduct.id);
-    }, 900);
-
-    return () => clearTimeout(timer);
-  // handleArticleClick est stable (useCallback avec deps stables)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productsLoading, imagesLoading, products]);
 
   const handleArticleHover = useCallback(({width, articleRef, id}) => {
     setHoveredArticleId(id);
