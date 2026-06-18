@@ -651,8 +651,7 @@ def _create_order_from_stripe_session(session, session_id):
             html_message = render_to_string('emails/order_confirmation.html', email_context)
             plain_message = strip_tags(html_message)
 
-            # Envoyer via Celery (retry automatique, non bloquant)
-            send_order_confirmation_email.delay(
+            send_order_confirmation_email(
                 subject=f"Confirmation de commande #{order.id} - Maison Hoolis",
                 message=plain_message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
@@ -660,7 +659,7 @@ def _create_order_from_stripe_session(session, session_id):
                 html_message=html_message,
             )
 
-            logger.info(f"Commande #{order.id} créée - Email délégué à Celery")
+            logger.info(f"Commande #{order.id} créée - Email envoyé")
 
         except Exception as email_error:
             # Ne pas bloquer la création de commande si email échoue
