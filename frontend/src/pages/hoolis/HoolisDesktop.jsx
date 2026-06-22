@@ -51,8 +51,12 @@ export default function HoolisDesktop() {
   const label = useStore(state => state.label);
   const setLabel = useStore(state => state.setLabel);
   const bgColor = useStore(state => state.bgColor);
-  const bgImageDesktop = useStore(state => state.bgImageDesktop);
-  const bgFit = useStore(state => state.bgFit);
+  const bgImageDesktop  = useStore(state => state.bgImageDesktop);
+  const bgFit           = useStore(state => state.bgFit);
+  const bgPaddingTop    = useStore(state => state.bgPaddingTop);
+  const bgPaddingBottom = useStore(state => state.bgPaddingBottom);
+  const bgPaddingLeft   = useStore(state => state.bgPaddingLeft);
+  const bgPaddingRight  = useStore(state => state.bgPaddingRight);
   const siteConfigReady = useStore(state => state.siteConfigReady);
   const labelColor = useStore(state => state.labelColor);
   const setLabelColor = useStore(state => state.setLabelColor);
@@ -279,7 +283,7 @@ export default function HoolisDesktop() {
         <img
             src={bgImageDesktop || "/hoolis-img/background.webp"}
             alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
-            style={{ opacity: siteConfigReady ? 1 : 0, transition: 'opacity 0.5s ease', objectFit: bgFit }}
+            style={{ opacity: siteConfigReady ? 1 : 0, transition: 'opacity 0.5s ease', objectFit: bgFit, paddingTop: bgPaddingTop, paddingBottom: bgPaddingBottom, paddingLeft: bgPaddingLeft, paddingRight: bgPaddingRight }}
         />
 
         {(productsLoading || imagesLoading) &&

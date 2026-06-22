@@ -8,8 +8,12 @@ import "./Landing.scss";
 
 export default function Landing() {
     const { bgColor, label, labelColor, buttonsVisible, setBgColor, setIsClicked, setButtonsVisible, setLabel, setMobileButtonsVisible } = useStore();
-    const bgImageDesktop = useStore(state => state.bgImageDesktop);
-    const bgImageMobile = useStore(state => state.bgImageMobile);
+    const bgImageDesktop  = useStore(state => state.bgImageDesktop);
+    const bgImageMobile   = useStore(state => state.bgImageMobile);
+    const bgPaddingTop    = useStore(state => state.bgPaddingTop);
+    const bgPaddingBottom = useStore(state => state.bgPaddingBottom);
+    const bgPaddingLeft   = useStore(state => state.bgPaddingLeft);
+    const bgPaddingRight  = useStore(state => state.bgPaddingRight);
     const screenRef = useRef(null);
     const labelRef = useRef(null);
     const screenMobileRef = useRef(null);
@@ -104,7 +108,11 @@ export default function Landing() {
                                 onLoad={() => setDesktopImageLoaded(true)}
                                 style={{
                                     opacity: desktopImageLoaded ? 1 : 0,
-                                    transition: 'opacity 0.5s ease-in-out'
+                                    transition: 'opacity 0.5s ease-in-out',
+                                    paddingTop: bgPaddingTop,
+                                    paddingBottom: bgPaddingBottom,
+                                    paddingLeft: bgPaddingLeft,
+                                    paddingRight: bgPaddingRight,
                                 }}
                             />
                             {/*<video src="/hoolis-img/bg-vid-shop.mp4" autoPlay loop muted />*/}

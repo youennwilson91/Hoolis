@@ -24,6 +24,10 @@ class SiteConfig(models.Model):
         default=ImageFit.COVER,
         verbose_name="Ajustement de l'image"
     )
+    bg_padding_top    = models.IntegerField(default=0, verbose_name="Padding haut (px)")
+    bg_padding_bottom = models.IntegerField(default=0, verbose_name="Padding bas (px)")
+    bg_padding_left   = models.IntegerField(default=0, verbose_name="Padding gauche (px)")
+    bg_padding_right  = models.IntegerField(default=0, verbose_name="Padding droite (px)")
 
     class Meta:
         verbose_name = "Configuration du site"

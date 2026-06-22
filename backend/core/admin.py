@@ -15,6 +15,6 @@ class UserAdmin(BaseUserAdmin):
 class SiteConfigAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Fond du site", {
-            'fields': ('bg_image_desktop', 'bg_image_mobile', 'bg_fit')
+            'fields': ('bg_image_desktop', 'bg_fit', 'bg_padding_top', 'bg_padding_bottom', 'bg_padding_left', 'bg_padding_right')
         }),
     )
