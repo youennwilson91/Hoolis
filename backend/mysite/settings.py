@@ -339,7 +339,7 @@ STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default=None)
 # Configuration Email
 RESEND_API_KEY = env('RESEND_API_KEY', default=None)
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='')
-ADMIN_EMAIL = env('ADMIN_EMAIL', default='maisonhoolis@gmail.com')
+ADMIN_EMAIL = env('ADMIN_EMAIL', default='maisonhoolis.contact@gmail.com')
 
 # URL du frontend pour les redirections Stripe
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
