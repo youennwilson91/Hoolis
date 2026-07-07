@@ -1,11 +1,61 @@
 import pytest
 import uuid
+import time
+import hmac
+import hashlib
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from store.models import Customer, Product, Collection, Promotion, Order
+from store.models import Customer, Product, Collection, Order
 from decimal import Decimal
 
 User = get_user_model()
+
+
+def sign_stripe_payload(payload, secret=None, timestamp=None):
+    """
+    Génère un header Stripe-Signature valide pour un payload donné,
+    en suivant le même format que celui vérifié par stripe.Webhook.construct_event
+    (t=<timestamp>,v1=hmac_sha256(secret, f"{timestamp}.{payload}")).
+    """
+    secret = secret if secret is not None else settings.STRIPE_WEBHOOK_SECRET
+    timestamp = timestamp if timestamp is not None else int(time.time())
+    signed_payload = f"{timestamp}.{payload}"
+    signature = hmac.new(
+        secret.encode('utf-8'),
+        signed_payload.encode('utf-8'),
+        hashlib.sha256
+    ).hexdigest()
+    return f"t={timestamp},v1={signature}"
+
+
+@pytest.fixture
+def stripe_checkout_session_payload():
+    """Fixture factory : construit un event Stripe checkout.session.* minimal (dict JSON-sérialisable)"""
+    def _make(
+        event_type='checkout.session.completed',
+        session_id=None,
+        payment_status='paid',
+        customer_email='customer@example.com',
+        amount_total=9999,
+        metadata=None,
+    ):
+        session_id = session_id or f"cs_test_{uuid.uuid4().hex[:16]}"
+        return {
+            'id': f"evt_{uuid.uuid4().hex[:16]}",
+            'type': event_type,
+            'data': {
+                'object': {
+                    'id': session_id,
+                    'object': 'checkout.session',
+                    'payment_status': payment_status,
+                    'customer_email': customer_email,
+                    'amount_total': amount_total,
+                    'metadata': metadata or {},
+                }
+            }
+        }
+    return _make
 
 @pytest.fixture
 def admin_user():
@@ -81,12 +131,3 @@ def product(collection):
         collection=collection,
         is_available=True
     )
-
-@pytest.fixture
-def promotion():
-    """Fixture pour créer une promotion"""
-    return Promotion.objects.create(
-        name="Test Promotion",
-        description="Test promotion description",
-        discount=Decimal("10.00")
-    ) 

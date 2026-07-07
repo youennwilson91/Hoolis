@@ -49,3 +49,4 @@ stripe==12.4.0
 # Development & Testing (optionnel)
 pytest==8.3.5
 pytest-django==4.11.1
+pytest-cov==6.1.1
