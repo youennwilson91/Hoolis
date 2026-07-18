@@ -345,3 +345,27 @@ ADMIN_EMAIL = env('ADMIN_EMAIL', default='maisonhoolis.contact@gmail.com')
 # URL du frontend pour les redirections Stripe
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
 
+# Logging : force les erreurs serveur (500) vers stdout même quand DEBUG=False,
+# sinon Django ne les affiche que via mail_admins (config par défaut) et elles
+# n'apparaissent jamais dans les logs Railway.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
