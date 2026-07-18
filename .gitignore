@@ -1,6 +1,24 @@
 backend/staticfiles/
+backend/django.log
+backend/media/
 
 # Secrets
 .env
 *.env
 backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+.coverage
+htmlcov/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/build/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

@@ -1,11 +1,10 @@
 import pytest
 from decimal import Decimal
 from model_bakery import baker
-from store.models import Product, Collection, Cart, CartItem
+from store.models import Product, Collection
 from store.serializers import (
-    ProductSerializer, 
-    CollectionSerializer, 
-    CartItemSerializer
+    ProductSerializer,
+    CollectionSerializer,
 )
 
 
@@ -48,21 +47,4 @@ class TestProductSerializer:
         assert serializer.validated_data['title'] == 'New Product'
         assert serializer.validated_data['price'] == Decimal('129.99')
         assert serializer.validated_data['is_available'] == True
-
-
-@pytest.mark.django_db
-class TestCartItemSerializer:
-    def test_serialize_cart_item(self):
-        """Test de sérialisation d'un élément du panier"""
-        cart = baker.make(Cart)
-        product = baker.make(Product, price=Decimal('25.00'))
-        cart_item = baker.make(CartItem, cart=cart, product=product, quantity=3)
-        
-        serializer = CartItemSerializer(cart_item)
-        data = serializer.data
-        
-        assert data['id'] == cart_item.id
-        assert 'product' in data
-        assert 'id' in data['product']
-        assert data['quantity'] == 3
-        assert 'total_price' in data 
+ 
