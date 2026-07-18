@@ -25,6 +25,7 @@ export default function HoolisDesktop() {
   const galleryRef = useRef(null);
   const articleRef = useRef([]);
   const collectionRef = useRef(null);
+  const autoOpenedRef = useRef(false);
   // BOOKING DISABLED
   // const bookingContainerRef = useRef(null);
   const cartRef = useRef(null);
@@ -38,7 +39,7 @@ export default function HoolisDesktop() {
   const is_resell = false;
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(false);
+  const { products, isLoading: productsLoading, error } = useProducts(false);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -50,6 +51,13 @@ export default function HoolisDesktop() {
   const label = useStore(state => state.label);
   const setLabel = useStore(state => state.setLabel);
   const bgColor = useStore(state => state.bgColor);
+  const bgImageDesktop  = useStore(state => state.bgImageDesktop);
+  const bgFit           = useStore(state => state.bgFit);
+  const bgPaddingTop    = useStore(state => state.bgPaddingTop);
+  const bgPaddingBottom = useStore(state => state.bgPaddingBottom);
+  const bgPaddingLeft   = useStore(state => state.bgPaddingLeft);
+  const bgPaddingRight  = useStore(state => state.bgPaddingRight);
+  const siteConfigReady = useStore(state => state.siteConfigReady);
   const labelColor = useStore(state => state.labelColor);
   const setLabelColor = useStore(state => state.setLabelColor);
   const setIsClicked = useStore(state => state.setIsClicked);
@@ -101,6 +109,7 @@ export default function HoolisDesktop() {
 
     const changeCollection = async () => {
       if (displayedCollection && collectionRef.current) {
+        collectionRef.current.style.pointerEvents = 'none';
         await gsap.to(collectionRef.current, {
           duration: 0.5,
           opacity: 0,
@@ -138,10 +147,29 @@ export default function HoolisDesktop() {
 
       // Animer le fade-in seulement si le conteneur a du contenu
       if (collectionRef.current && collectionRef.current.children.length > 0) {
+        collectionRef.current.style.pointerEvents = 'none';
         gsap.to(collectionRef.current, {
           duration: 0.5,
           opacity: 1,
-          ease: "power2.inOut"
+          ease: "power2.inOut",
+          onComplete: () => {
+            if (!autoOpenedRef.current) {
+              autoOpenedRef.current = true;
+              const allRendered = products.filter(p => p != null);
+              const randomIndex = Math.floor(Math.random() * allRendered.length);
+              const firstProduct = allRendered[randomIndex];
+              const el = articleRef.current[randomIndex];
+              if (el && firstProduct) {
+                handleArticleClick(el, firstProduct.id);
+                // Re-activer après la fin de l'animation d'ouverture (width 0.4s + details 0.25s)
+                setTimeout(() => {
+                  if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
+                }, 700);
+                return;
+              }
+            }
+            if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
+          }
         });
       }
     };
@@ -253,9 +281,9 @@ export default function HoolisDesktop() {
     <div ref={screenRef} className="shop-container">
       <div className="shop-landing">
         <img
-            src="/hoolis-img/gainsbourglove.webp"
+            src={bgImageDesktop || "/hoolis-img/background.webp"}
             alt="T-shirt Coquillage Hoolis - Collection Exclusive - Vue Portée"
-            loading="lazy"
+            style={{ opacity: siteConfigReady ? 1 : 0, transition: 'opacity 0.5s ease', objectFit: bgFit, paddingTop: bgPaddingTop, paddingBottom: bgPaddingBottom, paddingLeft: bgPaddingLeft, paddingRight: bgPaddingRight }}
         />
 
         {(productsLoading || imagesLoading) &&
@@ -268,14 +296,13 @@ export default function HoolisDesktop() {
 
           <ErrorBoundary>
             <div className="shop-gallery-articles" ref={collectionRef}>
+              {error && <p style={{color: 'white', padding: '20px'}}>{error}</p>}
               {!productsLoading && !imagesLoading &&
                 (() => {
-                  if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                  if (!Array.isArray(products) || products.length === 0) {
                     return null;
                   }
-                  const filteredProducts = products.filter(article =>
-                    article && article.collection && article.collection.name === displayedCollection
-                  );
+                  const filteredProducts = products.filter(article => article != null);
                   return filteredProducts.map((article, index) => (
                     <Article
                     key={article.id}

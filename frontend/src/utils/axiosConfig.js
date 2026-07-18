@@ -1,13 +1,6 @@
 import axios from 'axios';
 
-const ENVIRONMENT = import.meta.env.VITE_ENVIRONMENT?.toLowerCase() || 'local';
-
-export const API_BASE_URL = 
-  ENVIRONMENT === 'local' 
-    ? 'http://localhost:8000'  // Toujours localhost en local
-    : ENVIRONMENT === 'dev'
-    ? 'https://dev-hoolis-backend.onrender.com' 
-    : 'https://prod-hoolis-fbackend.onrender.com';  // prod
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Instance axios configurée
 export const apiClient = axios.create({
@@ -18,6 +11,7 @@ export const apiClient = axios.create({
 
 // Endpoints API centralisés
 export const API_ENDPOINTS = {
+  siteConfig: '/core/config/',
   products: '/store/products/',
   // BOOKING DISABLED
   // availableSlotsProducts: '/store/available-slots-products/',

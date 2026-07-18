@@ -141,7 +141,7 @@ export default function OrderForm({
         <div className="order-popup-header">
           <h2>
             {isLoading && <span className="header-spinner"></span>}
-            {isLoading ? 'Redirection vers le paiement...' : 'Finaliser votre commande'}
+            {isLoading ? 'Redirection vers le paiement...' : 'Finalisez votre commande'}
           </h2>
           <button className="close-popup-btn" onClick={handleClose} disabled={isLoading}>×</button>
         </div>

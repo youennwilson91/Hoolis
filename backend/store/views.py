@@ -375,6 +375,7 @@ class OrderItemViewSet(ModelViewSet):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 @throttle_classes([PaymentRateThrottle, BurstRateThrottle])
 def create_stripe_session(request):
     """
@@ -436,7 +437,7 @@ def create_stripe_session(request):
             )
 
         except Exception as user_error:
-            logger.error("Erreur création utilisateur/customer")
+            logger.error(f"Erreur création utilisateur/customer: {type(user_error).__name__} - {user_error}")
             return Response(
                 {"error": "Erreur création utilisateur"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -650,16 +651,41 @@ def _create_order_from_stripe_session(session, session_id):
             html_message = render_to_string('emails/order_confirmation.html', email_context)
             plain_message = strip_tags(html_message)
 
-            # Envoyer via Celery (retry automatique, non bloquant)
-            send_order_confirmation_email.delay(
-                subject=f"Confirmation de commande #{order.id} - Maison Hoolis",
-                message=plain_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[customer.email, settings.DEFAULT_FROM_EMAIL],
-                html_message=html_message,
-            )
+            import threading
 
-            logger.info(f"Commande #{order.id} créée - Email délégué à Celery")
+            # Email client
+            threading.Thread(
+                target=send_order_confirmation_email,
+                kwargs={
+                    'subject': f"Confirmation de commande #{order.id} - Maison Hoolis",
+                    'message': plain_message,
+                    'from_email': settings.DEFAULT_FROM_EMAIL,
+                    'recipient_list': [customer.email],
+                    'html_message': html_message,
+                },
+                daemon=True,
+            ).start()
+
+            # Email admin
+            admin_context = {
+                **email_context,
+                'customer_email': customer.email,
+                'customer_phone': metadata.get('customer_phone', ''),
+            }
+            admin_html = render_to_string('emails/order_admin_notification.html', admin_context)
+            threading.Thread(
+                target=send_order_confirmation_email,
+                kwargs={
+                    'subject': f"[Hoolis] Nouvelle commande #{order.id} - {customer.name}",
+                    'message': strip_tags(admin_html),
+                    'from_email': settings.DEFAULT_FROM_EMAIL,
+                    'recipient_list': [settings.ADMIN_EMAIL],
+                    'html_message': admin_html,
+                },
+                daemon=True,
+            ).start()
+
+            logger.info(f"Commande #{order.id} créée - Emails en cours d'envoi")
 
         except Exception as email_error:
             # Ne pas bloquer la création de commande si email échoue

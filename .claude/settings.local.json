@@ -28,7 +28,10 @@
       "Bash(cd:*)",
       "Bash(npm uninstall:*)",
       "Bash(npm search:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(git push *)"
     ]
   }
 }

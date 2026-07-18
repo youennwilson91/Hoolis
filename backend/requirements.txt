@@ -25,6 +25,8 @@ dj-database-url==2.1.0
 # Media & Static Files
 pillow==11.1.0
 whitenoise==6.6.0
+django-storages[s3]==1.14.4
+boto3==1.35.81
 
 # Django Extensions
 django-extensions==4.1
@@ -33,9 +35,8 @@ django-debug-toolbar==5.1.0
 # Production Server
 gunicorn==23.0.0
 
-# Celery + Redis
-celery==5.4.0
-redis==5.2.1
+# Email
+resend==2.10.0
 
 # Utilities
 requests==2.32.3
@@ -48,3 +49,4 @@ stripe==12.4.0
 # Development & Testing (optionnel)
 pytest==8.3.5
 pytest-django==4.11.1
+pytest-cov==6.1.1

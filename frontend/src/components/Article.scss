@@ -11,6 +11,7 @@
     align-items: center;
     cursor: pointer;
     padding: 2.5px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
 
     .article-image-container {
         position: relative;
@@ -88,32 +89,28 @@
         width: 96%;
         display: flex;
         flex-direction: row;
+        gap: 12px;
         pointer-events: all !important;
 
-        .add-to-cart {
-            position: relative;
-            top: auto;
-            left: auto;
-            margin: 0;
-            border: 3px solid #888888;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 22px;
-            color: #333333;
+        button.add-to-cart {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border: none;
+            background: transparent;
             cursor: pointer;
             pointer-events: all !important;
-            background-color: #d3d3d3;
 
-            &:hover {
-                cursor: pointer;
-                color: #222222;
-                border: 3px solid #666666;
-                background-color: #e6e6e6;
+            svg {
+                width: 48px;
+                height: 48px;
+                fill: white;
+                filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.6));
             }
-        }
 
-        button.add-to-cart {
-            font-family: "Champagne Limousines", sans-serif !important;
+            &:hover svg {
+                opacity: 0.75;
+            }
         }
     }
 
@@ -136,6 +133,7 @@
     }
 
     .description-popup {
+        position: relative;
         background: #f5f5f5;
         padding: 30px;
         border-radius: 10px;
@@ -166,15 +164,22 @@
         }
 
         .close-popup-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             background-color: #d3d3d3;
             border: 3px solid #888888;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
             color: #333333;
             cursor: pointer;
-            display: block;
-            margin: 15px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: "Champagne Limousines", sans-serif !important;
 
             &:hover {
@@ -195,16 +200,23 @@
 
     .close-article {
         position: absolute;
-        top: 2%;
-        right: 2%;
-        font-size: 36px;
+        top: 12px;
+        right: 12px;
+        background: transparent;
+        border: none;
+        font-size: 40px;
+        font-weight: normal;
         color: white;
         cursor: pointer;
         pointer-events: all !important;
+        z-index: 1;
+        line-height: 1;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
 
         &:hover {
-            cursor: pointer;
-            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
         }
     }
 }
@@ -325,21 +337,23 @@
 
         .close-article {
             position: absolute;
-            top: 2%;
-            right: 2%;
-            font-size: 28px;
+            top: 12px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            font-size: 40px;
+            font-weight: normal;
             color: white;
             cursor: pointer;
             pointer-events: all !important;
-            text-shadow: 0px 0px 10px black;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px 15px;
-            border-radius: 5px;
+            z-index: 1;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
 
             &:hover {
-                cursor: pointer;
-                color: #EFEC8F;
-                background: rgba(0, 0, 0, 0.7);
+                background-color: rgba(255, 255, 255, 0.15);
             }
         }
 

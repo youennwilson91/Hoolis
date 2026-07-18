@@ -12,7 +12,8 @@ import AboutButton from "./AboutButton";
 
 
 function MainButton() {
-  const { menuOpen, setMenuOpen } = useStore();
+  const menuOpen = useStore(state => state.menuOpen);
+  const setMenuOpen = useStore(state => state.setMenuOpen);
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
 
@@ -60,11 +61,9 @@ function MainButton() {
 
 export default function MenuButtons({ screenRef }) {
 
-    const {
-      setMobileButtonsVisible,
-      menuOpen,
-      setMenuOpen
-    } = useStore();
+    const setMobileButtonsVisible = useStore(state => state.setMobileButtonsVisible);
+    const menuOpen = useStore(state => state.menuOpen);
+    const setMenuOpen = useStore(state => state.setMenuOpen);
 
     const location = useLocation();
     

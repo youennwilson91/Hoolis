@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
     'django_cryptography',
+    'storages',
 ]
 
 if DEBUG:
@@ -110,6 +111,7 @@ if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'mysite.urls'
+WSGI_APPLICATION = 'mysite.wsgi.application'
 
 TEMPLATES = [
     {
@@ -170,13 +172,31 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Configuration pour servir les assets React
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'frontend' / 'dist' / 'assets',  # Assets générés par Vite
-    BASE_DIR.parent / 'frontend' / 'dist',  # Autres fichiers statiques (images, etc.)
+    p for p in [
+        BASE_DIR.parent / 'frontend' / 'dist' / 'assets',
+        BASE_DIR.parent / 'frontend' / 'dist',
+    ] if p.exists()
 ]
-MEDIA_URL = '/media/'
-MEDIA_ROOT = env('MEDIA_ROOT', default='/data/media')
+USE_S3 = env.bool('USE_S3', default=False)
+
+if USE_S3:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_ACCESS_KEY_ID = env('R2_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('R2_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('R2_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = env('R2_ENDPOINT_URL')
+    AWS_S3_REGION_NAME = 'auto'
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_S3_ADDRESSING_STYLE = 'path'
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    _r2_domain = env('R2_CUSTOM_DOMAIN', default=None)
+    MEDIA_URL = f'https://{_r2_domain}/' if _r2_domain else f'{env("R2_ENDPOINT_URL")}/{env("R2_BUCKET_NAME")}/'
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = env('MEDIA_ROOT', default=str(BASE_DIR / 'media'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -316,30 +336,36 @@ STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY', default=None)
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default=None)
 STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default=None)
 
-# Configuration Celery + Redis (Upstash)
-import ssl
-
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = 'cache+memory://'
-CELERY_BROKER_USE_SSL = {'ssl_cert_reqs': ssl.CERT_NONE}
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_IGNORE_RESULT = True
-CELERY_BROKER_HEARTBEAT = 0
-CELERY_BROKER_HEARTBEAT_CHECKRATE = 0
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'polling_interval': 30,
-}
 
 # Configuration Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
-EMAIL_PORT = env.int('EMAIL_PORT', default=587)
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('EMAIL_HOST_USER', default=None)
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default=None)
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=None)
+RESEND_API_KEY = env('RESEND_API_KEY', default=None)
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='')
+ADMIN_EMAIL = env('ADMIN_EMAIL', default='maisonhoolis.contact@gmail.com')
 
 # URL du frontend pour les redirections Stripe
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
+
+# Logging : force les erreurs serveur (500) vers stdout même quand DEBUG=False,
+# sinon Django ne les affiche que via mail_admins (config par défaut) et elles
+# n'apparaissent jamais dans les logs Railway.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 

@@ -1,6 +1,6 @@
 import MenuButtons from "../../components/Buttons/MenuMobile.jsx";
 import useStore from "../../utils/store.jsx";
-import { useRef, useEffect, useState, useMemo, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./Hoolis.scss";
@@ -45,10 +45,9 @@ export default function HoolisMobile({ labelRef }) {
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
 
   // Utiliser le hook personnalisé pour gérer les produits
-  const { products, isLoading: productsLoading } = useProducts(false);
+  const { products, isLoading: productsLoading, error } = useProducts(false);
 
-  const [imagesLoading, setImagesLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [imagesLoading, setImagesLoading] = useState(() => !(products?.length > 0));
   const [showDescription, setShowDescription] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
@@ -84,9 +83,7 @@ export default function HoolisMobile({ labelRef }) {
       setDisplayedCollection(collectionChosen);
       setImagesLoading(true);
 
-      const filteredProducts = products.filter(
-        article => article?.collection?.name === collectionChosen
-      );
+      const filteredProducts = products.filter(article => article != null);
 
       const imagePromises = filteredProducts.flatMap(article =>
         (article.images || []).map(img =>
@@ -268,12 +265,10 @@ export default function HoolisMobile({ labelRef }) {
 
             {!productsLoading && !imagesLoading &&
               (() => {
-                if (!Array.isArray(products) || products.length === 0 || !displayedCollection) {
+                if (!Array.isArray(products) || products.length === 0) {
                   return null;
                 }
-                let filteredProducts = products.filter(article =>
-                  article && article.collection && article.collection.name === displayedCollection
-                );
+                let filteredProducts = products.filter(article => article != null);
 
                 // Si un article est cliqué, ne rendre que celui-là
                 if (clickedArticleId !== null) {

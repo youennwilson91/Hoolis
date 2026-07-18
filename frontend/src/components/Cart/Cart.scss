@@ -30,13 +30,22 @@
 
     .close-cart {
         position: absolute;
-        top: -0%;
+        top: 8px;
+        right: 12px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
         color: black;
         cursor: pointer;
+        z-index: 1;
+        line-height: 1;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
     }
 
     .close-cart:hover {
-        text-decoration: underline;
+        background-color: rgba(0, 0, 0, 0.08);
     }
 
     hr {

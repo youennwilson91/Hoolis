@@ -52,7 +52,7 @@ export default function PaymentReturn() {
           </h3>
           <p>{message}</p>
           <button onClick={closePopup} className="close-payment-popup">
-            Fermer
+            X
           </button>
         </div>
       </div>
