@@ -169,26 +169,25 @@ export default function HoolisDesktop({ initialProductId = null }) {
           ease: "power2.inOut",
           onComplete: () => {
             if (!autoOpenedRef.current) {
+              // articleRef.current est indexé sur la liste réellement rendue dans le DOM
+              // (tous les produits, cf. JSX plus bas), pas sur filteredProducts (collection).
+              const renderedProducts = products.filter(p => p != null);
               let targetIndex = -1;
               let targetProduct = null;
 
               if (initialProductId != null) {
-                targetIndex = filteredProducts.findIndex(p => p?.id === initialProductId);
+                targetIndex = renderedProducts.findIndex(p => p?.id === initialProductId);
                 if (targetIndex !== -1) {
-                  targetProduct = filteredProducts[targetIndex];
-                } else if (products.some(p => p?.id === initialProductId)) {
-                  // Le produit ciblé est dans une autre collection : l'effet de bascule
-                  // va changer collectionChosen et redéclencher ce rendu. On attend ce passage.
-                  if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
-                  return;
+                  targetProduct = renderedProducts[targetIndex];
                 }
+                // Id invalide/inexistant : on retombe sur le tirage aléatoire ci-dessous.
               }
 
               autoOpenedRef.current = true;
 
               if (!targetProduct) {
-                targetIndex = Math.floor(Math.random() * filteredProducts.length);
-                targetProduct = filteredProducts[targetIndex];
+                targetIndex = Math.floor(Math.random() * renderedProducts.length);
+                targetProduct = renderedProducts[targetIndex];
               }
 
               const el = articleRef.current[targetIndex];
