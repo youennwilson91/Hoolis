@@ -18,7 +18,7 @@ import Cart from "../../components/Cart/Cart.jsx";
 import CartIcon from "../../components/Cart/CartIcon.jsx";
 import { useToast } from "../../components/Toast/ToastContainer";
 
-export default function HoolisDesktop() {
+export default function HoolisDesktop({ initialProductId = null }) {
 
   const screenRef = useRef(null);
   const labelRef = useRef(null);
@@ -31,7 +31,6 @@ export default function HoolisDesktop() {
   const cartRef = useRef(null);
 
   const [hoveredArticleId, setHoveredArticleId] = useState(null);
-  const [clickedArticleId, setClickedArticleId] = useState(null);
   const [clickedArticleRef, setClickedArticleRef] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
   const [imagesLoading, setImagesLoading] = useState(false);
@@ -69,6 +68,8 @@ export default function HoolisDesktop() {
   const collectionChosen = useStore(state => state.collectionChosen);
   const setCollectionChosen = useStore(state => state.setCollectionChosen);
   const setIsMouseActive = useStore(state => state.setIsMouseActive);
+  const clickedArticleId = useStore(state => state.selectedArticleId);
+  const setClickedArticleId = useStore(state => state.setSelectedArticleId);
   // BOOKING DISABLED
   // const isBooking = useStore(state => state.isBooking);
   // const setIsBooking = useStore(state => state.setIsBooking);
@@ -80,7 +81,11 @@ export default function HoolisDesktop() {
     setLabelColor(bgColor);
     setGalleryVisible(false);
     setHoveredArticleId(0);
-    setClickedArticleId(null);
+    // Si un produit est ciblé via l'URL, on ne réinitialise pas la sélection :
+    // l'effet d'auto-ouverture ci-dessous s'en chargera une fois les produits chargés.
+    if (!initialProductId) {
+      setClickedArticleId(null);
+    }
     setClickedArticleRef(null);
     setCartVisible(false);
     setMobileButtonsVisible(false);
@@ -93,7 +98,17 @@ export default function HoolisDesktop() {
     setCollectionChosen("VETEMENTS");
     // Les setters Zustand sont stables, bgColor est utilisé uniquement pour init
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);  
+  }, []);
+
+  // Si le produit ciblé par l'URL appartient à une autre collection que celle par défaut,
+  // on bascule dessus dès que les produits sont chargés.
+  useEffect(() => {
+    if (initialProductId == null || autoOpenedRef.current || !products?.length) return;
+    const target = products.find(p => p?.id === initialProductId);
+    if (target?.collection?.name && target.collection.name !== collectionChosen) {
+      setCollectionChosen(target.collection.name);
+    }
+  }, [initialProductId, products, collectionChosen, setCollectionChosen]);
 
   useGSAP(() => {
     gsap.to(screenRef.current, {
@@ -154,13 +169,31 @@ export default function HoolisDesktop() {
           ease: "power2.inOut",
           onComplete: () => {
             if (!autoOpenedRef.current) {
+              let targetIndex = -1;
+              let targetProduct = null;
+
+              if (initialProductId != null) {
+                targetIndex = filteredProducts.findIndex(p => p?.id === initialProductId);
+                if (targetIndex !== -1) {
+                  targetProduct = filteredProducts[targetIndex];
+                } else if (products.some(p => p?.id === initialProductId)) {
+                  // Le produit ciblé est dans une autre collection : l'effet de bascule
+                  // va changer collectionChosen et redéclencher ce rendu. On attend ce passage.
+                  if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
+                  return;
+                }
+              }
+
               autoOpenedRef.current = true;
-              const allRendered = products.filter(p => p != null);
-              const randomIndex = Math.floor(Math.random() * allRendered.length);
-              const firstProduct = allRendered[randomIndex];
-              const el = articleRef.current[randomIndex];
-              if (el && firstProduct) {
-                handleArticleClick(el, firstProduct.id);
+
+              if (!targetProduct) {
+                targetIndex = Math.floor(Math.random() * filteredProducts.length);
+                targetProduct = filteredProducts[targetIndex];
+              }
+
+              const el = articleRef.current[targetIndex];
+              if (el && targetProduct) {
+                handleArticleClick(el, targetProduct.id);
                 // Re-activer après la fin de l'animation d'ouverture (width 0.4s + details 0.25s)
                 setTimeout(() => {
                   if (collectionRef.current) collectionRef.current.style.pointerEvents = '';
@@ -175,6 +208,9 @@ export default function HoolisDesktop() {
     };
 
     changeCollection();
+    // displayedCollection sert seulement à décider du fade-out, initialProductId ne doit
+    // déclencher cet effet qu'indirectement via collectionChosen, et handleArticleClick est stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionChosen, products]);
 
   // BOOKING DISABLED
@@ -233,6 +269,8 @@ export default function HoolisDesktop() {
           );
         }
       });
+    // setClickedArticleId (setter zustand) est stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clickedArticleRef]);
 
   const handleArticleClose = useCallback((articleRef, e) => {
@@ -246,6 +284,8 @@ export default function HoolisDesktop() {
       width: "7%",
       height: "100%"
     });
+    // setClickedArticleId (setter zustand) est stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function handleToggleCart() {

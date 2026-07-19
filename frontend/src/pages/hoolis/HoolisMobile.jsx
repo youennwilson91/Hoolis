@@ -18,7 +18,7 @@ import Cart from "../../components/Cart/Cart.jsx";
 import CartIcon from "../../components/Cart/CartIcon.jsx";
 import { useToast } from "../../components/Toast/ToastContainer";
 
-export default function HoolisMobile({ labelRef }) {
+export default function HoolisMobile({ labelRef, initialProductId = null }) {
   const mobileScreenRef = useRef(null);
   // BOOKING DISABLED
   // const bookingContainerRef = useRef(null);
@@ -28,6 +28,7 @@ export default function HoolisMobile({ labelRef }) {
   const articleRef = useRef([]);
   const galleryButtonsRef = useRef(null);
   const cartRef = useRef(null);
+  const autoOpenedRef = useRef(false);
 
   // Hook custom pour le cart
   const { addToCart, handleAddToCart, cartTotal, cartAsItem } = useCart();
@@ -51,21 +52,48 @@ export default function HoolisMobile({ labelRef }) {
   const [showDescription, setShowDescription] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [orderFormVisible, setOrderFormVisible] = useState(false);
-  const [clickedArticleId, setClickedArticleId] = useState(null);
   const [displayedCollection, setDisplayedCollection] = useState("");
 
-
+  const clickedArticleId = useStore(state => state.selectedArticleId);
+  const setClickedArticleId = useStore(state => state.setSelectedArticleId);
 
   useEffect(() => {
     // BOOKING DISABLED
     // setIsBooking(false);
-    setClickedArticleId(null);
+    // Si un produit est ciblé via l'URL, on ne réinitialise pas la sélection :
+    // l'effet d'auto-ouverture ci-dessous s'en chargera une fois les produits chargés.
+    if (!initialProductId) {
+      setClickedArticleId(null);
+    }
 
     // Reset collection states pour éviter le flash de l'ancienne page
     setDisplayedCollection("");
     setCollectionChosen("VETEMENTS");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-    
+
+  // Auto-ouverture du produit ciblé par l'URL (partage/SEO), une seule fois au chargement
+  useEffect(() => {
+    if (initialProductId == null || autoOpenedRef.current) return;
+    if (productsLoading || imagesLoading || !products?.length) return;
+
+    const filteredProducts = products.filter(article => article != null);
+    const targetIndex = filteredProducts.findIndex(p => p?.id === initialProductId);
+
+    autoOpenedRef.current = true;
+    if (targetIndex === -1) return;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = articleRef.current[targetIndex];
+        if (el) {
+          handleArticleClick(el, initialProductId);
+        }
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialProductId, productsLoading, imagesLoading, products]);
+
 
   // Gestion du changement de collection
   useEffect(() => {
@@ -195,6 +223,8 @@ export default function HoolisMobile({ labelRef }) {
         }
       );
     }, 300);
+    // setClickedArticleId (setter zustand) est stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleArticleClose = useCallback((clickedArticleElement, e) => {
@@ -210,6 +240,8 @@ export default function HoolisMobile({ labelRef }) {
         setClickedArticleId(null);
       }
     });
+    // setClickedArticleId (setter zustand) est stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleToggleCart() {
